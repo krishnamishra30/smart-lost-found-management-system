@@ -48,12 +48,15 @@ DB_HOST = os.environ.get(
     "localhost"
 ).strip()
 
-DB_PORT = int(
-    os.environ.get(
-        "DB_PORT",
-        "3306"
+try:
+    DB_PORT = int(
+        os.environ.get(
+            "DB_PORT",
+            "3306"
+        )
     )
-)
+except ValueError:
+    DB_PORT = 3306
 
 DB_USER = os.environ.get(
     "DB_USER",
@@ -82,57 +85,138 @@ DB_SSL_CA = os.environ.get(
 
 def get_db_connection():
 
+    is_remote_database = (
+        DB_HOST.lower() not in [
+            "",
+            "localhost",
+            "127.0.0.1"
+        ]
+    )
+
     config = {
         "host": DB_HOST,
         "port": DB_PORT,
         "user": DB_USER,
         "password": DB_PASSWORD,
         "database": DB_NAME,
-        "connection_timeout": 15,
-        "autocommit": False
+
+        "connection_timeout": 20,
+
+        "autocommit": False,
+
+        # Use pure Python implementation.
+        # This avoids environment-specific connector
+        # differences on Render.
+        "use_pure": True
     }
 
     # -----------------------------------------------------
-    # AIVEN SSL
+    # LOCAL MYSQL
     # -----------------------------------------------------
 
-    if DB_HOST != "localhost" and DB_SSL_CA:
+    if not is_remote_database:
 
-        ssl_ca = DB_SSL_CA.strip()
+        print(
+            "DATABASE MODE: LOCAL MYSQL"
+        )
 
-        # If environment variable contains the complete
-        # certificate text, create a temporary CA file.
-        if "BEGIN CERTIFICATE" in ssl_ca:
+    # -----------------------------------------------------
+    # AIVEN / REMOTE MYSQL
+    # -----------------------------------------------------
 
-            ca_file = tempfile.NamedTemporaryFile(
-                mode="w",
-                suffix=".pem",
-                delete=False
-            )
+    else:
 
-            ca_file.write(ssl_ca)
-            ca_file.flush()
-            ca_file.close()
+        print(
+            "DATABASE MODE: REMOTE MYSQL / AIVEN"
+        )
 
-            config["ssl_ca"] = ca_file.name
-            config["ssl_verify_cert"] = True
-            config["ssl_verify_identity"] = True
+        # Aiven requires encrypted connections.
+        config["ssl_disabled"] = False
 
+        # TLS versions supported by modern Aiven MySQL.
+        config["tls_versions"] = [
+            "TLSv1.2",
+            "TLSv1.3"
+        ]
+
+        # -------------------------------------------------
+        # OPTIONAL CA CERTIFICATE
+        # -------------------------------------------------
+
+        if DB_SSL_CA:
+
+            ssl_ca = DB_SSL_CA.strip()
+
+            try:
+
+                # Case 1:
+                # Complete certificate text is stored
+                # directly inside DB_SSL_CA.
+                if "BEGIN CERTIFICATE" in ssl_ca:
+
+                    ca_file = tempfile.NamedTemporaryFile(
+                        mode="w",
+                        suffix=".pem",
+                        delete=False,
+                        encoding="utf-8"
+                    )
+
+                    ca_file.write(
+                        ssl_ca
+                    )
+
+                    ca_file.flush()
+                    ca_file.close()
+
+                    config["ssl_ca"] = ca_file.name
+
+                    config["ssl_verify_cert"] = True
+                    config["ssl_verify_identity"] = True
+
+                    print(
+                        "DATABASE SSL: CA certificate loaded from environment."
+                    )
+
+                # Case 2:
+                # DB_SSL_CA contains a file path.
+                else:
+
+                    config["ssl_ca"] = ssl_ca
+
+                    config["ssl_verify_cert"] = True
+                    config["ssl_verify_identity"] = True
+
+                    print(
+                        "DATABASE SSL: CA certificate path configured."
+                    )
+
+            except Exception as ssl_error:
+
+                print(
+                    "SSL CONFIGURATION ERROR:",
+                    repr(ssl_error)
+                )
+
+                raise
+
+        # -------------------------------------------------
+        # NO CA CERTIFICATE
+        # -------------------------------------------------
         else:
 
-            # If DB_SSL_CA contains an actual file path.
-            config["ssl_ca"] = ssl_ca
-            config["ssl_verify_cert"] = True
-            config["ssl_verify_identity"] = True
+            # TLS encryption remains enabled.
+            # Certificate verification is disabled only
+            # because no CA certificate was supplied.
+            config["ssl_verify_cert"] = False
+            config["ssl_verify_identity"] = False
 
-    elif DB_HOST != "localhost":
+            print(
+                "DATABASE SSL: TLS enabled without CA verification."
+            )
 
-        # Aiven requires SSL.
-        # Encrypted connection is enabled even when CA
-        # certificate is not supplied.
-        config["ssl_disabled"] = False
-        config["ssl_verify_cert"] = False
-        config["ssl_verify_identity"] = False
+    # -----------------------------------------------------
+    # SAFE DATABASE CONFIG LOG
+    # -----------------------------------------------------
 
     print(
         "DATABASE CONFIG:",
@@ -141,9 +225,16 @@ def get_db_connection():
             "port": DB_PORT,
             "user": DB_USER,
             "database": DB_NAME,
-            "ssl": DB_HOST != "localhost"
+            "remote": is_remote_database,
+            "ssl_enabled": is_remote_database
         }
     )
+
+    # -----------------------------------------------------
+    # DATABASE CONNECTION
+    # -----------------------------------------------------
+
+    connection = None
 
     try:
 
@@ -167,6 +258,15 @@ def get_db_connection():
 
         print(
             "MYSQL CONNECTION ERROR:",
+            repr(e)
+        )
+
+        raise
+
+    except Exception as e:
+
+        print(
+            "DATABASE CONNECTION ERROR:",
             repr(e)
         )
 
@@ -3108,6 +3208,10 @@ def health():
 
         result = cursor.fetchone()
 
+        print(
+            "HEALTH CHECK: DATABASE CONNECTED"
+        )
+
         return {
             "status": "ok",
             "application":
@@ -3115,6 +3219,20 @@ def health():
             "database": "connected",
             "test": result[0] if result else 1
         }, 200
+
+    except Error as e:
+
+        print(
+            "HEALTH CHECK MYSQL ERROR:",
+            repr(e)
+        )
+
+        return {
+            "status": "error",
+            "application":
+                "Smart Lost & Found Management System",
+            "database": "unavailable"
+        }, 503
 
     except Exception as e:
 
@@ -3127,8 +3245,7 @@ def health():
             "status": "error",
             "application":
                 "Smart Lost & Found Management System",
-            "database": "unavailable",
-            "error": str(e)
+            "database": "unavailable"
         }, 503
 
     finally:
