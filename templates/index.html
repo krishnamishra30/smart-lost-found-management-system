@@ -1,0 +1,1312 @@
+{% extends "base.html" %}
+
+{% block title %}
+Smart Lost & Found | Campus Recovery Platform
+{% endblock %}
+
+{% block content %}
+
+<style>
+/* =========================================================
+   HOME PAGE
+========================================================= */
+
+.home-page {
+    overflow: hidden;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    position: relative;
+    min-height: 530px;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: center;
+    gap: 55px;
+    padding: 55px 0 70px;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 430px;
+    height: 430px;
+    background: #dbeafe;
+    border-radius: 50%;
+    filter: blur(10px);
+    opacity: 0.55;
+    right: -180px;
+    top: -120px;
+    z-index: -1;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    background: #e0e7ff;
+    border-radius: 50%;
+    opacity: 0.45;
+    left: -160px;
+    bottom: -130px;
+    z-index: -1;
+}
+
+/* =========================================================
+   HERO CONTENT
+========================================================= */
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 13px;
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+    color: #2563eb;
+    border-radius: 30px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.hero-badge i {
+    font-size: 10px;
+}
+
+.hero-title {
+    font-size: 52px;
+    line-height: 1.08;
+    letter-spacing: -1.8px;
+    color: #111827;
+    max-width: 680px;
+    margin-bottom: 20px;
+}
+
+.hero-title span {
+    color: #2563eb;
+}
+
+.hero-description {
+    max-width: 600px;
+    color: #64748b;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+.hero-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.hero-primary,
+.hero-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 13px 20px;
+    border-radius: 11px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: 0.2s ease;
+    text-decoration: none;
+}
+
+.hero-primary {
+    background: #2563eb;
+    color: white;
+    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.22);
+}
+
+.hero-primary:hover {
+    background: #1d4ed8;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.28);
+}
+
+.hero-secondary {
+    background: white;
+    border: 1px solid #dfe5ee;
+    color: #475569;
+}
+
+.hero-secondary:hover {
+    border-color: #bfdbfe;
+    background: #f8faff;
+    color: #2563eb;
+    transform: translateY(-2px);
+}
+
+/* =========================================================
+   TRUST ROW
+========================================================= */
+
+.trust-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+}
+
+.trust-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.trust-item i {
+    color: #16a34a;
+    font-size: 12px;
+}
+
+/* =========================================================
+   HERO VISUAL
+========================================================= */
+
+.hero-visual {
+    position: relative;
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.visual-main-card {
+    width: 350px;
+    background: white;
+    border: 1px solid #e5eaf2;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 25px 65px rgba(15, 23, 42, 0.12);
+    position: relative;
+    z-index: 3;
+    transform: rotate(1deg);
+}
+
+.visual-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+.visual-card-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #172033;
+}
+
+.visual-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #ecfdf5;
+    color: #15803d;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.visual-status i {
+    font-size: 6px;
+}
+
+.visual-item {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px;
+    border: 1px solid #edf0f5;
+    border-radius: 13px;
+    margin-bottom: 10px;
+    background: #fafbfc;
+}
+
+.visual-item-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: #eff6ff;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.visual-item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.visual-item-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: #273248;
+    margin-bottom: 4px;
+}
+
+.visual-item-meta {
+    font-size: 9px;
+    color: #8a94a6;
+}
+
+.match-score {
+    font-size: 10px;
+    font-weight: 800;
+    color: #16a34a;
+    flex-shrink: 0;
+}
+
+/* =========================================================
+   FLOATING CARDS
+========================================================= */
+
+.floating-card {
+    position: absolute;
+    background: white;
+    border: 1px solid #e6eaf1;
+    box-shadow: 0 15px 40px rgba(15, 23, 42, 0.11);
+    border-radius: 15px;
+    padding: 13px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 5;
+}
+
+.floating-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.floating-text strong {
+    display: block;
+    font-size: 11px;
+    color: #273248;
+    margin-bottom: 3px;
+}
+
+.floating-text span {
+    display: block;
+    font-size: 9px;
+    color: #8a94a6;
+}
+
+.floating-one {
+    top: 35px;
+    right: -5px;
+}
+
+.floating-two {
+    bottom: 45px;
+    left: -20px;
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats-section {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid #e8ecf3;
+    border-radius: 16px;
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
+}
+
+.stat-icon {
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 15px;
+}
+
+.stat-number {
+    font-size: 21px;
+    font-weight: 800;
+    color: #172033;
+}
+
+.stat-label {
+    font-size: 10px;
+    color: #7a8495;
+    margin-top: 3px;
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.home-section {
+    padding: 85px 0 20px;
+}
+
+.section-heading {
+    text-align: center;
+    max-width: 650px;
+    margin: 0 auto 42px;
+}
+
+.section-label {
+    display: inline-block;
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    margin-bottom: 10px;
+}
+
+.section-heading h2 {
+    font-size: 32px;
+    letter-spacing: -0.8px;
+    color: #172033;
+    margin-bottom: 10px;
+}
+
+.section-heading p {
+    color: #7a8495;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* =========================================================
+   FEATURE CARDS
+========================================================= */
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.feature-card {
+    background: white;
+    border: 1px solid #e8ecf3;
+    border-radius: 18px;
+    padding: 28px;
+    transition: 0.25s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: #dbe5ff;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.07);
+}
+
+.feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    background: #eff6ff;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    margin-bottom: 18px;
+}
+
+.feature-card h3 {
+    font-size: 15px;
+    color: #172033;
+    margin-bottom: 8px;
+}
+
+.feature-card p {
+    color: #7a8495;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* =========================================================
+   HOW IT WORKS
+========================================================= */
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    position: relative;
+}
+
+.step-card {
+    background: white;
+    border: 1px solid #e8ecf3;
+    border-radius: 17px;
+    padding: 25px;
+    position: relative;
+    transition: 0.2s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+.step-number {
+    position: absolute;
+    top: 17px;
+    right: 17px;
+    width: 27px;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.step-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 11px;
+    background: #f8fafc;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 17px;
+}
+
+.step-card h3 {
+    font-size: 14px;
+    margin-bottom: 7px;
+    color: #172033;
+}
+
+.step-card p {
+    font-size: 11px;
+    line-height: 1.65;
+    color: #7a8495;
+}
+
+/* =========================================================
+   CTA
+========================================================= */
+
+.cta-section {
+    margin-top: 85px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+    border-radius: 24px;
+    padding: 45px 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    right: -60px;
+    top: -90px;
+}
+
+.cta-section::after {
+    content: "";
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    left: 35%;
+    bottom: -100px;
+}
+
+.cta-content {
+    position: relative;
+    z-index: 2;
+}
+
+.cta-content h2 {
+    color: white;
+    font-size: 27px;
+    margin-bottom: 9px;
+    letter-spacing: -0.5px;
+}
+
+.cta-content p {
+    color: #dbeafe;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.cta-button {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+    background: white;
+    color: #2563eb;
+    padding: 13px 19px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.cta-button:hover {
+    color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.16);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .hero {
+        grid-template-columns: 1fr;
+        padding-top: 40px;
+    }
+
+    .hero-content {
+        text-align: center;
+    }
+
+    .hero-description {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-buttons,
+    .trust-row {
+        justify-content: center;
+    }
+
+    .hero-visual {
+        min-height: 400px;
+    }
+
+    .stats-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 700px) {
+
+    .hero-title {
+        font-size: 39px;
+        letter-spacing: -1.2px;
+    }
+
+    .hero-description {
+        font-size: 14px;
+    }
+
+    .visual-main-card {
+        width: 310px;
+    }
+
+    .floating-one {
+        right: -5px;
+    }
+
+    .floating-two {
+        left: -5px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-heading h2 {
+        font-size: 27px;
+    }
+
+    .cta-section {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 35px 28px;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .hero {
+        padding-top: 25px;
+    }
+
+    .hero-title {
+        font-size: 32px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .hero-primary,
+    .hero-secondary {
+        width: 100%;
+    }
+
+    .trust-row {
+        gap: 12px;
+    }
+
+    .hero-visual {
+        transform: scale(0.9);
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+
+    .stats-section {
+        grid-template-columns: 1fr;
+    }
+
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .home-section {
+        padding-top: 65px;
+    }
+
+    .cta-content h2 {
+        font-size: 23px;
+    }
+}
+</style>
+
+
+<div class="home-page">
+
+    <!-- =====================================================
+         HERO SECTION
+    ===================================================== -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                Smart Campus Recovery Platform
+            </div>
+
+            <h1 class="hero-title">
+                Lost something?
+                <br>
+                <span>Let's help you find it.</span>
+            </h1>
+
+            <p class="hero-description">
+                Smart Lost & Found connects students and staff
+                with lost belongings through centralized reporting,
+                intelligent matching and simple claim management.
+            </p>
+
+            <div class="hero-buttons">
+
+                {% if session.get('user_id') %}
+
+                    <a href="{{ url_for('report_lost') }}"
+                       class="hero-primary">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        Report Lost Item
+                    </a>
+
+                    <a href="{{ url_for('report_found') }}"
+                       class="hero-secondary">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                        Report Found Item
+                    </a>
+
+                {% else %}
+
+                    <a href="{{ url_for('register') }}"
+                       class="hero-primary">
+                        <i class="fa-solid fa-user-plus"></i>
+                        Get Started
+                    </a>
+
+                    <a href="{{ url_for('search') }}"
+                       class="hero-secondary">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Search Items
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+            <div class="trust-row">
+
+                <div class="trust-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    Easy Reporting
+                </div>
+
+                <div class="trust-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    Smart Matching
+                </div>
+
+                <div class="trust-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    Secure Claims
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HERO VISUAL -->
+
+        <div class="hero-visual">
+
+            <div class="floating-card floating-one">
+
+                <div class="floating-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+
+                <div class="floating-text">
+                    <strong>Smart Match Found</strong>
+                    <span>92% similarity detected</span>
+                </div>
+
+            </div>
+
+
+            <div class="visual-main-card">
+
+                <div class="visual-card-header">
+
+                    <div class="visual-card-title">
+                        Possible Matches
+                    </div>
+
+                    <div class="visual-status">
+                        <i class="fa-solid fa-circle"></i>
+                        Active
+                    </div>
+
+                </div>
+
+
+                <div class="visual-item">
+
+                    <div class="visual-item-icon">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+
+                    <div class="visual-item-content">
+                        <div class="visual-item-name">
+                            Black Smartphone
+                        </div>
+
+                        <div class="visual-item-meta">
+                            Library • Yesterday
+                        </div>
+                    </div>
+
+                    <div class="match-score">
+                        92%
+                    </div>
+
+                </div>
+
+
+                <div class="visual-item">
+
+                    <div class="visual-item-icon">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    <div class="visual-item-content">
+                        <div class="visual-item-name">
+                            Brown Wallet
+                        </div>
+
+                        <div class="visual-item-meta">
+                            Cafeteria • 2 days ago
+                        </div>
+                    </div>
+
+                    <div class="match-score">
+                        87%
+                    </div>
+
+                </div>
+
+
+                <div class="visual-item">
+
+                    <div class="visual-item-icon">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+
+                    <div class="visual-item-content">
+                        <div class="visual-item-name">
+                            Key Set
+                        </div>
+
+                        <div class="visual-item-meta">
+                            Main Gate • Today
+                        </div>
+                    </div>
+
+                    <div class="match-score">
+                        81%
+                    </div>
+
+                </div>
+
+
+                <div style="
+                    margin-top:18px;
+                    padding-top:15px;
+                    border-top:1px solid #edf0f5;
+                    display:flex;
+                    align-items:center;
+                    justify-content:space-between;
+                ">
+
+                    <span style="
+                        font-size:10px;
+                        color:#8a94a6;
+                    ">
+                        AI-assisted matching
+                    </span>
+
+                    <i class="fa-solid fa-shield-halved"
+                       style="
+                           color:#2563eb;
+                           font-size:13px;
+                       ">
+                    </i>
+
+                </div>
+
+            </div>
+
+
+            <div class="floating-card floating-two">
+
+                <div class="floating-icon">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+
+                <div class="floating-text">
+                    <strong>Recovery Made Simple</strong>
+                    <span>Track your claim status</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PLATFORM HIGHLIGHTS
+    ===================================================== -->
+
+    <section class="stats-section">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-file-circle-plus"></i>
+            </div>
+
+            <div>
+                <div class="stat-number">Easy</div>
+                <div class="stat-label">Item Reporting</div>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-brain"></i>
+            </div>
+
+            <div>
+                <div class="stat-number">Smart</div>
+                <div class="stat-label">Matching System</div>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-list-check"></i>
+            </div>
+
+            <div>
+                <div class="stat-number">Simple</div>
+                <div class="stat-label">Claim Management</div>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div>
+                <div class="stat-number">Secure</div>
+                <div class="stat-label">Campus Platform</div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FEATURES
+    ===================================================== -->
+
+    <section class="home-section">
+
+        <div class="section-heading">
+
+            <span class="section-label">
+                Powerful Features
+            </span>
+
+            <h2>
+                Everything you need to recover lost items
+            </h2>
+
+            <p>
+                A centralized platform designed to make campus
+                lost-and-found management faster, easier and smarter.
+            </p>
+
+        </div>
+
+
+        <div class="features-grid">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <i class="fa-solid fa-file-circle-exclamation"></i>
+                </div>
+
+                <h3>Report Lost Items</h3>
+
+                <p>
+                    Submit detailed information about your lost
+                    item including category, location, date,
+                    description and identification details.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </div>
+
+                <h3>Report Found Items</h3>
+
+                <p>
+                    Help someone recover their belongings by
+                    reporting items you have found on campus.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+
+                <h3>Smart Matching</h3>
+
+                <p>
+                    Compare item details such as category,
+                    name, description, location and color to
+                    identify possible matches.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+
+                <h3>Powerful Search</h3>
+
+                <p>
+                    Quickly search lost and found records using
+                    relevant item information and filters.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <i class="fa-solid fa-file-signature"></i>
+                </div>
+
+                <h3>Claim Management</h3>
+
+                <p>
+                    Submit claims for matching found items and
+                    keep track of the claim approval process.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+
+                <h3>Status Tracking</h3>
+
+                <p>
+                    Monitor your reported items and claim status
+                    from a centralized dashboard.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         HOW IT WORKS
+    ===================================================== -->
+
+    <section class="home-section">
+
+        <div class="section-heading">
+
+            <span class="section-label">
+                Simple Process
+            </span>
+
+            <h2>
+                How Smart Lost & Found works
+            </h2>
+
+            <p>
+                Four simple steps to move from a missing item
+                to a successful recovery.
+            </p>
+
+        </div>
+
+
+        <div class="steps-grid">
+
+            <div class="step-card">
+
+                <div class="step-number">01</div>
+
+                <div class="step-icon">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+
+                <h3>Report</h3>
+
+                <p>
+                    Report your lost item or submit details
+                    about an item you found.
+                </p>
+
+            </div>
+
+
+            <div class="step-card">
+
+                <div class="step-number">02</div>
+
+                <div class="step-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+
+                <h3>Discover</h3>
+
+                <p>
+                    Search through available lost and found
+                    reports across the campus.
+                </p>
+
+            </div>
+
+
+            <div class="step-card">
+
+                <div class="step-number">03</div>
+
+                <div class="step-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+
+                <h3>Match</h3>
+
+                <p>
+                    Smart matching compares item details
+                    to identify possible connections.
+                </p>
+
+            </div>
+
+
+            <div class="step-card">
+
+                <div class="step-number">04</div>
+
+                <div class="step-icon">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+
+                <h3>Recover</h3>
+
+                <p>
+                    Submit a claim, get it reviewed and
+                    track the recovery process.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CALL TO ACTION
+    ===================================================== -->
+
+    <section class="cta-section">
+
+        <div class="cta-content">
+
+            <h2>
+                Ready to find what you lost?
+            </h2>
+
+            <p>
+                Join your campus community and make lost-and-found
+                recovery faster and easier.
+            </p>
+
+        </div>
+
+
+        {% if session.get('user_id') %}
+
+            <a href="{{ url_for('search') }}"
+               class="cta-button">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Search Lost & Found
+
+            </a>
+
+        {% else %}
+
+            <a href="{{ url_for('register') }}"
+               class="cta-button">
+
+                <i class="fa-solid fa-arrow-right"></i>
+                Create Free Account
+
+            </a>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,1907 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create Account | Smart Lost & Found
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+    /* =====================================================
+       REGISTER PAGE
+    ===================================================== */
+
+    .register-page {
+        min-height: 680px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 35px 0;
+    }
+
+
+    .register-wrapper {
+        width: 100%;
+        max-width: 980px;
+
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+
+        background: #ffffff;
+
+        border: 1px solid #e7ebf2;
+
+        border-radius: 24px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 20px 60px rgba(15, 23, 42, 0.09);
+    }
+
+
+    /* =====================================================
+       LEFT PANEL
+    ===================================================== */
+
+    .register-info {
+        position: relative;
+
+        padding: 48px 43px;
+
+        background:
+            linear-gradient(
+                145deg,
+                #1d4ed8,
+                #4f46e5
+            );
+
+        color: white;
+
+        overflow: hidden;
+    }
+
+
+    .register-info::before {
+        content: "";
+
+        position: absolute;
+
+        width: 290px;
+        height: 290px;
+
+        border-radius: 50%;
+
+        background: rgba(255,255,255,0.08);
+
+        top: -120px;
+        right: -110px;
+    }
+
+
+    .register-info::after {
+        content: "";
+
+        position: absolute;
+
+        width: 230px;
+        height: 230px;
+
+        border-radius: 50%;
+
+        background: rgba(255,255,255,0.06);
+
+        bottom: -120px;
+        left: -100px;
+    }
+
+
+    /* =====================================================
+       BRAND
+    ===================================================== */
+
+    .register-brand {
+        position: relative;
+
+        z-index: 2;
+
+        display: flex;
+        align-items: center;
+
+        gap: 11px;
+
+        margin-bottom: 58px;
+    }
+
+
+    .register-brand-icon {
+        width: 43px;
+        height: 43px;
+
+        border-radius: 12px;
+
+        background: rgba(255,255,255,0.16);
+
+        border: 1px solid rgba(255,255,255,0.20);
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        font-size: 17px;
+    }
+
+
+    .register-brand-text strong {
+        display: block;
+
+        font-size: 14px;
+
+        margin-bottom: 3px;
+    }
+
+
+    .register-brand-text span {
+        font-size: 9px;
+
+        color: #dbeafe;
+    }
+
+
+    /* =====================================================
+       INFORMATION CONTENT
+    ===================================================== */
+
+    .register-info-content {
+        position: relative;
+
+        z-index: 2;
+    }
+
+
+    .register-small-title {
+        display: inline-block;
+
+        padding: 6px 10px;
+
+        border-radius: 20px;
+
+        background: rgba(255,255,255,0.12);
+
+        border: 1px solid rgba(255,255,255,0.15);
+
+        font-size: 9px;
+
+        font-weight: 700;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.8px;
+
+        margin-bottom: 16px;
+    }
+
+
+    .register-info-content h2 {
+        font-size: 30px;
+
+        line-height: 1.2;
+
+        letter-spacing: -0.7px;
+
+        margin-bottom: 15px;
+    }
+
+
+    .register-info-content > p {
+        color: #dbeafe;
+
+        font-size: 12px;
+
+        line-height: 1.8;
+
+        max-width: 355px;
+
+        margin-bottom: 30px;
+    }
+
+
+    /* =====================================================
+       BENEFITS
+    ===================================================== */
+
+    .register-benefits {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 14px;
+    }
+
+
+    .register-benefit {
+        display: flex;
+
+        align-items: center;
+
+        gap: 11px;
+    }
+
+
+    .register-benefit-icon {
+        width: 31px;
+        height: 31px;
+
+        flex-shrink: 0;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+
+        background: rgba(255,255,255,0.12);
+
+        color: white;
+
+        font-size: 11px;
+    }
+
+
+    .register-benefit-text strong {
+        display: block;
+
+        font-size: 10px;
+
+        margin-bottom: 2px;
+    }
+
+
+    .register-benefit-text span {
+        font-size: 9px;
+
+        color: #dbeafe;
+    }
+
+
+    /* =====================================================
+       RIGHT FORM SECTION
+    ===================================================== */
+
+    .register-form-section {
+        padding: 43px 45px;
+
+        display: flex;
+
+        flex-direction: column;
+
+        justify-content: center;
+    }
+
+
+    .register-form-header {
+        margin-bottom: 25px;
+    }
+
+
+    .register-form-header h1 {
+        font-size: 27px;
+
+        letter-spacing: -0.5px;
+
+        color: #172033;
+
+        margin-bottom: 7px;
+    }
+
+
+    .register-form-header p {
+        color: #7a8495;
+
+        font-size: 12px;
+
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+       FORM
+    ===================================================== */
+
+    .register-form {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+
+    .register-form-group {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 7px;
+    }
+
+
+    .register-label {
+        font-size: 11px;
+
+        font-weight: 700;
+
+        color: #374151;
+    }
+
+
+    .register-input-wrapper {
+        position: relative;
+
+        width: 100%;
+    }
+
+
+    .register-input-icon {
+        position: absolute;
+
+        left: 14px;
+
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        color: #94a3b8;
+
+        font-size: 12px;
+
+        pointer-events: none;
+
+        z-index: 2;
+    }
+
+
+    .register-input {
+        width: 100%;
+
+        height: 44px;
+
+        padding: 0 42px;
+
+        border: 1px solid #dfe5ee;
+
+        border-radius: 10px;
+
+        background: #fafbfc;
+
+        color: #172033;
+
+        font-size: 12px;
+
+        outline: none;
+
+        transition: 0.2s ease;
+
+        box-sizing: border-box;
+    }
+
+
+    .register-input::placeholder {
+        color: #a1a9b7;
+    }
+
+
+    .register-input:focus {
+        background: #ffffff;
+
+        border-color: #2563eb;
+
+        box-shadow:
+            0 0 0 3px rgba(37,99,235,0.08);
+    }
+
+
+    .register-input.valid {
+        border-color: #22c55e;
+    }
+
+
+    .register-input.invalid {
+        border-color: #ef4444;
+    }
+
+
+    /* =====================================================
+       PASSWORD TOGGLE
+    ===================================================== */
+
+    .register-password-toggle {
+        position: absolute;
+
+        right: 8px;
+
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        width: 32px;
+        height: 32px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border: none;
+
+        border-radius: 7px;
+
+        background: transparent;
+
+        color: #94a3b8;
+
+        font-size: 12px;
+
+        padding: 0;
+
+        cursor: pointer;
+
+        z-index: 5;
+
+        transition: 0.2s ease;
+    }
+
+
+    .register-password-toggle:hover {
+        background: #eef2ff;
+
+        color: #2563eb;
+    }
+
+
+    .register-password-toggle:focus {
+        outline: none;
+
+        box-shadow:
+            0 0 0 2px rgba(37,99,235,0.15);
+    }
+
+
+    /* =====================================================
+       PASSWORD STRENGTH
+    ===================================================== */
+
+    .password-strength {
+        display: none;
+
+        margin-top: 4px;
+    }
+
+
+    .password-strength.show {
+        display: block;
+    }
+
+
+    .strength-bars {
+        display: flex;
+
+        gap: 4px;
+
+        margin-bottom: 5px;
+    }
+
+
+    .strength-bar {
+        height: 3px;
+
+        flex: 1;
+
+        border-radius: 10px;
+
+        background: #e5e7eb;
+
+        transition: 0.2s ease;
+    }
+
+
+    .strength-text {
+        font-size: 9px;
+
+        color: #94a3b8;
+    }
+
+
+    /* =====================================================
+       PASSWORD REQUIREMENTS
+    ===================================================== */
+
+    .password-requirements {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 6px 12px;
+
+        margin-top: 2px;
+    }
+
+
+    .password-requirement {
+        font-size: 8px;
+
+        color: #94a3b8;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 4px;
+    }
+
+
+    .password-requirement i {
+        font-size: 7px;
+    }
+
+
+    .password-requirement.valid {
+        color: #16a34a;
+    }
+
+
+    /* =====================================================
+       CONFIRM PASSWORD MESSAGE
+    ===================================================== */
+
+    .confirm-message {
+        font-size: 9px;
+
+        display: none;
+
+        margin-top: 1px;
+    }
+
+
+    .confirm-message.show {
+        display: block;
+    }
+
+
+    .confirm-message.success {
+        color: #16a34a;
+    }
+
+
+    .confirm-message.error {
+        color: #dc2626;
+    }
+
+
+    /* =====================================================
+       TERMS
+    ===================================================== */
+
+    .terms-box {
+        display: flex;
+
+        align-items: flex-start;
+
+        gap: 8px;
+
+        margin-top: 2px;
+
+        color: #64748b;
+
+        font-size: 9px;
+
+        line-height: 1.6;
+    }
+
+
+    .terms-box input {
+        width: 14px;
+        height: 14px;
+
+        margin-top: 1px;
+
+        flex-shrink: 0;
+
+        accent-color: #2563eb;
+
+        cursor: pointer;
+    }
+
+
+    .terms-box a {
+        color: #2563eb;
+
+        font-weight: 700;
+
+        text-decoration: none;
+    }
+
+
+    .terms-box a:hover {
+        text-decoration: underline;
+    }
+
+
+    /* =====================================================
+       REGISTER BUTTON
+    ===================================================== */
+
+    .register-button {
+        width: 100%;
+
+        height: 46px;
+
+        border: none;
+
+        border-radius: 10px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+        color: white;
+
+        font-size: 12px;
+
+        font-weight: 800;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 8px;
+
+        box-shadow:
+            0 8px 20px rgba(37,99,235,0.18);
+
+        cursor: pointer;
+
+        transition: 0.2s ease;
+    }
+
+
+    .register-button:hover {
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 11px 25px rgba(37,99,235,0.24);
+    }
+
+
+    .register-button:active {
+        transform: translateY(0);
+    }
+
+
+    .register-button:disabled {
+        opacity: 0.55;
+
+        cursor: not-allowed;
+
+        transform: none;
+
+        box-shadow: none;
+    }
+
+
+    /* =====================================================
+       LOGIN LINK
+    ===================================================== */
+
+    .already-account {
+        text-align: center;
+
+        margin-top: 18px;
+
+        padding: 13px;
+
+        background: #f8fafc;
+
+        border: 1px solid #edf0f5;
+
+        border-radius: 11px;
+
+        font-size: 10px;
+
+        color: #64748b;
+    }
+
+
+    .already-account a {
+        color: #2563eb;
+
+        font-weight: 800;
+
+        margin-left: 4px;
+
+        text-decoration: none;
+    }
+
+
+    .already-account a:hover {
+        text-decoration: underline;
+    }
+
+
+    /* =====================================================
+       SECURITY NOTE
+    ===================================================== */
+
+    .register-security {
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 6px;
+
+        color: #94a3b8;
+
+        font-size: 9px;
+
+        margin-top: 15px;
+    }
+
+
+    .register-security i {
+        color: #16a34a;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 850px) {
+
+        .register-wrapper {
+            grid-template-columns: 1fr;
+
+            max-width: 560px;
+        }
+
+
+        .register-info {
+            padding: 35px;
+        }
+
+
+        .register-brand {
+            margin-bottom: 30px;
+        }
+
+
+        .register-info-content h2 {
+            font-size: 27px;
+        }
+
+
+        .register-benefits {
+            flex-direction: row;
+
+            flex-wrap: wrap;
+        }
+
+
+        .register-benefit {
+            flex: 1;
+
+            min-width: 150px;
+        }
+
+    }
+
+
+    @media (max-width: 550px) {
+
+        .register-page {
+            padding: 15px 0;
+        }
+
+
+        .register-wrapper {
+            border-radius: 18px;
+        }
+
+
+        .register-info {
+            padding: 30px 25px;
+        }
+
+
+        .register-form-section {
+            padding: 32px 25px;
+        }
+
+
+        .register-info-content h2 {
+            font-size: 24px;
+        }
+
+
+        .register-benefits {
+            display: none;
+        }
+
+
+        .register-form-header h1 {
+            font-size: 24px;
+        }
+
+
+        .password-requirements {
+            flex-direction: column;
+
+            gap: 4px;
+        }
+
+    }
+
+</style>
+
+
+<div class="register-page">
+
+    <div class="register-wrapper">
+
+
+        <!-- =================================================
+             LEFT INFORMATION PANEL
+        ================================================= -->
+
+        <div class="register-info">
+
+
+            <div class="register-brand">
+
+                <div class="register-brand-icon">
+
+                    <i class="fa-solid fa-magnifying-glass-location"></i>
+
+                </div>
+
+
+                <div class="register-brand-text">
+
+                    <strong>
+                        Smart Lost & Found
+                    </strong>
+
+                    <span>
+                        Campus Recovery Platform
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="register-info-content">
+
+
+                <span class="register-small-title">
+                    Join the Platform
+                </span>
+
+
+                <h2>
+                    Never lose hope
+                    of finding your item.
+                </h2>
+
+
+                <p>
+                    Create your account and become part of a
+                    smarter campus community where lost and
+                    found items can be connected faster.
+                </p>
+
+
+                <div class="register-benefits">
+
+
+                    <div class="register-benefit">
+
+                        <div class="register-benefit-icon">
+
+                            <i class="fa-solid fa-file-circle-plus"></i>
+
+                        </div>
+
+
+                        <div class="register-benefit-text">
+
+                            <strong>
+                                Easy Reporting
+                            </strong>
+
+                            <span>
+                                Report lost or found items quickly.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="register-benefit">
+
+                        <div class="register-benefit-icon">
+
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                        </div>
+
+
+                        <div class="register-benefit-text">
+
+                            <strong>
+                                Smart Matching
+                            </strong>
+
+                            <span>
+                                Find possible matches automatically.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="register-benefit">
+
+                        <div class="register-benefit-icon">
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                        </div>
+
+
+                        <div class="register-benefit-text">
+
+                            <strong>
+                                Secure Platform
+                            </strong>
+
+                            <span>
+                                Your account stays protected.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             RIGHT REGISTRATION FORM
+        ================================================= -->
+
+        <div class="register-form-section">
+
+
+            <div class="register-form-header">
+
+                <h1>
+                    Create your account
+                </h1>
+
+                <p>
+                    Register to start reporting, searching and
+                    recovering lost items on campus.
+                </p>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('register') }}"
+                class="register-form"
+                id="registerForm"
+                autocomplete="off">
+
+
+                <!-- =================================================
+                     FULL NAME
+                ================================================= -->
+
+                <div class="register-form-group">
+
+                    <label
+                        class="register-label"
+                        for="name">
+
+                        Full Name
+
+                    </label>
+
+
+                    <div class="register-input-wrapper">
+
+                        <i
+                            class="fa-solid fa-user register-input-icon">
+                        </i>
+
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            class="register-input"
+                            placeholder="Enter your full name"
+                            required
+                            autocomplete="off"
+                            maxlength="100"
+                            spellcheck="false">
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     EMAIL
+                ================================================= -->
+
+                <div class="register-form-group">
+
+                    <label
+                        class="register-label"
+                        for="email">
+
+                        Email Address
+
+                    </label>
+
+
+                    <div class="register-input-wrapper">
+
+                        <i
+                            class="fa-solid fa-envelope register-input-icon">
+                        </i>
+
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="register-input"
+                            placeholder="Enter your email address"
+                            required
+                            autocomplete="off"
+                            autocapitalize="none"
+                            spellcheck="false"
+                            maxlength="150">
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     PASSWORD
+                ================================================= -->
+
+                <div class="register-form-group">
+
+                    <label
+                        class="register-label"
+                        for="registerPassword">
+
+                        Password
+
+                    </label>
+
+
+                    <div class="register-input-wrapper">
+
+                        <i
+                            class="fa-solid fa-lock register-input-icon">
+                        </i>
+
+
+                        <input
+                            type="password"
+                            id="registerPassword"
+                            name="password"
+                            class="register-input"
+                            placeholder="Create a strong password"
+                            required
+                            autocomplete="new-password"
+                            minlength="6">
+
+
+                        <button
+                            type="button"
+                            class="register-password-toggle"
+                            id="passwordToggle"
+                            onclick="toggleRegisterPassword()"
+                            aria-label="Show password"
+                            title="Show password">
+
+                            <i
+                                class="fa-solid fa-eye"
+                                id="passwordIcon">
+                            </i>
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- PASSWORD STRENGTH -->
+
+                    <div
+                        class="password-strength"
+                        id="passwordStrength">
+
+                        <div class="strength-bars">
+
+                            <span
+                                class="strength-bar"
+                                id="bar1">
+                            </span>
+
+                            <span
+                                class="strength-bar"
+                                id="bar2">
+                            </span>
+
+                            <span
+                                class="strength-bar"
+                                id="bar3">
+                            </span>
+
+                            <span
+                                class="strength-bar"
+                                id="bar4">
+                            </span>
+
+                        </div>
+
+
+                        <span
+                            class="strength-text"
+                            id="strengthText">
+
+                            Password strength
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- REQUIREMENTS -->
+
+                    <div class="password-requirements">
+
+                        <span
+                            class="password-requirement"
+                            id="lengthRequirement">
+
+                            <i class="fa-solid fa-circle"></i>
+
+                            6+ characters
+
+                        </span>
+
+
+                        <span
+                            class="password-requirement"
+                            id="letterRequirement">
+
+                            <i class="fa-solid fa-circle"></i>
+
+                            Letter
+
+                        </span>
+
+
+                        <span
+                            class="password-requirement"
+                            id="numberRequirement">
+
+                            <i class="fa-solid fa-circle"></i>
+
+                            Number
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     CONFIRM PASSWORD
+                ================================================= -->
+
+                <div class="register-form-group">
+
+                    <label
+                        class="register-label"
+                        for="confirmPassword">
+
+                        Confirm Password
+
+                    </label>
+
+
+                    <div class="register-input-wrapper">
+
+                        <i
+                            class="fa-solid fa-lock register-input-icon">
+                        </i>
+
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            name="confirm_password"
+                            class="register-input"
+                            placeholder="Re-enter your password"
+                            required
+                            autocomplete="new-password">
+
+
+                        <button
+                            type="button"
+                            class="register-password-toggle"
+                            onclick="toggleConfirmPassword()"
+                            aria-label="Show password"
+                            title="Show password">
+
+                            <i
+                                class="fa-solid fa-eye"
+                                id="confirmPasswordIcon">
+                            </i>
+
+                        </button>
+
+                    </div>
+
+
+                    <span
+                        class="confirm-message"
+                        id="confirmMessage">
+                    </span>
+
+                </div>
+
+
+                <!-- =================================================
+                     TERMS
+                ================================================= -->
+
+                <label class="terms-box">
+
+                    <input
+                        type="checkbox"
+                        id="terms"
+                        name="terms"
+                        required>
+
+                    <span>
+
+                        I agree to use the Smart Lost & Found
+                        platform responsibly and follow the
+                        campus recovery guidelines.
+
+                        <a href="{{ url_for('privacy') }}">
+                            Privacy Policy
+                        </a>
+
+                    </span>
+
+                </label>
+
+
+                <!-- =================================================
+                     REGISTER BUTTON
+                ================================================= -->
+
+                <button
+                    type="submit"
+                    class="register-button"
+                    id="registerButton">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                    Create Account
+
+                </button>
+
+
+            </form>
+
+
+            <!-- =================================================
+                 LOGIN LINK
+            ================================================= -->
+
+            <div class="already-account">
+
+                Already have an account?
+
+                <a href="{{ url_for('login') }}">
+                    Sign in
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 SECURITY
+            ================================================= -->
+
+            <div class="register-security">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                Your account information is securely handled.
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =====================================================
+       SHOW / HIDE PASSWORD
+    ===================================================== */
+
+    function toggleRegisterPassword() {
+
+        const password =
+            document.getElementById("registerPassword");
+
+        const icon =
+            document.getElementById("passwordIcon");
+
+        const button =
+            document.getElementById("passwordToggle");
+
+
+        if (password.type === "password") {
+
+            password.type = "text";
+
+            icon.classList.remove("fa-eye");
+
+            icon.classList.add("fa-eye-slash");
+
+            button.setAttribute(
+                "aria-label",
+                "Hide password"
+            );
+
+            button.setAttribute(
+                "title",
+                "Hide password"
+            );
+
+        } else {
+
+            password.type = "password";
+
+            icon.classList.remove("fa-eye-slash");
+
+            icon.classList.add("fa-eye");
+
+            button.setAttribute(
+                "aria-label",
+                "Show password"
+            );
+
+            button.setAttribute(
+                "title",
+                "Show password"
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       SHOW / HIDE CONFIRM PASSWORD
+    ===================================================== */
+
+    function toggleConfirmPassword() {
+
+        const password =
+            document.getElementById("confirmPassword");
+
+        const icon =
+            document.getElementById("confirmPasswordIcon");
+
+
+        if (password.type === "password") {
+
+            password.type = "text";
+
+            icon.classList.remove("fa-eye");
+
+            icon.classList.add("fa-eye-slash");
+
+        } else {
+
+            password.type = "password";
+
+            icon.classList.remove("fa-eye-slash");
+
+            icon.classList.add("fa-eye");
+
+        }
+
+    }
+
+
+    /* =====================================================
+       PASSWORD STRENGTH
+    ===================================================== */
+
+    const passwordInput =
+        document.getElementById("registerPassword");
+
+    const passwordStrength =
+        document.getElementById("passwordStrength");
+
+    const strengthText =
+        document.getElementById("strengthText");
+
+    const bar1 =
+        document.getElementById("bar1");
+
+    const bar2 =
+        document.getElementById("bar2");
+
+    const bar3 =
+        document.getElementById("bar3");
+
+    const bar4 =
+        document.getElementById("bar4");
+
+
+    function updateRequirement(
+        element,
+        valid
+    ) {
+
+        if (valid) {
+
+            element.classList.add("valid");
+
+            element.querySelector("i").className =
+                "fa-solid fa-circle-check";
+
+        } else {
+
+            element.classList.remove("valid");
+
+            element.querySelector("i").className =
+                "fa-solid fa-circle";
+
+        }
+
+    }
+
+
+    function updatePasswordStrength() {
+
+        const password =
+            passwordInput.value;
+
+
+        const lengthRequirement =
+            document.getElementById(
+                "lengthRequirement"
+            );
+
+        const letterRequirement =
+            document.getElementById(
+                "letterRequirement"
+            );
+
+        const numberRequirement =
+            document.getElementById(
+                "numberRequirement"
+            );
+
+
+        const hasLength =
+            password.length >= 6;
+
+        const hasLetter =
+            /[A-Za-z]/.test(password);
+
+        const hasNumber =
+            /[0-9]/.test(password);
+
+
+        updateRequirement(
+            lengthRequirement,
+            hasLength
+        );
+
+        updateRequirement(
+            letterRequirement,
+            hasLetter
+        );
+
+        updateRequirement(
+            numberRequirement,
+            hasNumber
+        );
+
+
+        if (password.length === 0) {
+
+            passwordStrength.classList.remove("show");
+
+            return;
+
+        }
+
+
+        passwordStrength.classList.add("show");
+
+
+        let score = 0;
+
+
+        if (password.length >= 6) {
+            score++;
+        }
+
+        if (password.length >= 10) {
+            score++;
+        }
+
+        if (hasLetter) {
+            score++;
+        }
+
+        if (hasNumber) {
+            score++;
+        }
+
+
+        bar1.style.background =
+            "#e5e7eb";
+
+        bar2.style.background =
+            "#e5e7eb";
+
+        bar3.style.background =
+            "#e5e7eb";
+
+        bar4.style.background =
+            "#e5e7eb";
+
+
+        if (score <= 1) {
+
+            bar1.style.background =
+                "#ef4444";
+
+            strengthText.textContent =
+                "Weak password";
+
+        } else if (score === 2) {
+
+            bar1.style.background =
+                "#f59e0b";
+
+            bar2.style.background =
+                "#f59e0b";
+
+            strengthText.textContent =
+                "Fair password";
+
+        } else if (score === 3) {
+
+            bar1.style.background =
+                "#eab308";
+
+            bar2.style.background =
+                "#eab308";
+
+            bar3.style.background =
+                "#eab308";
+
+            strengthText.textContent =
+                "Good password";
+
+        } else {
+
+            bar1.style.background =
+                "#22c55e";
+
+            bar2.style.background =
+                "#22c55e";
+
+            bar3.style.background =
+                "#22c55e";
+
+            bar4.style.background =
+                "#22c55e";
+
+            strengthText.textContent =
+                "Strong password";
+
+        }
+
+    }
+
+
+    passwordInput.addEventListener(
+        "input",
+        updatePasswordStrength
+    );
+
+
+    /* =====================================================
+       CONFIRM PASSWORD VALIDATION
+    ===================================================== */
+
+    const confirmPassword =
+        document.getElementById(
+            "confirmPassword"
+        );
+
+    const confirmMessage =
+        document.getElementById(
+            "confirmMessage"
+        );
+
+
+    function checkPasswords() {
+
+        const password =
+            passwordInput.value;
+
+        const confirm =
+            confirmPassword.value;
+
+
+        if (confirm.length === 0) {
+
+            confirmMessage.classList.remove(
+                "show",
+                "success",
+                "error"
+            );
+
+            confirmPassword.classList.remove(
+                "valid",
+                "invalid"
+            );
+
+            return;
+
+        }
+
+
+        confirmMessage.classList.add("show");
+
+
+        if (password === confirm) {
+
+            confirmMessage.textContent =
+                "✓ Passwords match";
+
+            confirmMessage.classList.remove(
+                "error"
+            );
+
+            confirmMessage.classList.add(
+                "success"
+            );
+
+            confirmPassword.classList.remove(
+                "invalid"
+            );
+
+            confirmPassword.classList.add(
+                "valid"
+            );
+
+        } else {
+
+            confirmMessage.textContent =
+                "✕ Passwords do not match";
+
+            confirmMessage.classList.remove(
+                "success"
+            );
+
+            confirmMessage.classList.add(
+                "error"
+            );
+
+            confirmPassword.classList.remove(
+                "valid"
+            );
+
+            confirmPassword.classList.add(
+                "invalid"
+            );
+
+        }
+
+    }
+
+
+    confirmPassword.addEventListener(
+        "input",
+        checkPasswords
+    );
+
+
+    passwordInput.addEventListener(
+        "input",
+        function() {
+
+            if (confirmPassword.value.length > 0) {
+                checkPasswords();
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       FORM VALIDATION
+    ===================================================== */
+
+    const registerForm =
+        document.getElementById(
+            "registerForm"
+        );
+
+
+    registerForm.addEventListener(
+        "submit",
+        function(event) {
+
+            const password =
+                passwordInput.value;
+
+            const confirm =
+                confirmPassword.value;
+
+
+            if (password !== confirm) {
+
+                event.preventDefault();
+
+                alert(
+                    "Passwords do not match. Please check again."
+                );
+
+                confirmPassword.focus();
+
+                return;
+
+            }
+
+
+            if (password.length < 6) {
+
+                event.preventDefault();
+
+                alert(
+                    "Password must contain at least 6 characters."
+                );
+
+                passwordInput.focus();
+
+                return;
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       BROWSER AUTOFILL SETTINGS
+    ===================================================== */
+
+    window.addEventListener(
+        "load",
+        function() {
+
+            const nameInput =
+                document.getElementById("name");
+
+            const emailInput =
+                document.getElementById("email");
+
+            const passwordInput =
+                document.getElementById(
+                    "registerPassword"
+                );
+
+            const confirmInput =
+                document.getElementById(
+                    "confirmPassword"
+                );
+
+
+            if (nameInput) {
+
+                nameInput.setAttribute(
+                    "autocomplete",
+                    "off"
+                );
+
+            }
+
+
+            if (emailInput) {
+
+                emailInput.setAttribute(
+                    "autocomplete",
+                    "off"
+                );
+
+            }
+
+
+            if (passwordInput) {
+
+                passwordInput.setAttribute(
+                    "autocomplete",
+                    "new-password"
+                );
+
+            }
+
+
+            if (confirmInput) {
+
+                confirmInput.setAttribute(
+                    "autocomplete",
+                    "new-password"
+                );
+
+            }
+
+        }
+    );
+
+</script>
+
+{% endblock %}

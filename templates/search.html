@@ -1,0 +1,714 @@
+{% extends "base.html" %}
+
+{% block title %}Search Items | Smart Lost & Found{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    .search-hero {
+        background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+        border: 1px solid #dbeafe;
+        border-radius: 22px;
+        padding: 32px;
+        margin-bottom: 25px;
+    }
+
+    .search-hero h1 {
+        font-size: 30px;
+        font-weight: 800;
+        margin-bottom: 8px;
+        color: #172033;
+    }
+
+    .search-hero p {
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.7;
+        margin-bottom: 24px;
+    }
+
+    .search-form {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: 0 8px 25px rgba(15,23,42,0.05);
+    }
+
+    .search-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1.3fr auto;
+        gap: 12px;
+        align-items: end;
+    }
+
+    .search-field label {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        color: #475569;
+        margin-bottom: 6px;
+    }
+
+    .search-field input,
+    .search-field select {
+        width: 100%;
+        height: 43px;
+        padding: 0 12px;
+        border: 1px solid #dbe1e8;
+        border-radius: 9px;
+        background: white;
+        outline: none;
+        font-size: 13px;
+        color: #172033;
+    }
+
+    .search-field input:focus,
+    .search-field select:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+    }
+
+    .search-button {
+        height: 43px;
+        padding: 0 19px;
+        border: none;
+        border-radius: 9px;
+        background: #2563eb;
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+        white-space: nowrap;
+    }
+
+    .search-button:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+    }
+
+    .results-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 17px;
+    }
+
+    .results-title {
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .result-count {
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .results-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .result-card {
+        background: white;
+        border: 1px solid #e5e9ef;
+        border-radius: 17px;
+        overflow: hidden;
+        transition: 0.25s;
+        box-shadow: 0 6px 20px rgba(15,23,42,0.04);
+    }
+
+    .result-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 35px rgba(15,23,42,0.09);
+        border-color: #cbdcfb;
+    }
+
+    .result-top {
+        padding: 18px 18px 13px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .result-icon {
+        width: 43px;
+        height: 43px;
+        border-radius: 12px;
+        background: #eff6ff;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+
+    .result-card.found .result-icon {
+        background: #ecfdf5;
+        color: #16a34a;
+    }
+
+    .result-card.lost .result-icon {
+        background: #fff1f2;
+        color: #dc2626;
+    }
+
+    .result-content {
+        padding: 0 18px 18px;
+    }
+
+    .result-name {
+        font-size: 17px;
+        font-weight: 800;
+        color: #172033;
+        margin-bottom: 7px;
+    }
+
+    .result-description {
+        color: #64748b;
+        font-size: 12px;
+        line-height: 1.6;
+        min-height: 39px;
+        margin-bottom: 15px;
+    }
+
+    .result-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        padding-top: 13px;
+        border-top: 1px solid #edf0f4;
+    }
+
+    .meta-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .meta-row i {
+        width: 17px;
+        color: #94a3b8;
+        text-align: center;
+    }
+
+    .details-btn {
+        width: 100%;
+        margin-top: 16px;
+        height: 40px;
+        border-radius: 9px;
+        background: #f1f5f9;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-size: 12px;
+        font-weight: 700;
+        transition: 0.2s;
+    }
+
+    .details-btn:hover {
+        background: #2563eb;
+        color: white;
+    }
+
+    .search-tip {
+        margin-top: 18px;
+        padding: 13px 15px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.7);
+        border: 1px solid #dbeafe;
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .search-tip i {
+        color: #2563eb;
+        margin-right: 5px;
+    }
+
+    @media (max-width: 1050px) {
+
+        .search-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .search-button {
+            width: 100%;
+        }
+
+        .results-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+    }
+
+    @media (max-width: 650px) {
+
+        .search-hero {
+            padding: 22px;
+        }
+
+        .search-hero h1 {
+            font-size: 24px;
+        }
+
+        .search-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .results-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .results-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<!-- =========================
+     SEARCH HERO
+========================= -->
+
+<section class="search-hero">
+
+    <h1>
+        <i class="fa-solid fa-magnifying-glass"></i>
+        Find a Lost or Found Item
+    </h1>
+
+    <p>
+        Search campus reports using item name, category, type,
+        and location. Open any result to view complete item details.
+    </p>
+
+
+    <!-- SEARCH FORM -->
+
+    <form method="GET"
+          action="{{ url_for('search') }}"
+          class="search-form">
+
+        <div class="search-grid">
+
+            <!-- QUERY -->
+
+            <div class="search-field">
+
+                <label>
+                    Search Item
+                </label>
+
+                <input
+                    type="text"
+                    name="query"
+                    value="{{ request.args.get('query', '') }}"
+                    placeholder="e.g. Black wallet, iPhone, ID card..."
+                >
+
+            </div>
+
+
+            <!-- CATEGORY -->
+
+            <div class="search-field">
+
+                <label>
+                    Category
+                </label>
+
+                <select name="category">
+
+                    <option value="">
+                        All Categories
+                    </option>
+
+                    <option value="Electronics"
+                        {% if request.args.get('category') == 'Electronics' %}selected{% endif %}>
+                        Electronics
+                    </option>
+
+                    <option value="Documents"
+                        {% if request.args.get('category') == 'Documents' %}selected{% endif %}>
+                        Documents
+                    </option>
+
+                    <option value="Wallet"
+                        {% if request.args.get('category') == 'Wallet' %}selected{% endif %}>
+                        Wallet
+                    </option>
+
+                    <option value="Keys"
+                        {% if request.args.get('category') == 'Keys' %}selected{% endif %}>
+                        Keys
+                    </option>
+
+                    <option value="Accessories"
+                        {% if request.args.get('category') == 'Accessories' %}selected{% endif %}>
+                        Accessories
+                    </option>
+
+                    <option value="Clothing"
+                        {% if request.args.get('category') == 'Clothing' %}selected{% endif %}>
+                        Clothing
+                    </option>
+
+                    <option value="Other"
+                        {% if request.args.get('category') == 'Other' %}selected{% endif %}>
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- TYPE -->
+
+            <div class="search-field">
+
+                <label>
+                    Report Type
+                </label>
+
+                <select name="type">
+
+                    <option value="">
+                        Lost + Found
+                    </option>
+
+                    <option value="Lost"
+                        {% if request.args.get('type') == 'Lost' %}selected{% endif %}>
+                        Lost Items
+                    </option>
+
+                    <option value="Found"
+                        {% if request.args.get('type') == 'Found' %}selected{% endif %}>
+                        Found Items
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- LOCATION -->
+
+            <div class="search-field">
+
+                <label>
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    name="location"
+                    value="{{ request.args.get('location', '') }}"
+                    placeholder="e.g. Library, Canteen..."
+                >
+
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <div>
+
+                <button type="submit"
+                        class="search-button">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    Search
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+
+    <div class="search-tip">
+
+        <i class="fa-solid fa-lightbulb"></i>
+
+        <strong>Tip:</strong>
+        Try a combination of item name and location
+        for better search results.
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     RESULTS
+========================= -->
+
+<div class="results-header">
+
+    <div class="results-title">
+        Search Results
+    </div>
+
+    <div class="result-count">
+
+        {{ results|length }}
+
+        {% if results|length == 1 %}
+            Result
+        {% else %}
+            Results
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+{% if results %}
+
+<div class="results-grid">
+
+    {% for item in results %}
+
+    <article class="result-card
+        {% if item.report_type|lower == 'found' %}
+            found
+        {% else %}
+            lost
+        {% endif %}">
+
+        <!-- TOP -->
+
+        <div class="result-top">
+
+            <div class="result-icon">
+
+                {% if item.report_type|lower == "found" %}
+
+                    <i class="fa-solid fa-box-open"></i>
+
+                {% else %}
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                {% endif %}
+
+            </div>
+
+
+            {% if item.report_type|lower == "found" %}
+
+                <span class="badge badge-found">
+                    <i class="fa-solid fa-check"></i>
+                    Found
+                </span>
+
+            {% else %}
+
+                <span class="badge badge-lost">
+                    <i class="fa-solid fa-location-dot"></i>
+                    Lost
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- CONTENT -->
+
+        <div class="result-content">
+
+            <div class="result-name">
+                {{ item.item_name }}
+            </div>
+
+
+            <div class="result-description">
+
+                {% if item.description %}
+
+                    {{ item.description[:120] }}
+
+                    {% if item.description|length > 120 %}
+                        ...
+                    {% endif %}
+
+                {% else %}
+
+                    No description provided.
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="result-meta">
+
+                <!-- CATEGORY -->
+
+                <div class="meta-row">
+
+                    <i class="fa-solid fa-layer-group"></i>
+
+                    <span>
+                        {{ item.category or "Not specified" }}
+                    </span>
+
+                </div>
+
+
+                <!-- LOCATION -->
+
+                <div class="meta-row">
+
+                    <i class="fa-solid fa-location-dot"></i>
+
+                    <span>
+
+                        {% if item.report_type|lower == "found" %}
+
+                            {{ item.found_location or "Not specified" }}
+
+                        {% else %}
+
+                            {{ item.lost_location or "Not specified" }}
+
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="meta-row">
+
+                    <i class="fa-regular fa-calendar"></i>
+
+                    <span>
+
+                        {% if item.report_type|lower == "found" %}
+
+                            {{ item.found_date or "Not specified" }}
+
+                        {% else %}
+
+                            {{ item.lost_date or "Not specified" }}
+
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <!-- COLOR -->
+
+                {% if item.color %}
+
+                <div class="meta-row">
+
+                    <i class="fa-solid fa-palette"></i>
+
+                    <span>
+                        {{ item.color }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- DETAILS -->
+
+            <a class="details-btn"
+               href="{{ url_for(
+                   'item_details',
+                   item_type=item.report_type|lower,
+                   item_id=item.id
+               ) }}">
+
+                View Full Details
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </article>
+
+    {% endfor %}
+
+</div>
+
+
+{% else %}
+
+
+<!-- =========================
+     NO RESULTS
+========================= -->
+
+<div class="empty-state">
+
+    <div class="empty-icon">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+    </div>
+
+
+    <h3>
+        No Items Found
+    </h3>
+
+
+    <p>
+        We couldn't find any matching lost or found reports.
+        Try changing your search filters.
+    </p>
+
+
+    <a href="{{ url_for('search') }}"
+       class="btn btn-primary">
+
+        <i class="fa-solid fa-rotate-left"></i>
+
+        Clear Search
+
+    </a>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

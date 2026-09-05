@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Smart Lost & Found{% endblock %}</title>
+
+    <meta name="description"
+          content="Smart Lost & Found Management System for reporting, searching, matching and recovering lost items.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: #f5f7fb;
+            color: #172033;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font-family: inherit;
+        }
+
+        button {
+            border: 0;
+        }
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 74px;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid #e8ebf1;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-container {
+            width: min(1200px, 94%);
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        /* =====================================================
+           BRAND
+        ===================================================== */
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-weight: 800;
+            font-size: 19px;
+            color: #172033;
+            white-space: nowrap;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: white;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+            flex-shrink: 0;
+        }
+
+        .brand-text span {
+            color: #2563eb;
+        }
+
+        /* =====================================================
+           NAV LINKS
+        ===================================================== */
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a {
+            padding: 10px 13px;
+            border-radius: 9px;
+            color: #596579;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            background: #eef4ff;
+            color: #2563eb;
+        }
+
+        .nav-links a i {
+            margin-right: 5px;
+        }
+
+        /* =====================================================
+           NAV RIGHT
+        ===================================================== */
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 7px 10px;
+            border: 1px solid #e6e9ef;
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eaf1ff;
+            color: #2563eb;
+            font-weight: 800;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .user-info {
+            line-height: 1.2;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 700;
+            max-width: 125px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: #8a94a6;
+            margin-top: 3px;
+        }
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 11px 17px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #eef2f7;
+            color: #334155;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #2563eb;
+            border: 1px solid #2563eb;
+        }
+
+        .btn-outline:hover {
+            background: #eff6ff;
+        }
+
+        .get-started {
+            background: #2563eb !important;
+            color: white !important;
+            padding: 10px 15px !important;
+            border-radius: 10px !important;
+        }
+
+        .get-started:hover {
+            background: #1d4ed8 !important;
+        }
+
+        /* =====================================================
+           THREE DOT MENU
+        ===================================================== */
+
+        .menu-wrapper {
+            position: relative;
+        }
+
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #e5e8ef;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #475569;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .menu-btn:hover {
+            background: #f1f5ff;
+            color: #2563eb;
+            border-color: #dbe5ff;
+        }
+
+        .quick-menu {
+            position: absolute;
+            right: 0;
+            top: 49px;
+            width: 240px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #e5e8ef;
+            border-radius: 14px;
+            padding: 8px;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.13);
+            display: none;
+            animation: menuOpen 0.18s ease;
+        }
+
+        .quick-menu.show {
+            display: block;
+        }
+
+        .quick-menu a {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 11px 12px;
+            border-radius: 9px;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .quick-menu a:hover {
+            background: #f3f6ff;
+            color: #2563eb;
+        }
+
+        .quick-menu i {
+            width: 18px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: #edf0f4;
+            margin: 6px 0;
+        }
+
+        .logout-link {
+            color: #dc2626 !important;
+        }
+
+        .logout-link:hover {
+            background: #fff1f2 !important;
+            color: #dc2626 !important;
+        }
+
+        @keyframes menuOpen {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        main {
+            min-height: calc(100vh - 74px);
+        }
+
+        .page-container {
+            width: min(1200px, 94%);
+            margin: auto;
+            padding: 35px 0 60px;
+        }
+
+        /* =====================================================
+           BACK BUTTON
+        ===================================================== */
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 22px;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            color: #2563eb;
+            transform: translateX(-2px);
+        }
+
+        /* =====================================================
+           FLASH MESSAGES
+        ===================================================== */
+
+        .flash-container {
+            position: fixed;
+            right: 22px;
+            top: 90px;
+            z-index: 2000;
+            width: min(380px, calc(100% - 30px));
+            pointer-events: none;
+        }
+
+        .flash {
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            background: white;
+            border: 1px solid #e4e8ef;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.12);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+            pointer-events: auto;
+        }
+
+        .flash.success {
+            border-left: 4px solid #16a34a;
+        }
+
+        .flash.success i {
+            color: #16a34a;
+        }
+
+        .flash.error {
+            border-left: 4px solid #dc2626;
+        }
+
+        .flash.error i {
+            color: #dc2626;
+        }
+
+        .flash.info {
+            border-left: 4px solid #2563eb;
+        }
+
+        .flash.info i {
+            color: #2563eb;
+        }
+
+        .flash.warning {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .flash.warning i {
+            color: #f59e0b;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* =====================================================
+           HEADINGS
+        ===================================================== */
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 31px;
+            line-height: 1.2;
+            font-weight: 800;
+            color: #172033;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #718096;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        /* =====================================================
+           CARDS
+        ===================================================== */
+
+        .card {
+            background: white;
+            border: 1px solid #e8ebf1;
+            border-radius: 17px;
+            padding: 24px;
+            box-shadow: 0 7px 25px rgba(15, 23, 42, 0.04);
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.07);
+        }
+
+        /* =====================================================
+           BADGES
+        ===================================================== */
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .badge-lost {
+            background: #fff1f2;
+            color: #dc2626;
+        }
+
+        .badge-found {
+            background: #ecfdf5;
+            color: #15803d;
+        }
+
+        .badge-pending {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .badge-approved {
+            background: #ecfdf5;
+            color: #15803d;
+        }
+
+        .badge-rejected {
+            background: #fff1f2;
+            color: #dc2626;
+        }
+
+        .badge-blue {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        /* =====================================================
+           FORMS
+        ===================================================== */
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .form-control,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            border: 1px solid #dce2ea;
+            border-radius: 10px;
+            padding: 11px 13px;
+            background: white;
+            color: #172033;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-control::placeholder,
+        .form-textarea::placeholder {
+            color: #9aa4b2;
+        }
+
+        .form-control:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.09);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 17px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border: 1px dashed #dce2ea;
+            border-radius: 17px;
+        }
+
+        .empty-icon {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 7px;
+        }
+
+        .empty-state p {
+            color: #7b8798;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 14px;
+            border: 1px solid #e7ebf0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+            background: white;
+        }
+
+        .data-table th {
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 13px 15px;
+            text-align: left;
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-top: 1px solid #edf0f4;
+            font-size: 13px;
+            color: #475569;
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover td {
+            background: #fafcff;
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+            background: #111827;
+            color: #cbd5e1;
+            margin-top: 30px;
+        }
+
+        .footer-container {
+            width: min(1200px, 94%);
+            margin: auto;
+            padding: 45px 0 25px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 45px;
+        }
+
+        .footer-brand {
+            color: white;
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .footer-description {
+            color: #94a3b8;
+            max-width: 430px;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .footer-title {
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(2px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #263244;
+            margin-top: 35px;
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        /* =====================================================
+           SCROLLBAR
+        ===================================================== */
+
+        .quick-menu::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .quick-menu::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .quick-menu::-webkit-scrollbar-thumb {
+            background: #dbe1ea;
+            border-radius: 10px;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1000px) {
+
+            .nav-links {
+                display: none;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                height: 66px;
+            }
+
+            .nav-container {
+                width: 92%;
+            }
+
+            .brand {
+                font-size: 15px;
+            }
+
+            .brand-icon {
+                width: 37px;
+                height: 37px;
+                border-radius: 10px;
+            }
+
+            .user-box {
+                display: none;
+            }
+
+            .get-started {
+                display: none !important;
+            }
+
+            .nav-right {
+                gap: 7px;
+            }
+
+            .page-container {
+                padding-top: 25px;
+            }
+
+            .page-header h1 {
+                font-size: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+            }
+
+            .quick-menu {
+                right: -3px;
+                width: 225px;
+            }
+
+        }
+
+        @media (max-width: 420px) {
+
+            .brand-text {
+                display: none;
+            }
+
+            .brand-icon {
+                width: 39px;
+                height: 39px;
+            }
+
+            .btn-outline {
+                padding: 9px 12px;
+            }
+
+            .menu-btn {
+                width: 38px;
+                height: 38px;
+            }
+
+        }
+
+    </style>
+
+    {% block extra_css %}{% endblock %}
+
+</head>
+
+<body>
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <!-- BRAND -->
+
+        <a href="{{ url_for('home') }}" class="brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+
+            <div class="brand-text">
+                Smart <span>Lost & Found</span>
+            </div>
+
+        </a>
+
+
+        <!-- MAIN NAVIGATION -->
+
+        {% if session.get("user_id") %}
+
+        <div class="nav-links">
+
+            <a href="{{ url_for('dashboard') }}">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('search') }}">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Search
+            </a>
+
+            <a href="{{ url_for('matches') }}">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                Smart Match
+            </a>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- RIGHT SIDE -->
+
+        <div class="nav-right">
+
+            {% if session.get("user_id") %}
+
+                <!-- USER PROFILE -->
+
+                <div class="user-box">
+
+                    <div class="user-avatar">
+                        {{ session.get("user_name", "U")[0]|upper }}
+                    </div>
+
+                    <div class="user-info">
+
+                        <div class="user-name">
+                            {{ session.get("user_name", "User") }}
+                        </div>
+
+                        <div class="user-role">
+
+                            {% if session.get("user_role") == "admin" %}
+                                Administrator
+                            {% else %}
+                                Student / User
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- REPORT ITEM -->
+
+                <a href="{{ url_for('report_lost') }}"
+                   class="btn get-started">
+
+                    <i class="fa-solid fa-plus"></i>
+                    Report Item
+
+                </a>
+
+            {% else %}
+
+                <!-- LOGIN -->
+
+                <a href="{{ url_for('login') }}"
+                   class="btn btn-outline">
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Login
+
+                </a>
+
+                <!-- REGISTER -->
+
+                <a href="{{ url_for('register') }}"
+                   class="btn get-started">
+
+                    Get Started
+
+                </a>
+
+            {% endif %}
+
+
+            <!-- THREE DOT MENU -->
+
+            <div class="menu-wrapper">
+
+                <button
+                    class="menu-btn"
+                    id="menuButton"
+                    onclick="toggleQuickMenu()"
+                    type="button"
+                    aria-label="Open menu"
+                    aria-expanded="false"
+                    aria-controls="quickMenu">
+
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+
+                </button>
+
+
+                <div class="quick-menu"
+                     id="quickMenu">
+
+                    {% if session.get("user_id") %}
+
+                        <a href="{{ url_for('dashboard') }}">
+                            <i class="fa-solid fa-gauge-high"></i>
+                            Dashboard
+                        </a>
+
+                        <a href="{{ url_for('search') }}">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            Search Items
+                        </a>
+
+                        <a href="{{ url_for('matches') }}">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            Smart Matches
+                        </a>
+
+                        <a href="{{ url_for('track') }}">
+                            <i class="fa-solid fa-route"></i>
+                            Track Status
+                        </a>
+
+                        <div class="menu-divider"></div>
+
+
+                        {% if session.get("user_role") == "admin" %}
+
+                            <a href="{{ url_for('admin_dashboard') }}">
+                                <i class="fa-solid fa-user-shield"></i>
+                                Admin Panel
+                            </a>
+
+                            <a href="{{ url_for('admin_claims') }}">
+                                <i class="fa-solid fa-clipboard-check"></i>
+                                Manage Claims
+                            </a>
+
+                            <div class="menu-divider"></div>
+
+                        {% endif %}
+
+
+                        <a href="{{ url_for('about') }}">
+                            <i class="fa-solid fa-circle-info"></i>
+                            About Us
+                        </a>
+
+                        <a href="{{ url_for('how_it_works') }}">
+                            <i class="fa-solid fa-circle-question"></i>
+                            How It Works
+                        </a>
+
+                        <a href="{{ url_for('contact') }}">
+                            <i class="fa-solid fa-envelope"></i>
+                            Contact Us
+                        </a>
+
+                        <a href="{{ url_for('help_page') }}">
+                            <i class="fa-solid fa-life-ring"></i>
+                            Help & Support
+                        </a>
+
+                        <a href="{{ url_for('privacy') }}">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            Privacy Policy
+                        </a>
+
+                        <div class="menu-divider"></div>
+
+                        <a href="{{ url_for('logout') }}"
+                           class="logout-link">
+
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Logout
+
+                        </a>
+
+                    {% else %}
+
+                        <a href="{{ url_for('about') }}">
+                            <i class="fa-solid fa-circle-info"></i>
+                            About Us
+                        </a>
+
+                        <a href="{{ url_for('how_it_works') }}">
+                            <i class="fa-solid fa-circle-question"></i>
+                            How It Works
+                        </a>
+
+                        <a href="{{ url_for('contact') }}">
+                            <i class="fa-solid fa-envelope"></i>
+                            Contact Us
+                        </a>
+
+                        <a href="{{ url_for('help_page') }}">
+                            <i class="fa-solid fa-life-ring"></i>
+                            Help & Support
+                        </a>
+
+                        <a href="{{ url_for('privacy') }}">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            Privacy Policy
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+     FLASH MESSAGES
+===================================================== -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        <div class="flash-container">
+
+            {% for category, message in messages %}
+
+                <div class="flash {{ category }}">
+
+                    {% if category == "success" %}
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                    {% elif category == "error" %}
+
+                        <i class="fa-solid fa-circle-exclamation"></i>
+
+                    {% elif category == "warning" %}
+
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    {% else %}
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                    {% endif %}
+
+                    <span>{{ message }}</span>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+{% endwith %}
+
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<main>
+
+    <div class="page-container">
+
+        {% if request.endpoint not in ["home", "login", "register"] %}
+
+            <a href="javascript:history.back()"
+               class="back-btn">
+
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
+
+            </a>
+
+        {% endif %}
+
+
+        {% block content %}{% endblock %}
+
+    </div>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <div class="footer-container">
+
+        <div class="footer-grid">
+
+            <!-- ABOUT -->
+
+            <div>
+
+                <div class="footer-brand">
+                    Smart Lost & Found
+                </div>
+
+                <p class="footer-description">
+                    A smart campus platform designed to help students
+                    and staff report, search, match and recover lost
+                    belongings quickly and efficiently.
+                </p>
+
+            </div>
+
+
+            <!-- QUICK LINKS -->
+
+            <div>
+
+                <div class="footer-title">
+                    Quick Links
+                </div>
+
+                <div class="footer-links">
+
+                    <a href="{{ url_for('home') }}">
+                        Home
+                    </a>
+
+                    <a href="{{ url_for('about') }}">
+                        About Us
+                    </a>
+
+                    <a href="{{ url_for('how_it_works') }}">
+                        How It Works
+                    </a>
+
+                    <a href="{{ url_for('contact') }}">
+                        Contact Us
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUPPORT -->
+
+            <div>
+
+                <div class="footer-title">
+                    Support
+                </div>
+
+                <div class="footer-links">
+
+                    <a href="{{ url_for('help_page') }}">
+                        Help & Support
+                    </a>
+
+                    <a href="{{ url_for('privacy') }}">
+                        Privacy Policy
+                    </a>
+
+                    {% if session.get("user_id") %}
+
+                        <a href="{{ url_for('search') }}">
+                            Search Items
+                        </a>
+
+                        <a href="{{ url_for('matches') }}">
+                            Smart Matches
+                        </a>
+
+                        <a href="{{ url_for('track') }}">
+                            Track Status
+                        </a>
+
+                    {% else %}
+
+                        <a href="{{ url_for('login') }}">
+                            Login
+                        </a>
+
+                        <a href="{{ url_for('register') }}">
+                            Create Account
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FOOTER BOTTOM -->
+
+        <div class="footer-bottom">
+
+            <div>
+                © 2026 Smart Lost & Found Management System
+            </div>
+
+            <div>
+                Mini Project-I
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+    function toggleQuickMenu() {
+
+        const menu = document.getElementById("quickMenu");
+        const button = document.getElementById("menuButton");
+
+        if (!menu) {
+            return;
+        }
+
+        const isOpen = menu.classList.toggle("show");
+
+        if (button) {
+            button.setAttribute(
+                "aria-expanded",
+                isOpen ? "true" : "false"
+            );
+        }
+
+    }
+
+
+    /* Close menu when clicking outside */
+
+    document.addEventListener("click", function(event) {
+
+        const wrapper = document.querySelector(".menu-wrapper");
+        const menu = document.getElementById("quickMenu");
+        const button = document.getElementById("menuButton");
+
+        if (!wrapper || !menu) {
+            return;
+        }
+
+        if (!wrapper.contains(event.target)) {
+
+            menu.classList.remove("show");
+
+            if (button) {
+                button.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+            }
+
+        }
+
+    });
+
+
+    /* Close menu with Escape key */
+
+    document.addEventListener("keydown", function(event) {
+
+        if (event.key === "Escape") {
+
+            const menu = document.getElementById("quickMenu");
+            const button = document.getElementById("menuButton");
+
+            if (menu) {
+                menu.classList.remove("show");
+            }
+
+            if (button) {
+                button.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+            }
+
+        }
+
+    });
+
+
+    /* Auto-hide flash messages */
+
+    setTimeout(function() {
+
+        const flashes = document.querySelectorAll(".flash");
+
+        flashes.forEach(function(flash) {
+
+            flash.style.transition =
+                "opacity 0.4s ease, transform 0.4s ease";
+
+            flash.style.opacity = "0";
+            flash.style.transform = "translateX(20px)";
+
+            setTimeout(function() {
+
+                if (flash && flash.parentNode) {
+                    flash.remove();
+                }
+
+            }, 400);
+
+        });
+
+    }, 4500);
+
+</script>
+
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

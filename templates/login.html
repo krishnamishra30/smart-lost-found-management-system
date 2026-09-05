@@ -1,0 +1,1161 @@
+{% extends "base.html" %}
+
+{% block title %}
+Login | Smart Lost & Found
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+    /* =====================================================
+       LOGIN PAGE
+    ===================================================== */
+
+    .login-page {
+        min-height: 650px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 35px 0;
+    }
+
+
+    .login-wrapper {
+        width: 100%;
+        max-width: 950px;
+
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        background: #ffffff;
+
+        border: 1px solid #e7ebf2;
+
+        border-radius: 24px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 20px 60px rgba(15, 23, 42, 0.09);
+    }
+
+
+    /* =====================================================
+       LEFT INFORMATION PANEL
+    ===================================================== */
+
+    .login-info {
+        position: relative;
+
+        padding: 50px 45px;
+
+        background:
+            linear-gradient(
+                145deg,
+                #1d4ed8,
+                #4f46e5
+            );
+
+        color: white;
+
+        overflow: hidden;
+    }
+
+
+    .login-info::before {
+        content: "";
+
+        position: absolute;
+
+        width: 280px;
+        height: 280px;
+
+        border-radius: 50%;
+
+        background: rgba(255,255,255,0.08);
+
+        top: -100px;
+        right: -100px;
+    }
+
+
+    .login-info::after {
+        content: "";
+
+        position: absolute;
+
+        width: 220px;
+        height: 220px;
+
+        border-radius: 50%;
+
+        background: rgba(255,255,255,0.06);
+
+        bottom: -120px;
+        left: -90px;
+    }
+
+
+    .login-brand {
+        position: relative;
+        z-index: 2;
+
+        display: flex;
+        align-items: center;
+
+        gap: 11px;
+
+        margin-bottom: 65px;
+    }
+
+
+    .login-brand-icon {
+        width: 43px;
+        height: 43px;
+
+        border-radius: 12px;
+
+        background: rgba(255,255,255,0.16);
+
+        border: 1px solid rgba(255,255,255,0.20);
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        font-size: 17px;
+    }
+
+
+    .login-brand-text strong {
+        display: block;
+
+        font-size: 14px;
+
+        margin-bottom: 3px;
+    }
+
+
+    .login-brand-text span {
+        font-size: 9px;
+
+        color: #dbeafe;
+    }
+
+
+    .login-info-content {
+        position: relative;
+
+        z-index: 2;
+    }
+
+
+    .login-info-content .small-title {
+        display: inline-block;
+
+        padding: 6px 10px;
+
+        border-radius: 20px;
+
+        background: rgba(255,255,255,0.12);
+
+        border: 1px solid rgba(255,255,255,0.15);
+
+        font-size: 9px;
+
+        font-weight: 700;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.8px;
+
+        margin-bottom: 16px;
+    }
+
+
+    .login-info-content h2 {
+        font-size: 31px;
+
+        line-height: 1.2;
+
+        letter-spacing: -0.7px;
+
+        margin-bottom: 15px;
+    }
+
+
+    .login-info-content > p {
+        color: #dbeafe;
+
+        font-size: 12px;
+
+        line-height: 1.8;
+
+        max-width: 350px;
+
+        margin-bottom: 30px;
+    }
+
+
+    /* =====================================================
+       FEATURES
+    ===================================================== */
+
+    .login-features {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+
+    .login-feature {
+        display: flex;
+
+        align-items: center;
+
+        gap: 11px;
+    }
+
+
+    .login-feature-icon {
+        width: 31px;
+        height: 31px;
+
+        flex-shrink: 0;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+
+        background: rgba(255,255,255,0.12);
+
+        color: white;
+
+        font-size: 11px;
+    }
+
+
+    .login-feature span {
+        font-size: 10px;
+
+        color: #e0e7ff;
+
+        font-weight: 600;
+    }
+
+
+    /* =====================================================
+       RIGHT FORM SECTION
+    ===================================================== */
+
+    .login-form-section {
+        padding: 50px 45px;
+
+        display: flex;
+
+        flex-direction: column;
+
+        justify-content: center;
+    }
+
+
+    .form-header {
+        margin-bottom: 28px;
+    }
+
+
+    .form-header h1 {
+        font-size: 27px;
+
+        letter-spacing: -0.5px;
+
+        color: #172033;
+
+        margin-bottom: 7px;
+    }
+
+
+    .form-header p {
+        color: #7a8495;
+
+        font-size: 12px;
+
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+       FORM
+    ===================================================== */
+
+    .login-form {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 17px;
+    }
+
+
+    .form-group {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 7px;
+    }
+
+
+    .form-label {
+        font-size: 11px;
+
+        font-weight: 700;
+
+        color: #374151;
+    }
+
+
+    .input-wrapper {
+        position: relative;
+
+        width: 100%;
+    }
+
+
+    .input-icon {
+        position: absolute;
+
+        left: 14px;
+
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        color: #94a3b8;
+
+        font-size: 12px;
+
+        pointer-events: none;
+
+        z-index: 2;
+    }
+
+
+    .form-input {
+        width: 100%;
+
+        height: 45px;
+
+        padding: 0 42px;
+
+        border: 1px solid #dfe5ee;
+
+        border-radius: 10px;
+
+        background: #fafbfc;
+
+        color: #172033;
+
+        font-size: 12px;
+
+        outline: none;
+
+        transition: 0.2s ease;
+
+        box-sizing: border-box;
+    }
+
+
+    .form-input::placeholder {
+        color: #a1a9b7;
+    }
+
+
+    .form-input:focus {
+        background: #ffffff;
+
+        border-color: #2563eb;
+
+        box-shadow:
+            0 0 0 3px rgba(37,99,235,0.08);
+    }
+
+
+    /* =====================================================
+       PASSWORD EYE BUTTON
+    ===================================================== */
+
+    .password-toggle {
+        position: absolute;
+
+        right: 8px;
+
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        width: 32px;
+        height: 32px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border: none;
+
+        border-radius: 7px;
+
+        background: transparent;
+
+        color: #94a3b8;
+
+        font-size: 12px;
+
+        padding: 0;
+
+        cursor: pointer;
+
+        z-index: 5;
+
+        transition: 0.2s ease;
+    }
+
+
+    .password-toggle:hover {
+        background: #eef2ff;
+
+        color: #2563eb;
+    }
+
+
+    .password-toggle:focus {
+        outline: none;
+
+        box-shadow:
+            0 0 0 2px rgba(37,99,235,0.15);
+    }
+
+
+    /* =====================================================
+       FORM OPTIONS
+    ===================================================== */
+
+    .form-options {
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        margin-top: -2px;
+    }
+
+
+    .remember-me {
+        display: flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        color: #64748b;
+
+        font-size: 10px;
+
+        cursor: pointer;
+    }
+
+
+    .remember-me input {
+        width: 14px;
+        height: 14px;
+
+        accent-color: #2563eb;
+
+        cursor: pointer;
+    }
+
+
+    .forgot-link {
+        color: #2563eb;
+
+        font-size: 10px;
+
+        font-weight: 700;
+
+        text-decoration: none;
+    }
+
+
+    .forgot-link:hover {
+        text-decoration: underline;
+    }
+
+
+    /* =====================================================
+       LOGIN BUTTON
+    ===================================================== */
+
+    .login-button {
+        width: 100%;
+
+        height: 46px;
+
+        border: none;
+
+        border-radius: 10px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+        color: white;
+
+        font-size: 12px;
+
+        font-weight: 800;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 8px;
+
+        box-shadow:
+            0 8px 20px rgba(37,99,235,0.18);
+
+        cursor: pointer;
+
+        transition: 0.2s ease;
+    }
+
+
+    .login-button:hover {
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 11px 25px rgba(37,99,235,0.24);
+    }
+
+
+    .login-button:active {
+        transform: translateY(0);
+    }
+
+
+    /* =====================================================
+       DIVIDER
+    ===================================================== */
+
+    .login-divider {
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        margin: 23px 0 20px;
+
+        color: #a1a9b7;
+
+        font-size: 9px;
+    }
+
+
+    .login-divider::before,
+    .login-divider::after {
+        content: "";
+
+        height: 1px;
+
+        flex: 1;
+
+        background: #edf0f5;
+    }
+
+
+    /* =====================================================
+       REGISTER BOX
+    ===================================================== */
+
+    .register-box {
+        text-align: center;
+
+        padding: 14px;
+
+        background: #f8fafc;
+
+        border: 1px solid #edf0f5;
+
+        border-radius: 11px;
+
+        font-size: 10px;
+
+        color: #64748b;
+    }
+
+
+    .register-box a {
+        color: #2563eb;
+
+        font-weight: 800;
+
+        margin-left: 4px;
+
+        text-decoration: none;
+    }
+
+
+    .register-box a:hover {
+        text-decoration: underline;
+    }
+
+
+    /* =====================================================
+       SECURITY NOTE
+    ===================================================== */
+
+    .security-note {
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 6px;
+
+        color: #94a3b8;
+
+        font-size: 9px;
+
+        margin-top: 18px;
+    }
+
+
+    .security-note i {
+        color: #16a34a;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 850px) {
+
+        .login-wrapper {
+            grid-template-columns: 1fr;
+
+            max-width: 550px;
+        }
+
+
+        .login-info {
+            padding: 35px;
+        }
+
+
+        .login-brand {
+            margin-bottom: 30px;
+        }
+
+
+        .login-info-content h2 {
+            font-size: 27px;
+        }
+
+
+        .login-features {
+            flex-direction: row;
+
+            flex-wrap: wrap;
+        }
+
+
+        .login-feature {
+            flex: 1;
+
+            min-width: 150px;
+        }
+
+    }
+
+
+    @media (max-width: 550px) {
+
+        .login-page {
+            padding: 15px 0;
+        }
+
+
+        .login-wrapper {
+            border-radius: 18px;
+        }
+
+
+        .login-info {
+            padding: 30px 25px;
+        }
+
+
+        .login-form-section {
+            padding: 32px 25px;
+        }
+
+
+        .login-info-content h2 {
+            font-size: 24px;
+        }
+
+
+        .login-features {
+            display: none;
+        }
+
+
+        .form-header h1 {
+            font-size: 24px;
+        }
+
+    }
+
+</style>
+
+
+<div class="login-page">
+
+    <div class="login-wrapper">
+
+
+        <!-- =================================================
+             LEFT PANEL
+        ================================================= -->
+
+        <div class="login-info">
+
+
+            <div class="login-brand">
+
+                <div class="login-brand-icon">
+
+                    <i class="fa-solid fa-magnifying-glass-location"></i>
+
+                </div>
+
+
+                <div class="login-brand-text">
+
+                    <strong>
+                        Smart Lost & Found
+                    </strong>
+
+                    <span>
+                        Campus Recovery Platform
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="login-info-content">
+
+
+                <span class="small-title">
+                    Welcome Back
+                </span>
+
+
+                <h2>
+                    Your lost item
+                    journey starts here.
+                </h2>
+
+
+                <p>
+                    Sign in to manage your reports, discover
+                    possible matches, submit claims and track
+                    your recovery status.
+                </p>
+
+
+                <div class="login-features">
+
+
+                    <div class="login-feature">
+
+                        <div class="login-feature-icon">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                        </div>
+
+                        <span>
+                            Search lost & found items
+                        </span>
+
+                    </div>
+
+
+                    <div class="login-feature">
+
+                        <div class="login-feature-icon">
+
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                        </div>
+
+                        <span>
+                            Discover smart matches
+                        </span>
+
+                    </div>
+
+
+                    <div class="login-feature">
+
+                        <div class="login-feature-icon">
+
+                            <i class="fa-solid fa-chart-line"></i>
+
+                        </div>
+
+                        <span>
+                            Track your reports & claims
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             RIGHT LOGIN FORM
+        ================================================= -->
+
+        <div class="login-form-section">
+
+
+            <div class="form-header">
+
+                <h1>
+                    Sign in to your account
+                </h1>
+
+                <p>
+                    Enter your credentials to continue to
+                    your Smart Lost & Found dashboard.
+                </p>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('login') }}"
+                class="login-form"
+                autocomplete="off">
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label
+                        class="form-label"
+                        for="email">
+
+                        Email Address
+
+                    </label>
+
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-envelope input-icon"></i>
+
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-input"
+                            placeholder="Enter your email address"
+                            required
+                            autocomplete="off"
+                            autocapitalize="none"
+                            spellcheck="false">
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label
+                        class="form-label"
+                        for="loginPassword">
+
+                        Password
+
+                    </label>
+
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-lock input-icon"></i>
+
+
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            name="password"
+                            class="form-input"
+                            placeholder="Enter your password"
+                            required
+                            autocomplete="new-password">
+
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="passwordToggle"
+                            onclick="togglePassword()"
+                            aria-label="Show password"
+                            title="Show password">
+
+                            <i
+                                class="fa-solid fa-eye"
+                                id="passwordIcon">
+                            </i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- OPTIONS -->
+
+                <div class="form-options">
+
+                    <label class="remember-me">
+
+                        <input
+                            type="checkbox"
+                            name="remember"
+                            autocomplete="off">
+
+                        Remember me
+
+                    </label>
+
+
+                    <a
+                        href="#"
+                        class="forgot-link"
+                        onclick="forgotPassword(event)">
+
+                        Forgot password?
+
+                    </a>
+
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    type="submit"
+                    class="login-button">
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+
+                    Sign In
+
+                </button>
+
+
+            </form>
+
+
+            <!-- DIVIDER -->
+
+            <div class="login-divider">
+
+                OR
+
+            </div>
+
+
+            <!-- REGISTER -->
+
+            <div class="register-box">
+
+                Don't have an account?
+
+                <a href="{{ url_for('register') }}">
+                    Create an account
+                </a>
+
+            </div>
+
+
+            <!-- SECURITY -->
+
+            <div class="security-note">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                Your account information is protected.
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =====================================================
+       SHOW / HIDE PASSWORD
+    ===================================================== */
+
+    function togglePassword() {
+
+        const passwordInput =
+            document.getElementById("loginPassword");
+
+        const passwordIcon =
+            document.getElementById("passwordIcon");
+
+        const passwordButton =
+            document.getElementById("passwordToggle");
+
+
+        if (!passwordInput || !passwordIcon) {
+            return;
+        }
+
+
+        if (passwordInput.type === "password") {
+
+            passwordInput.type = "text";
+
+            passwordIcon.classList.remove("fa-eye");
+
+            passwordIcon.classList.add("fa-eye-slash");
+
+            passwordButton.setAttribute(
+                "aria-label",
+                "Hide password"
+            );
+
+            passwordButton.setAttribute(
+                "title",
+                "Hide password"
+            );
+
+        } else {
+
+            passwordInput.type = "password";
+
+            passwordIcon.classList.remove("fa-eye-slash");
+
+            passwordIcon.classList.add("fa-eye");
+
+            passwordButton.setAttribute(
+                "aria-label",
+                "Show password"
+            );
+
+            passwordButton.setAttribute(
+                "title",
+                "Show password"
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       FORGOT PASSWORD
+    ===================================================== */
+
+    function forgotPassword(event) {
+
+        event.preventDefault();
+
+        alert(
+            "Password recovery is currently managed by the system administrator."
+        );
+
+    }
+
+
+    /* =====================================================
+       PREVENT BROWSER AUTOFILL
+    ===================================================== */
+
+    window.addEventListener("load", function() {
+
+        const emailInput =
+            document.getElementById("email");
+
+        const passwordInput =
+            document.getElementById("loginPassword");
+
+
+        if (emailInput) {
+
+            emailInput.setAttribute(
+                "autocomplete",
+                "off"
+            );
+
+        }
+
+
+        if (passwordInput) {
+
+            passwordInput.setAttribute(
+                "autocomplete",
+                "new-password"
+            );
+
+        }
+
+    });
+
+</script>
+
+{% endblock %}

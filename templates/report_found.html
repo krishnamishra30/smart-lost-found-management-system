@@ -1,0 +1,959 @@
+{% extends "base.html" %}
+
+{% block title %}Report Found Item | Smart Lost & Found{% endblock %}
+
+{% block content %}
+
+<style>
+    .report-page {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 35px 20px 60px;
+    }
+
+    .report-header {
+        margin-bottom: 28px;
+    }
+
+    .report-header .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #16a34a;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        margin-bottom: 10px;
+    }
+
+    .report-header h1 {
+        margin: 0 0 10px;
+        font-size: 34px;
+        line-height: 1.2;
+        color: #111827;
+    }
+
+    .report-header p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 15px;
+        max-width: 720px;
+        line-height: 1.7;
+    }
+
+    .report-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: 25px;
+        align-items: start;
+    }
+
+    .form-card,
+    .info-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    .form-card {
+        padding: 30px;
+    }
+
+    .form-card-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding-bottom: 22px;
+        margin-bottom: 25px;
+        border-bottom: 1px solid #eef0f3;
+    }
+
+    .form-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f0fdf4;
+        color: #16a34a;
+        font-size: 20px;
+    }
+
+    .form-card-header h2 {
+        margin: 0 0 4px;
+        font-size: 20px;
+        color: #111827;
+    }
+
+    .form-card-header p {
+        margin: 0;
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    .form-section {
+        margin-bottom: 28px;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 17px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
+    .section-title i {
+        color: #16a34a;
+        font-size: 14px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group.full {
+        grid-column: 1 / -1;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #374151;
+    }
+
+    .required {
+        color: #dc2626;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background: #ffffff;
+        color: #111827;
+        font-family: inherit;
+        font-size: 14px;
+        padding: 12px 13px;
+        outline: none;
+        transition: 0.2s ease;
+    }
+
+    .form-input,
+    .form-select {
+        height: 46px;
+    }
+
+    .form-textarea {
+        min-height: 125px;
+        resize: vertical;
+        line-height: 1.6;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+        border-color: #16a34a;
+        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.10);
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+        color: #9ca3af;
+    }
+
+    .field-help {
+        margin-top: 6px;
+        font-size: 11px;
+        color: #9ca3af;
+        line-height: 1.5;
+    }
+
+    .textarea-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 6px;
+        font-size: 11px;
+        color: #9ca3af;
+    }
+
+    .submit-area {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding-top: 8px;
+        border-top: 1px solid #eef0f3;
+    }
+
+    .submit-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        color: #6b7280;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .submit-note i {
+        color: #16a34a;
+        margin-top: 2px;
+    }
+
+    .submit-btn {
+        border: none;
+        border-radius: 10px;
+        padding: 13px 22px;
+        background: #16a34a;
+        color: #ffffff;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        transition: 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .submit-btn:hover {
+        background: #15803d;
+        transform: translateY(-1px);
+        box-shadow: 0 7px 18px rgba(22, 163, 74, 0.22);
+    }
+
+    .info-column {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .info-card {
+        padding: 23px;
+    }
+
+    .info-card h3 {
+        margin: 0 0 15px;
+        font-size: 16px;
+        color: #111827;
+    }
+
+    .tip-item {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .tip-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .tip-icon {
+        flex: 0 0 34px;
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: #f0fdf4;
+        color: #16a34a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+    }
+
+    .tip-content strong {
+        display: block;
+        margin-bottom: 3px;
+        color: #374151;
+        font-size: 13px;
+    }
+
+    .tip-content span {
+        display: block;
+        color: #6b7280;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .process-card {
+        background: #111827;
+        color: #ffffff;
+        border: none;
+    }
+
+    .process-card h3 {
+        color: #ffffff;
+    }
+
+    .process-step {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 17px;
+    }
+
+    .process-step:last-child {
+        margin-bottom: 0;
+    }
+
+    .step-number {
+        flex: 0 0 28px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .process-step strong {
+        display: block;
+        font-size: 12px;
+        margin-bottom: 3px;
+    }
+
+    .process-step span {
+        color: #cbd5e1;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    .responsibility-box {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 14px;
+        border-radius: 11px;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+    }
+
+    .responsibility-box i {
+        color: #16a34a;
+        margin-top: 2px;
+    }
+
+    .responsibility-box strong {
+        display: block;
+        color: #374151;
+        font-size: 12px;
+        margin-bottom: 3px;
+    }
+
+    .responsibility-box span {
+        display: block;
+        color: #6b7280;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+        .report-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .info-column {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 680px) {
+        .report-page {
+            padding: 25px 15px 45px;
+        }
+
+        .report-header h1 {
+            font-size: 28px;
+        }
+
+        .form-card {
+            padding: 21px;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .form-group.full {
+            grid-column: auto;
+        }
+
+        .info-column {
+            display: flex;
+        }
+
+        .submit-area {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .submit-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="report-page">
+
+    <!-- HEADER -->
+    <div class="report-header">
+
+        <div class="eyebrow">
+            <i class="fa-solid fa-hand-holding-heart"></i>
+            Found Item Report
+        </div>
+
+        <h1>Report a Found Item</h1>
+
+        <p>
+            Found something on campus? Report it here so the rightful owner
+            can identify it and start the recovery process.
+        </p>
+
+    </div>
+
+
+    <div class="report-layout">
+
+        <!-- MAIN FORM -->
+        <div class="form-card">
+
+            <div class="form-card-header">
+
+                <div class="form-icon">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+
+                <div>
+                    <h2>Found Item Information</h2>
+                    <p>Provide accurate details about the item you found.</p>
+                </div>
+
+            </div>
+
+
+            <form method="POST"
+                  action="{{ url_for('report_found') }}"
+                  autocomplete="off">
+
+                <!-- BASIC INFORMATION -->
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <i class="fa-solid fa-tag"></i>
+                        Basic Information
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label class="form-label" for="item_name">
+                                Item Name <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="item_name"
+                                name="item_name"
+                                class="form-input"
+                                placeholder="Example: Black Wallet"
+                                required
+                                maxlength="150"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label class="form-label" for="category">
+                                Category <span class="required">*</span>
+                            </label>
+
+                            <select
+                                id="category"
+                                name="category"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">Select category</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Documents">Documents</option>
+                                <option value="Wallet">Wallet</option>
+                                <option value="Keys">Keys</option>
+                                <option value="Bag">Bag</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Jewellery">Jewellery</option>
+                                <option value="Books">Books</option>
+                                <option value="Accessories">Accessories</option>
+                                <option value="Other">Other</option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label class="form-label" for="found_location">
+                                Found Location <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="found_location"
+                                name="found_location"
+                                class="form-input"
+                                placeholder="Example: College Library"
+                                required
+                                maxlength="200"
+                            >
+
+                            <div class="field-help">
+                                Mention the exact campus area, building, room or nearby location.
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label class="form-label" for="found_date">
+                                Found Date <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="date"
+                                id="found_date"
+                                name="found_date"
+                                class="form-input"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <i class="fa-solid fa-align-left"></i>
+                        Description
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="form-label" for="description">
+                            Detailed Description <span class="required">*</span>
+                        </label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            class="form-textarea"
+                            placeholder="Describe what you found. Include brand, model, size, shape and visible characteristics."
+                            required
+                            maxlength="1000"
+                        ></textarea>
+
+                        <div class="textarea-meta">
+                            <span>Clear details help the owner identify the item.</span>
+                            <span id="descriptionCount">0 / 1000</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- IDENTIFICATION -->
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <i class="fa-solid fa-fingerprint"></i>
+                        Identification Details
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label class="form-label" for="color">
+                                Color
+                            </label>
+
+                            <input
+                                type="text"
+                                id="color"
+                                name="color"
+                                class="form-input"
+                                placeholder="Example: Black"
+                                maxlength="50"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label class="form-label" for="image">
+                                Image URL
+                            </label>
+
+                            <input
+                                type="text"
+                                id="image"
+                                name="image"
+                                class="form-input"
+                                placeholder="Optional image URL"
+                                maxlength="255"
+                            >
+
+                            <div class="field-help">
+                                Add an image URL if you have one available.
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group full">
+
+                            <label class="form-label" for="identification_details">
+                                Unique Identification Details
+                            </label>
+
+                            <textarea
+                                id="identification_details"
+                                name="identification_details"
+                                class="form-textarea"
+                                placeholder="Example: Scratch on the left side, blue sticker, initials, unique mark or other visible details."
+                                maxlength="1000"
+                            ></textarea>
+
+                            <div class="field-help">
+                                Do not include sensitive personal information unless it is necessary.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RESPONSIBILITY NOTICE -->
+                <div class="responsibility-box">
+
+                    <i class="fa-solid fa-shield-heart"></i>
+
+                    <div>
+
+                        <strong>Help return the item safely.</strong>
+
+                        <span>
+                            Please keep the found item secure and provide truthful
+                            information so the rightful owner can identify it.
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <br>
+
+
+                <!-- SUBMIT -->
+                <div class="submit-area">
+
+                    <div class="submit-note">
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                        <span>
+                            Review the item details before submitting your found report.
+                        </span>
+
+                    </div>
+
+
+                    <button type="submit" class="submit-btn">
+
+                        <i class="fa-solid fa-paper-plane"></i>
+
+                        Submit Found Report
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- RIGHT COLUMN -->
+        <div class="info-column">
+
+
+            <!-- TIPS -->
+            <div class="info-card">
+
+                <h3>Tips for a Better Report</h3>
+
+
+                <div class="tip-item">
+
+                    <div class="tip-icon">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+
+                    <div class="tip-content">
+
+                        <strong>Mention where you found it</strong>
+
+                        <span>
+                            Give the most specific location possible.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="tip-item">
+
+                    <div class="tip-icon">
+                        <i class="fa-solid fa-calendar"></i>
+                    </div>
+
+                    <div class="tip-content">
+
+                        <strong>Add the correct date</strong>
+
+                        <span>
+                            Select the date when you found the item.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="tip-item">
+
+                    <div class="tip-icon">
+                        <i class="fa-solid fa-eye"></i>
+                    </div>
+
+                    <div class="tip-content">
+
+                        <strong>Describe visible features</strong>
+
+                        <span>
+                            Include color, brand, shape and unique marks.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="tip-item">
+
+                    <div class="tip-icon">
+                        <i class="fa-solid fa-handshake"></i>
+                    </div>
+
+                    <div class="tip-content">
+
+                        <strong>Help the rightful owner</strong>
+
+                        <span>
+                            Accurate information makes verification easier.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PROCESS -->
+            <div class="info-card process-card">
+
+                <h3>What Happens Next?</h3>
+
+
+                <div class="process-step">
+
+                    <div class="step-number">1</div>
+
+                    <div>
+
+                        <strong>Report Submitted</strong>
+
+                        <span>
+                            Your found item is added to the platform.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="process-step">
+
+                    <div class="step-number">2</div>
+
+                    <div>
+
+                        <strong>Smart Matching</strong>
+
+                        <span>
+                            The system compares it with existing lost reports.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="process-step">
+
+                    <div class="step-number">3</div>
+
+                    <div>
+
+                        <strong>Potential Owner</strong>
+
+                        <span>
+                            A matching user can review the found item.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="process-step">
+
+                    <div class="step-number">4</div>
+
+                    <div>
+
+                        <strong>Claim and Recovery</strong>
+
+                        <span>
+                            The owner can submit a claim for verification.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SMART MATCHING -->
+            <div class="info-card">
+
+                <h3>Smart Matching</h3>
+
+                <div class="responsibility-box">
+
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                    <div>
+
+                        <strong>Found items can create matches</strong>
+
+                        <span>
+                            Category, item name, description, location and color
+                            help the system identify possible lost-item matches.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const dateInput = document.getElementById("found_date");
+        const description = document.getElementById("description");
+        const descriptionCount = document.getElementById("descriptionCount");
+
+
+        // Prevent selecting a future date
+        if (dateInput) {
+
+            const today = new Date()
+                .toISOString()
+                .split("T")[0];
+
+            dateInput.max = today;
+        }
+
+
+        // Description character counter
+        if (description && descriptionCount) {
+
+            function updateDescriptionCount() {
+
+                descriptionCount.textContent =
+                    description.value.length + " / 1000";
+
+            }
+
+            description.addEventListener(
+                "input",
+                updateDescriptionCount
+            );
+
+            updateDescriptionCount();
+        }
+
+    });
+
+</script>
+
+{% endblock %}

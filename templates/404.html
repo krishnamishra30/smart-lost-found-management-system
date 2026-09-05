@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found | Smart Lost & Found{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    /* =====================================================
+       404 ERROR PAGE
+    ===================================================== */
+
+    .error-page {
+        min-height: 72vh;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 50px 20px;
+    }
+
+
+    /* =====================================================
+       ERROR CARD
+    ===================================================== */
+
+    .error-card {
+        width: 100%;
+
+        max-width: 680px;
+
+        text-align: center;
+
+        background: #ffffff;
+
+        border: 1px solid #e5eaf1;
+
+        padding: 55px 35px;
+
+        border-radius: 22px;
+
+        box-shadow:
+            0 15px 45px rgba(15, 23, 42, 0.08);
+    }
+
+
+    /* =====================================================
+       ERROR NUMBER
+    ===================================================== */
+
+    .error-number {
+        font-size: 88px;
+
+        font-weight: 900;
+
+        line-height: 1;
+
+        letter-spacing: -3px;
+
+        color: #2563eb;
+    }
+
+
+    /* =====================================================
+       ERROR ICON
+    ===================================================== */
+
+    .error-icon {
+        width: 65px;
+        height: 65px;
+
+        margin: 20px auto 14px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 18px;
+
+        background: #eef4ff;
+
+        color: #2563eb;
+
+        font-size: 27px;
+    }
+
+
+    /* =====================================================
+       HEADING
+    ===================================================== */
+
+    .error-card h1 {
+        margin: 0 0 10px;
+
+        font-size: 30px;
+
+        color: #172033;
+
+        line-height: 1.25;
+    }
+
+
+    /* =====================================================
+       DESCRIPTION
+    ===================================================== */
+
+    .error-card p {
+        max-width: 530px;
+
+        margin: 0 auto 30px;
+
+        color: #64748b;
+
+        font-size: 14px;
+
+        line-height: 1.7;
+    }
+
+
+    /* =====================================================
+       ACTIONS
+    ===================================================== */
+
+    .error-actions {
+        display: flex;
+
+        justify-content: center;
+
+        align-items: center;
+
+        gap: 12px;
+
+        flex-wrap: wrap;
+    }
+
+
+    .error-btn {
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+
+        min-width: 145px;
+
+        padding: 11px 18px;
+
+        border-radius: 9px;
+
+        text-decoration: none;
+
+        font-size: 12px;
+
+        font-weight: 800;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+    }
+
+
+    /* =====================================================
+       PRIMARY BUTTON
+    ===================================================== */
+
+    .error-btn-primary {
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+        color: #ffffff;
+
+        box-shadow:
+            0 5px 15px rgba(37, 99, 235, 0.18);
+    }
+
+    .error-btn-primary:hover {
+        color: #ffffff;
+
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 9px 22px rgba(37, 99, 235, 0.25);
+    }
+
+
+    /* =====================================================
+       SECONDARY BUTTON
+    ===================================================== */
+
+    .error-btn-secondary {
+        background: #f1f5f9;
+
+        color: #334155;
+
+        border: 1px solid #e2e8f0;
+    }
+
+    .error-btn-secondary:hover {
+        color: #1d4ed8;
+
+        background: #eef4ff;
+
+        border-color: #cddcff;
+
+        transform: translateY(-2px);
+    }
+
+
+    /* =====================================================
+       SUPPORT TEXT
+    ===================================================== */
+
+    .error-help {
+        margin-top: 25px;
+
+        padding-top: 18px;
+
+        border-top: 1px solid #edf0f5;
+
+        color: #94a3b8;
+
+        font-size: 11px;
+
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 600px) {
+
+        .error-page {
+            min-height: 68vh;
+
+            padding: 35px 15px;
+        }
+
+        .error-card {
+            padding: 40px 22px;
+
+            border-radius: 18px;
+        }
+
+        .error-number {
+            font-size: 70px;
+        }
+
+        .error-icon {
+            width: 58px;
+            height: 58px;
+
+            font-size: 24px;
+
+            border-radius: 15px;
+        }
+
+        .error-card h1 {
+            font-size: 25px;
+        }
+
+        .error-card p {
+            font-size: 13px;
+        }
+
+        .error-actions {
+            flex-direction: column;
+        }
+
+        .error-btn {
+            width: 100%;
+
+            max-width: 260px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="error-page">
+
+
+    <div class="error-card">
+
+
+        <!-- ERROR NUMBER -->
+
+        <div class="error-number">
+            404
+        </div>
+
+
+        <!-- ICON -->
+
+        <div class="error-icon">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+        </div>
+
+
+        <!-- HEADING -->
+
+        <h1>
+            Page Not Found
+        </h1>
+
+
+        <!-- DESCRIPTION -->
+
+        <p>
+            Sorry, the page you are looking for doesn't exist
+            or may have been moved. Please check the URL or
+            return to the Smart Lost & Found home page.
+        </p>
+
+
+        <!-- ACTION BUTTONS -->
+
+        <div class="error-actions">
+
+
+            <a
+                href="{{ url_for('home') }}"
+                class="error-btn error-btn-primary">
+
+                <i class="fa-solid fa-house"></i>
+
+                Go to Home
+
+            </a>
+
+
+            <a
+                href="javascript:history.back()"
+                class="error-btn error-btn-secondary">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Go Back
+
+            </a>
+
+
+        </div>
+
+
+        <!-- SUPPORT -->
+
+        <div class="error-help">
+
+            Can't find what you're looking for?
+            Use the navigation menu or visit
+            <strong>Help & Support</strong>.
+
+        </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}

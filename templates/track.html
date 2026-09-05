@@ -1,0 +1,1473 @@
+{% extends "base.html" %}
+
+{% block title %}Track & Recover | Smart Lost & Found{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    /* =====================================================
+       TRACK PAGE
+    ===================================================== */
+
+    .track-page {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 35px 25px 60px;
+    }
+
+
+    /* =====================================================
+       BACK BUTTON
+    ===================================================== */
+
+    .track-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        text-decoration: none;
+
+        padding: 9px 14px;
+
+        background: #ffffff;
+
+        border: 1px solid #e1e7f0;
+
+        border-radius: 9px;
+
+        color: #566174;
+
+        font-size: 12px;
+        font-weight: 700;
+
+        margin-bottom: 24px;
+
+        transition: all 0.2s ease;
+    }
+
+    .track-back:hover {
+        color: #2563eb;
+        background: #f5f8ff;
+        border-color: #cddcff;
+        transform: translateX(-2px);
+    }
+
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .track-hero {
+        background: #ffffff;
+
+        border: 1px solid #e7ebf2;
+
+        border-radius: 18px;
+
+        padding: 35px;
+
+        margin-bottom: 28px;
+
+        box-shadow:
+            0 8px 25px rgba(15, 23, 42, 0.05);
+
+        position: relative;
+        overflow: hidden;
+    }
+
+    .track-hero::after {
+        content: "";
+
+        position: absolute;
+
+        width: 180px;
+        height: 180px;
+
+        right: -60px;
+        top: -70px;
+
+        border-radius: 50%;
+
+        background: rgba(37, 99, 235, 0.05);
+    }
+
+    .track-label {
+        display: inline-flex;
+
+        align-items: center;
+        gap: 7px;
+
+        padding: 7px 11px;
+
+        background: #eef4ff;
+
+        color: #2563eb;
+
+        border-radius: 7px;
+
+        font-size: 11px;
+
+        font-weight: 800;
+
+        letter-spacing: 0.5px;
+
+        margin-bottom: 13px;
+    }
+
+    .track-hero h1 {
+        font-size: 30px;
+
+        color: #172033;
+
+        margin: 0 0 10px;
+
+        line-height: 1.2;
+    }
+
+    .track-hero p {
+        color: #697386;
+
+        font-size: 14px;
+
+        line-height: 1.7;
+
+        max-width: 680px;
+
+        margin: 0;
+    }
+
+
+    /* =====================================================
+       SECTION
+    ===================================================== */
+
+    .track-section {
+        margin-top: 28px;
+    }
+
+    .track-section-header {
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: flex-end;
+
+        gap: 20px;
+
+        margin-bottom: 15px;
+    }
+
+    .track-section-title h2 {
+        margin: 0;
+
+        font-size: 20px;
+
+        color: #172033;
+    }
+
+    .track-section-title p {
+        margin: 5px 0 0;
+
+        font-size: 12px;
+
+        color: #7b8494;
+    }
+
+
+    /* =====================================================
+       REPORT GRID
+    ===================================================== */
+
+    .track-reports-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 18px;
+    }
+
+
+    /* =====================================================
+       REPORT CARD
+    ===================================================== */
+
+    .track-report-card {
+        background: #ffffff;
+
+        border: 1px solid #e5eaf1;
+
+        border-radius: 15px;
+
+        padding: 20px;
+
+        box-shadow:
+            0 6px 20px rgba(15, 23, 42, 0.04);
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            border-color 0.2s ease;
+    }
+
+    .track-report-card:hover {
+        transform: translateY(-3px);
+
+        border-color: #d5def0;
+
+        box-shadow:
+            0 12px 28px rgba(15, 23, 42, 0.08);
+    }
+
+
+    .track-report-top {
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 12px;
+
+        margin-bottom: 14px;
+    }
+
+
+    .track-item-name {
+        font-size: 17px;
+
+        font-weight: 800;
+
+        color: #172033;
+
+        line-height: 1.35;
+
+        word-break: break-word;
+    }
+
+
+    /* =====================================================
+       REPORT TYPE BADGE
+    ===================================================== */
+
+    .track-type-badge {
+        display: inline-flex;
+
+        align-items: center;
+
+        white-space: nowrap;
+
+        padding: 5px 9px;
+
+        border-radius: 7px;
+
+        font-size: 10px;
+
+        font-weight: 800;
+    }
+
+    .track-type-lost {
+        background: #fff1f2;
+
+        color: #be123c;
+    }
+
+    .track-type-found {
+        background: #ecfdf5;
+
+        color: #047857;
+    }
+
+
+    /* =====================================================
+       STATUS
+    ===================================================== */
+
+    .track-status {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        padding: 6px 10px;
+
+        border-radius: 7px;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+        margin-bottom: 15px;
+    }
+
+    .track-status-lost {
+        background: #fff1f2;
+        color: #be123c;
+    }
+
+    .track-status-found {
+        background: #ecfdf5;
+        color: #047857;
+    }
+
+    .track-status-claimed {
+        background: #eef4ff;
+        color: #2563eb;
+    }
+
+    .track-status-returned {
+        background: #ecfdf5;
+        color: #047857;
+    }
+
+    .track-status-pending {
+        background: #fff7ed;
+        color: #c2410c;
+    }
+
+    .track-status-approved {
+        background: #ecfdf5;
+        color: #047857;
+    }
+
+    .track-status-rejected {
+        background: #fef2f2;
+        color: #b91c1c;
+    }
+
+    .track-status-collected {
+        background: #eef4ff;
+        color: #2563eb;
+    }
+
+    .track-status-default {
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+
+    /* =====================================================
+       REPORT DETAILS
+    ===================================================== */
+
+    .track-report-details {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+    }
+
+    .track-detail-box {
+        background: #f8fafc;
+
+        padding: 11px;
+
+        border-radius: 9px;
+
+        min-width: 0;
+    }
+
+    .track-detail-label {
+        font-size: 9px;
+
+        color: #8a94a6;
+
+        text-transform: uppercase;
+
+        font-weight: 700;
+
+        margin-bottom: 5px;
+
+        letter-spacing: 0.3px;
+    }
+
+    .track-detail-value {
+        font-size: 12px;
+
+        color: #374151;
+
+        font-weight: 600;
+
+        line-height: 1.45;
+
+        word-break: break-word;
+    }
+
+
+    /* =====================================================
+       CLAIM CARD
+    ===================================================== */
+
+    .track-claim-card {
+        background: #ffffff;
+
+        border: 1px solid #e5eaf1;
+
+        border-radius: 15px;
+
+        padding: 20px;
+
+        margin-bottom: 15px;
+
+        box-shadow:
+            0 6px 20px rgba(15, 23, 42, 0.04);
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .track-claim-card:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 12px 28px rgba(15, 23, 42, 0.07);
+    }
+
+
+    .track-claim-header {
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        gap: 15px;
+
+        margin-bottom: 16px;
+    }
+
+    .track-claim-id {
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        font-size: 12px;
+
+        font-weight: 800;
+
+        color: #667085;
+    }
+
+    .track-claim-id i {
+        color: #2563eb;
+    }
+
+
+    /* =====================================================
+       CLAIM STATUS
+    ===================================================== */
+
+    .track-claim-status {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        padding: 6px 10px;
+
+        border-radius: 7px;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+        white-space: nowrap;
+    }
+
+    .track-claim-pending {
+        background: #fff7ed;
+
+        color: #c2410c;
+    }
+
+    .track-claim-approved {
+        background: #ecfdf5;
+
+        color: #047857;
+    }
+
+    .track-claim-rejected {
+        background: #fef2f2;
+
+        color: #b91c1c;
+    }
+
+    .track-claim-returned {
+        background: #eef4ff;
+
+        color: #2563eb;
+    }
+
+    .track-claim-claimed {
+        background: #eef4ff;
+
+        color: #2563eb;
+    }
+
+    .track-claim-default {
+        background: #f1f5f9;
+
+        color: #475569;
+    }
+
+
+    /* =====================================================
+       CLAIM GRID
+    ===================================================== */
+
+    .track-claim-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 13px;
+    }
+
+    .track-claim-box {
+        background: #f8fafc;
+
+        padding: 13px;
+
+        border-radius: 10px;
+
+        min-width: 0;
+    }
+
+    .track-claim-box span {
+        display: block;
+
+        font-size: 9px;
+
+        color: #8a94a6;
+
+        text-transform: uppercase;
+
+        font-weight: 700;
+
+        margin-bottom: 5px;
+
+        letter-spacing: 0.3px;
+    }
+
+    .track-claim-box strong {
+        display: block;
+
+        font-size: 12px;
+
+        color: #374151;
+
+        line-height: 1.45;
+
+        word-break: break-word;
+    }
+
+
+    /* =====================================================
+       CLAIM MESSAGE
+    ===================================================== */
+
+    .track-claim-message {
+        margin-top: 15px;
+
+        padding: 13px 14px;
+
+        background: #f8fafc;
+
+        border-radius: 9px;
+
+        border: 1px solid #edf0f5;
+    }
+
+    .track-claim-message-label {
+        font-size: 9px;
+
+        color: #8a94a6;
+
+        text-transform: uppercase;
+
+        font-weight: 800;
+
+        margin-bottom: 5px;
+    }
+
+    .track-claim-message-text {
+        font-size: 12px;
+
+        color: #4b5563;
+
+        line-height: 1.65;
+
+        word-break: break-word;
+    }
+
+
+    /* =====================================================
+       ADMIN NOTE
+    ===================================================== */
+
+    .track-admin-note {
+        margin-top: 15px;
+
+        padding: 12px 14px;
+
+        background: #f5f8ff;
+
+        border-left: 3px solid #2563eb;
+
+        border-radius: 7px;
+
+        font-size: 12px;
+
+        color: #4b5563;
+
+        line-height: 1.6;
+
+        word-break: break-word;
+    }
+
+    .track-admin-note strong {
+        color: #172033;
+    }
+
+
+    /* =====================================================
+       EMPTY STATE
+    ===================================================== */
+
+    .track-empty {
+        background: #ffffff;
+
+        border: 1px solid #e5eaf1;
+
+        border-radius: 15px;
+
+        padding: 38px 25px;
+
+        text-align: center;
+
+        color: #7b8494;
+
+        font-size: 13px;
+
+        box-shadow:
+            0 6px 20px rgba(15, 23, 42, 0.03);
+    }
+
+    .track-empty-icon {
+        width: 55px;
+        height: 55px;
+
+        margin: 0 auto 14px;
+
+        border-radius: 15px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        background: #eef4ff;
+
+        color: #2563eb;
+
+        font-size: 20px;
+    }
+
+    .track-empty strong {
+        display: block;
+
+        color: #172033;
+
+        font-size: 15px;
+
+        margin-bottom: 6px;
+    }
+
+    .track-empty p {
+        margin: 0;
+
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+       CTA
+    ===================================================== */
+
+    .track-cta {
+        margin-top: 35px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #172554,
+                #1e40af
+            );
+
+        border-radius: 18px;
+
+        padding: 30px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 25px;
+
+        color: #ffffff;
+    }
+
+    .track-cta-content h2 {
+        margin: 0 0 6px;
+
+        font-size: 21px;
+    }
+
+    .track-cta-content p {
+        margin: 0;
+
+        font-size: 12px;
+
+        color: #dbeafe;
+
+        line-height: 1.6;
+    }
+
+    .track-cta-btn {
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 7px;
+
+        background: #ffffff;
+
+        color: #1d4ed8;
+
+        padding: 11px 17px;
+
+        border-radius: 9px;
+
+        text-decoration: none;
+
+        font-size: 12px;
+
+        font-weight: 800;
+
+        white-space: nowrap;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .track-cta-btn:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 8px 18px rgba(0, 0, 0, 0.15);
+
+        color: #1d4ed8;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 900px) {
+
+        .track-reports-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .track-claim-grid {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+
+        .track-cta {
+            flex-direction: column;
+
+            align-items: flex-start;
+        }
+
+    }
+
+
+    @media (max-width: 600px) {
+
+        .track-page {
+            padding: 25px 15px 45px;
+        }
+
+        .track-hero {
+            padding: 25px 20px;
+        }
+
+        .track-hero h1 {
+            font-size: 25px;
+        }
+
+        .track-section-header {
+            align-items: flex-start;
+
+            flex-direction: column;
+
+            gap: 5px;
+        }
+
+        .track-report-top {
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+
+        .track-report-details {
+            grid-template-columns: 1fr;
+        }
+
+        .track-claim-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .track-claim-header {
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+
+        .track-cta {
+            padding: 25px 20px;
+        }
+
+        .track-cta-btn {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="track-page">
+
+
+    <!-- =================================================
+         BACK
+    ================================================= -->
+
+    <a
+        href="javascript:history.back()"
+        class="track-back">
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+        Back
+
+    </a>
+
+
+    <!-- =================================================
+         HERO
+    ================================================= -->
+
+    <section class="track-hero">
+
+        <div class="track-label">
+
+            <i class="fa-solid fa-route"></i>
+
+            TRACK & RECOVER
+
+        </div>
+
+
+        <h1>
+            Track & Recover
+        </h1>
+
+
+        <p>
+            Track your submitted reports, monitor claim
+            status and stay updated throughout the recovery
+            process of your lost or found belongings.
+        </p>
+
+    </section>
+
+
+    <!-- =================================================
+         MY REPORTS
+    ================================================= -->
+
+    <section class="track-section">
+
+
+        <div class="track-section-header">
+
+            <div class="track-section-title">
+
+                <h2>
+                    My Item Reports
+                </h2>
+
+                <p>
+                    Monitor the current status of your
+                    lost and found reports.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if reports %}
+
+            <div class="track-reports-grid">
+
+                {% for report in reports %}
+
+                    <article class="track-report-card">
+
+
+                        <div class="track-report-top">
+
+                            <div class="track-item-name">
+
+                                {{ report.item_name }}
+
+                            </div>
+
+
+                            {% if report.report_type == "Lost" %}
+
+                                <span class="track-type-badge track-type-lost">
+
+                                    <i class="fa-solid fa-circle-exclamation"></i>
+
+                                    LOST ITEM
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="track-type-badge track-type-found">
+
+                                    <i class="fa-solid fa-circle-check"></i>
+
+                                    FOUND ITEM
+
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- STATUS -->
+
+                        {% set report_status =
+                            report.status|string|lower|trim
+                        %}
+
+
+                        {% if report_status == "lost" %}
+
+                            <span class="track-status track-status-lost">
+
+                                <i class="fa-solid fa-location-dot"></i>
+
+                                Lost
+
+                            </span>
+
+                        {% elif report_status == "found" %}
+
+                            <span class="track-status track-status-found">
+
+                                <i class="fa-solid fa-box-open"></i>
+
+                                Found
+
+                            </span>
+
+                        {% elif report_status == "claimed" %}
+
+                            <span class="track-status track-status-claimed">
+
+                                <i class="fa-solid fa-hand-holding"></i>
+
+                                Claimed
+
+                            </span>
+
+                        {% elif report_status == "returned" %}
+
+                            <span class="track-status track-status-returned">
+
+                                <i class="fa-solid fa-circle-check"></i>
+
+                                Returned
+
+                            </span>
+
+                        {% elif report_status == "pending" %}
+
+                            <span class="track-status track-status-pending">
+
+                                <i class="fa-solid fa-clock"></i>
+
+                                Pending
+
+                            </span>
+
+                        {% elif report_status == "approved" %}
+
+                            <span class="track-status track-status-approved">
+
+                                <i class="fa-solid fa-check"></i>
+
+                                Approved
+
+                            </span>
+
+                        {% elif report_status == "rejected" %}
+
+                            <span class="track-status track-status-rejected">
+
+                                <i class="fa-solid fa-xmark"></i>
+
+                                Rejected
+
+                            </span>
+
+                        {% elif report_status == "collected" %}
+
+                            <span class="track-status track-status-collected">
+
+                                <i class="fa-solid fa-truck"></i>
+
+                                Collected
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="track-status track-status-default">
+
+                                <i class="fa-solid fa-circle-info"></i>
+
+                                {{ report.status }}
+
+                            </span>
+
+                        {% endif %}
+
+
+                        <!-- DETAILS -->
+
+                        <div class="track-report-details">
+
+
+                            <div class="track-detail-box">
+
+                                <div class="track-detail-label">
+                                    Category
+                                </div>
+
+                                <div class="track-detail-value">
+                                    {{ report.category }}
+                                </div>
+
+                            </div>
+
+
+                            <div class="track-detail-box">
+
+                                <div class="track-detail-label">
+                                    Location
+                                </div>
+
+                                <div class="track-detail-value">
+                                    {{ report.location }}
+                                </div>
+
+                            </div>
+
+
+                            <div class="track-detail-box">
+
+                                <div class="track-detail-label">
+                                    Date
+                                </div>
+
+                                <div class="track-detail-value">
+                                    {{ report.item_date }}
+                                </div>
+
+                            </div>
+
+
+                            <div class="track-detail-box">
+
+                                <div class="track-detail-label">
+                                    Report Type
+                                </div>
+
+                                <div class="track-detail-value">
+                                    {{ report.report_type }}
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="track-empty">
+
+                <div class="track-empty-icon">
+
+                    <i class="fa-solid fa-file-circle-question"></i>
+
+                </div>
+
+                <strong>
+                    No reports found
+                </strong>
+
+                <p>
+                    You have not submitted any lost or
+                    found item reports yet.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- =================================================
+         CLAIM TRACKING
+    ================================================= -->
+
+    <section class="track-section">
+
+
+        <div class="track-section-header">
+
+            <div class="track-section-title">
+
+                <h2>
+                    Claim Tracking
+                </h2>
+
+                <p>
+                    Follow the verification status of
+                    your submitted claims.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if claims %}
+
+            {% for claim in claims %}
+
+                <article class="track-claim-card">
+
+
+                    <div class="track-claim-header">
+
+
+                        <div class="track-claim-id">
+
+                            <i class="fa-solid fa-file-shield"></i>
+
+                            Claim #{{ claim.claim_id }}
+
+                        </div>
+
+
+                        {% set claim_status =
+                            claim.claim_status|string|lower|trim
+                        %}
+
+
+                        {% if claim_status == "pending" %}
+
+                            <span class="track-claim-status track-claim-pending">
+
+                                <i class="fa-solid fa-clock"></i>
+
+                                Pending
+
+                            </span>
+
+                        {% elif claim_status == "approved" %}
+
+                            <span class="track-claim-status track-claim-approved">
+
+                                <i class="fa-solid fa-circle-check"></i>
+
+                                Approved
+
+                            </span>
+
+                        {% elif claim_status == "rejected" %}
+
+                            <span class="track-claim-status track-claim-rejected">
+
+                                <i class="fa-solid fa-circle-xmark"></i>
+
+                                Rejected
+
+                            </span>
+
+                        {% elif claim_status == "returned" %}
+
+                            <span class="track-claim-status track-claim-returned">
+
+                                <i class="fa-solid fa-box-open"></i>
+
+                                Returned
+
+                            </span>
+
+                        {% elif claim_status == "claimed" %}
+
+                            <span class="track-claim-status track-claim-claimed">
+
+                                <i class="fa-solid fa-hand-holding"></i>
+
+                                Claimed
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="track-claim-status track-claim-default">
+
+                                <i class="fa-solid fa-circle-info"></i>
+
+                                {{ claim.claim_status }}
+
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- CLAIM DETAILS -->
+
+                    <div class="track-claim-grid">
+
+
+                        <div class="track-claim-box">
+
+                            <span>
+                                Lost Item
+                            </span>
+
+                            <strong>
+                                {{ claim.lost_item_name }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="track-claim-box">
+
+                            <span>
+                                Found Item
+                            </span>
+
+                            <strong>
+                                {{ claim.found_item_name }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="track-claim-box">
+
+                            <span>
+                                Category
+                            </span>
+
+                            <strong>
+                                {{ claim.lost_category }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="track-claim-box">
+
+                            <span>
+                                Found Location
+                            </span>
+
+                            <strong>
+                                {{ claim.found_location }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="track-claim-box">
+
+                            <span>
+                                Submitted
+                            </span>
+
+                            <strong>
+                                {{ claim.created_at }}
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- CLAIM MESSAGE -->
+
+                    {% if claim.claim_message %}
+
+                        <div class="track-claim-message">
+
+                            <div class="track-claim-message-label">
+
+                                Claim Explanation
+
+                            </div>
+
+                            <div class="track-claim-message-text">
+
+                                {{ claim.claim_message }}
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- ADMIN NOTE -->
+
+                    {% if claim.admin_note %}
+
+                        <div class="track-admin-note">
+
+                            <strong>
+                                <i class="fa-solid fa-shield-halved"></i>
+                                Admin Note:
+                            </strong>
+
+                            {{ claim.admin_note }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                </article>
+
+            {% endfor %}
+
+
+        {% else %}
+
+            <div class="track-empty">
+
+                <div class="track-empty-icon">
+
+                    <i class="fa-solid fa-file-circle-question"></i>
+
+                </div>
+
+                <strong>
+                    No claims submitted
+                </strong>
+
+                <p>
+                    When you claim a possible match,
+                    its verification status will appear here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- =================================================
+         CTA
+    ================================================= -->
+
+    <section class="track-cta">
+
+
+        <div class="track-cta-content">
+
+            <h2>
+                Can't Find Your Item?
+            </h2>
+
+            <p>
+                Report your lost item and let our
+                Smart Matching system help you find
+                a possible match.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('report_lost') }}"
+            class="track-cta-btn">
+
+            <i class="fa-solid fa-plus"></i>
+
+            Report Lost Item
+
+        </a>
+
+    </section>
+
+
+</div>
+
+{% endblock %}

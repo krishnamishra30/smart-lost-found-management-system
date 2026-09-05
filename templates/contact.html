@@ -1,0 +1,472 @@
+
+{% extends "base.html" %}
+
+{% block title %}Contact Us | Smart Lost & Found{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-page {
+        min-height: calc(100vh - 150px);
+        background: #f6f8fb;
+        padding: 45px 20px 70px;
+    }
+
+    .contact-container {
+        max-width: 1050px;
+        margin: 0 auto;
+    }
+
+    .contact-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
+        color: #475569;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .contact-back:hover {
+        color: #2563eb;
+    }
+
+    .contact-hero {
+        background: linear-gradient(135deg, #1d4ed8, #2563eb);
+        color: white;
+        border-radius: 24px;
+        padding: 45px 30px;
+        text-align: center;
+        margin-bottom: 28px;
+        box-shadow: 0 18px 40px rgba(37, 99, 235, .18);
+    }
+
+    .contact-icon {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 17px;
+        border-radius: 20px;
+        background: rgba(255,255,255,.15);
+        border: 1px solid rgba(255,255,255,.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 29px;
+    }
+
+    .contact-hero h1 {
+        margin: 0 0 10px;
+        font-size: 37px;
+    }
+
+    .contact-hero p {
+        max-width: 700px;
+        margin: 0 auto;
+        color: rgba(255,255,255,.9);
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    .contact-grid {
+        display: grid;
+        grid-template-columns: .9fr 1.1fr;
+        gap: 24px;
+    }
+
+    .contact-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 8px 25px rgba(15,23,42,.05);
+    }
+
+    .contact-card h2 {
+        margin: 0 0 9px;
+        color: #0f172a;
+        font-size: 21px;
+    }
+
+    .contact-card > p {
+        margin: 0 0 22px;
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 15px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        margin-bottom: 12px;
+    }
+
+    .contact-item-icon {
+        width: 43px;
+        height: 43px;
+        flex-shrink: 0;
+        border-radius: 12px;
+        background: #eff6ff;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+    }
+
+    .contact-item-content {
+        min-width: 0;
+    }
+
+    .contact-item-label {
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 3px;
+    }
+
+    .contact-item-value {
+        color: #0f172a;
+        font-size: 14px;
+        font-weight: 700;
+        word-break: break-word;
+    }
+
+    .contact-item-value a {
+        color: #2563eb;
+        text-decoration: none;
+    }
+
+    .contact-item-value a:hover {
+        text-decoration: underline;
+    }
+
+    .support-box {
+        margin-top: 20px;
+        padding: 17px;
+        border-radius: 14px;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        color: #1e40af;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .support-box i {
+        margin-right: 7px;
+    }
+
+    .quick-links {
+        display: grid;
+        gap: 12px;
+    }
+
+    .quick-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 17px;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        background: #f8fafc;
+        text-decoration: none;
+        transition: .2s ease;
+    }
+
+    .quick-link:hover {
+        background: white;
+        border-color: #93c5fd;
+        transform: translateY(-1px);
+    }
+
+    .quick-link-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .quick-link-icon {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        border-radius: 11px;
+        background: #dbeafe;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .quick-link-text strong {
+        display: block;
+        color: #0f172a;
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
+
+    .quick-link-text span {
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .quick-link-arrow {
+        color: #94a3b8;
+    }
+
+    .contact-note {
+        margin-top: 24px;
+        padding: 22px;
+        border-radius: 17px;
+        background: #0f172a;
+        color: white;
+        text-align: center;
+    }
+
+    .contact-note h3 {
+        margin: 0 0 7px;
+        font-size: 18px;
+    }
+
+    .contact-note p {
+        margin: 0;
+        color: #cbd5e1;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 800px) {
+        .contact-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .contact-page {
+            padding: 28px 14px 50px;
+        }
+
+        .contact-hero {
+            padding: 35px 20px;
+            border-radius: 19px;
+        }
+
+        .contact-hero h1 {
+            font-size: 29px;
+        }
+
+        .contact-card {
+            padding: 21px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contact-page">
+    <div class="contact-container">
+
+        <a href="{{ url_for('home') }}" class="contact-back">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Home
+        </a>
+
+        <section class="contact-hero">
+            <div class="contact-icon">
+                <i class="fa-solid fa-headset"></i>
+            </div>
+
+            <h1>Contact Us</h1>
+
+            <p>
+                Need help with Smart Lost & Found? Get in touch with the
+                project team for questions, support, or feedback.
+            </p>
+        </section>
+
+        <div class="contact-grid">
+
+            <div class="contact-card">
+                <h2>Get In Touch</h2>
+
+                <p>
+                    For questions about reports, claims, smart matching,
+                    or general support, you can contact us using the
+                    information below.
+                </p>
+
+                <div class="contact-item">
+                    <div class="contact-item-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div class="contact-item-content">
+                        <div class="contact-item-label">Name</div>
+                        <div class="contact-item-value">
+                            Krishna Mishra
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-item-icon">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+
+                    <div class="contact-item-content">
+                        <div class="contact-item-label">Email</div>
+                        <div class="contact-item-value">
+                            <a href="mailto:krishnam30@gmail.com">
+                                krishnam30@gmail.com
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-item-icon">
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+
+                    <div class="contact-item-content">
+                        <div class="contact-item-label">Phone</div>
+                        <div class="contact-item-value">
+                            932XXXXXXX
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-item-icon">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+
+                    <div class="contact-item-content">
+                        <div class="contact-item-label">Instagram</div>
+                        <div class="contact-item-value">
+                            <a
+                                href="https://www.instagram.com/___krsna_____m__?igsi=MTMwaHI4ZDRncGxrYg=="
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Instagram Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="support-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    Please do not share passwords or other confidential
+                    account information while requesting support.
+                </div>
+            </div>
+
+            <div class="contact-card">
+                <h2>Quick Support</h2>
+
+                <p>
+                    You can also use the following sections of the system
+                    to find answers and understand how the platform works.
+                </p>
+
+                <div class="quick-links">
+
+                    <a href="{{ url_for('help_page') }}" class="quick-link">
+                        <div class="quick-link-left">
+                            <div class="quick-link-icon">
+                                <i class="fa-solid fa-circle-question"></i>
+                            </div>
+
+                            <div class="quick-link-text">
+                                <strong>Help & Support</strong>
+                                <span>
+                                    Frequently asked questions and guidance
+                                </span>
+                            </div>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-right quick-link-arrow"></i>
+                    </a>
+
+                    <a href="{{ url_for('how_it_works') }}" class="quick-link">
+                        <div class="quick-link-left">
+                            <div class="quick-link-icon">
+                                <i class="fa-solid fa-route"></i>
+                            </div>
+
+                            <div class="quick-link-text">
+                                <strong>How It Works</strong>
+                                <span>
+                                    Learn how the recovery process works
+                                </span>
+                            </div>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-right quick-link-arrow"></i>
+                    </a>
+
+                    <a href="{{ url_for('search') }}" class="quick-link">
+                        <div class="quick-link-left">
+                            <div class="quick-link-icon">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+
+                            <div class="quick-link-text">
+                                <strong>Search Items</strong>
+                                <span>
+                                    Find lost and found item reports
+                                </span>
+                            </div>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-right quick-link-arrow"></i>
+                    </a>
+
+                    {% if session.get('user_id') %}
+                    <a href="{{ url_for('track') }}" class="quick-link">
+                        <div class="quick-link-left">
+                            <div class="quick-link-icon">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+
+                            <div class="quick-link-text">
+                                <strong>Track & Status</strong>
+                                <span>
+                                    Track your reports and claims
+                                </span>
+                            </div>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-right quick-link-arrow"></i>
+                    </a>
+                    {% endif %}
+
+                </div>
+
+                <div class="contact-note">
+                    <h3>
+                        <i class="fa-solid fa-heart"></i>
+                        We're Here to Help
+                    </h3>
+
+                    <p>
+                        Smart Lost & Found is designed to make campus
+                        item recovery easier, faster, and more organized.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+

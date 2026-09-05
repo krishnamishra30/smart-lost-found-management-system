@@ -1,0 +1,420 @@
+
+{% extends "base.html" %}
+
+{% block title %}About Us | Smart Lost & Found{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-page {
+        min-height: calc(100vh - 150px);
+        background: #f6f8fb;
+        padding: 45px 20px 70px;
+    }
+
+    .about-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .about-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #475569;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 24px;
+    }
+
+    .about-back:hover {
+        color: #2563eb;
+    }
+
+    .about-hero {
+        background: linear-gradient(135deg, #1d4ed8, #2563eb);
+        color: white;
+        border-radius: 24px;
+        padding: 48px 35px;
+        text-align: center;
+        box-shadow: 0 18px 40px rgba(37, 99, 235, 0.18);
+        margin-bottom: 28px;
+    }
+
+    .about-icon {
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 18px;
+        border-radius: 20px;
+        background: rgba(255,255,255,.15);
+        border: 1px solid rgba(255,255,255,.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+    }
+
+    .about-hero h1 {
+        margin: 0 0 12px;
+        font-size: 38px;
+    }
+
+    .about-hero p {
+        max-width: 760px;
+        margin: 0 auto;
+        color: rgba(255,255,255,.9);
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    .about-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 8px 25px rgba(15,23,42,.05);
+    }
+
+    .about-card h2 {
+        margin: 0 0 14px;
+        color: #0f172a;
+        font-size: 21px;
+    }
+
+    .about-card h2 i {
+        color: #2563eb;
+        margin-right: 8px;
+    }
+
+    .about-card p {
+        margin: 0;
+        color: #64748b;
+        line-height: 1.75;
+        font-size: 15px;
+    }
+
+    .mission-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 25px rgba(15,23,42,.05);
+    }
+
+    .mission-card h2 {
+        margin: 0 0 12px;
+        color: #0f172a;
+        font-size: 21px;
+    }
+
+    .mission-card h2 i {
+        color: #2563eb;
+        margin-right: 8px;
+    }
+
+    .mission-card p {
+        margin: 0;
+        color: #64748b;
+        line-height: 1.8;
+        font-size: 15px;
+    }
+
+    .modules-title {
+        text-align: center;
+        margin: 35px 0 20px;
+    }
+
+    .modules-title h2 {
+        margin: 0 0 8px;
+        color: #0f172a;
+        font-size: 27px;
+    }
+
+    .modules-title p {
+        margin: 0;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .module-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .module-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 17px;
+        padding: 23px;
+        box-shadow: 0 6px 20px rgba(15,23,42,.04);
+    }
+
+    .module-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+        background: #eff6ff;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+        margin-bottom: 15px;
+    }
+
+    .module-card h3 {
+        margin: 0 0 7px;
+        color: #0f172a;
+        font-size: 16px;
+    }
+
+    .module-card p {
+        margin: 0;
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .about-cta {
+        margin-top: 28px;
+        padding: 30px;
+        border-radius: 20px;
+        background: #0f172a;
+        color: white;
+        text-align: center;
+    }
+
+    .about-cta h2 {
+        margin: 0 0 9px;
+        font-size: 23px;
+    }
+
+    .about-cta p {
+        margin: 0 0 20px;
+        color: #cbd5e1;
+        font-size: 14px;
+    }
+
+    .about-cta a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: #2563eb;
+        color: white;
+        border-radius: 11px;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 14px;
+    }
+
+    .about-cta a:hover {
+        background: #1d4ed8;
+    }
+
+    @media (max-width: 850px) {
+        .about-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .module-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .about-page {
+            padding: 28px 14px 50px;
+        }
+
+        .about-hero {
+            padding: 35px 22px;
+            border-radius: 19px;
+        }
+
+        .about-hero h1 {
+            font-size: 29px;
+        }
+
+        .about-card,
+        .mission-card {
+            padding: 22px;
+        }
+
+        .module-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-page">
+    <div class="about-container">
+
+        <a href="{{ url_for('home') }}" class="about-back">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Home
+        </a>
+
+        <section class="about-hero">
+            <div class="about-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </div>
+
+            <h1>About Smart Lost & Found</h1>
+
+            <p>
+                Smart Lost & Found is a campus-focused platform designed to
+                make reporting, searching, matching, claiming, and recovering
+                lost and found items simple, organized, and efficient.
+            </p>
+        </section>
+
+        <div class="about-grid">
+
+            <div class="about-card">
+                <h2>
+                    <i class="fa-solid fa-circle-info"></i>
+                    Our System
+                </h2>
+
+                <p>
+                    The system provides a centralized platform where students
+                    and staff can report lost items, report found items,
+                    search available reports, and track the recovery process
+                    from one place.
+                </p>
+            </div>
+
+            <div class="about-card">
+                <h2>
+                    <i class="fa-solid fa-bullseye"></i>
+                    Our Goal
+                </h2>
+
+                <p>
+                    Our goal is to reduce the difficulty of finding lost
+                    belongings on campus by connecting lost and found reports
+                    and providing a structured recovery process.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="mission-card">
+            <h2>
+                <i class="fa-solid fa-lightbulb"></i>
+                Why Smart Lost & Found?
+            </h2>
+
+            <p>
+                Traditional lost-and-found processes can be difficult to
+                manage because information may be scattered across different
+                people or locations. This platform brings reports into one
+                centralized system and uses smart matching based on item
+                information such as category, name, description, location,
+                and color to help identify possible matches.
+            </p>
+        </div>
+
+        <div class="modules-title">
+            <h2>Key Features</h2>
+            <p>Everything needed for an organized campus recovery process.</p>
+        </div>
+
+        <div class="module-grid">
+
+            <div class="module-card">
+                <div class="module-icon">
+                    <i class="fa-solid fa-user-lock"></i>
+                </div>
+                <h3>Secure Authentication</h3>
+                <p>
+                    User registration and login provide controlled access
+                    to the platform.
+                </p>
+            </div>
+
+            <div class="module-card">
+                <div class="module-icon">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                </div>
+                <h3>Lost & Found Reports</h3>
+                <p>
+                    Users can submit detailed lost and found item reports
+                    with important item information.
+                </p>
+            </div>
+
+            <div class="module-card">
+                <div class="module-icon">
+                    <i class="fa-solid fa-filter"></i>
+                </div>
+                <h3>Search & Filtering</h3>
+                <p>
+                    Search reports using keywords, categories, report type,
+                    and locations.
+                </p>
+            </div>
+
+            <div class="module-card">
+                <div class="module-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <h3>Smart Matching</h3>
+                <p>
+                    The system compares lost and found information to
+                    identify possible matches.
+                </p>
+            </div>
+
+            <div class="module-card">
+                <div class="module-icon">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </div>
+                <h3>Claim Management</h3>
+                <p>
+                    Users can submit claims and administrators can review,
+                    approve, or reject them.
+                </p>
+            </div>
+
+            <div class="module-card">
+                <div class="module-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h3>Status Tracking</h3>
+                <p>
+                    Users can track reports and claims throughout the
+                    recovery process.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="about-cta">
+            <h2>Looking for a lost item?</h2>
+            <p>
+                Search the available reports and check for possible matches.
+            </p>
+
+            <a href="{{ url_for('search') }}">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Search Items
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+

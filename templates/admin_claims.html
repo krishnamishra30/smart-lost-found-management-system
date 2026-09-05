@@ -1,0 +1,1129 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Claims | Admin | Smart Lost & Found{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    /* =========================================================
+       ADMIN CLAIM MANAGEMENT
+    ========================================================= */
+
+    .admin-claims-page {
+        max-width: 1250px;
+        margin: 0 auto;
+        padding: 42px 20px 70px;
+    }
+
+    .claims-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
+    .claims-header h1 {
+        margin: 0 0 8px;
+        font-size: 34px;
+        font-weight: 800;
+        color: #172033;
+        letter-spacing: -0.7px;
+    }
+
+    .claims-header p {
+        margin: 0;
+        color: #68748b;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .claims-header-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #eef4ff;
+        color: #2563eb;
+        border: 1px solid #d8e5ff;
+        padding: 10px 15px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    /* =========================================================
+       FLASH
+    ========================================================= */
+
+    .claims-flash-container {
+        margin-bottom: 25px;
+    }
+
+    .claims-flash {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 17px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .claims-flash.success {
+        background: #ecfdf3;
+        color: #18753d;
+        border: 1px solid #bde8cc;
+    }
+
+    .claims-flash.error,
+    .claims-flash.danger {
+        background: #fff1f1;
+        color: #b42318;
+        border: 1px solid #f4c2c0;
+    }
+
+    .claims-flash.warning {
+        background: #fff8e7;
+        color: #946c00;
+        border: 1px solid #f2dfaa;
+    }
+
+    .claims-flash.info {
+        background: #eef5ff;
+        color: #2563eb;
+        border: 1px solid #d5e4ff;
+    }
+
+    /* =========================================================
+       CLAIM CARD
+    ========================================================= */
+
+    .admin-claim-card {
+        background: #ffffff;
+        border: 1px solid #e3e8f0;
+        border-radius: 20px;
+        margin-bottom: 25px;
+        overflow: hidden;
+        box-shadow: 0 8px 28px rgba(15, 23, 42, 0.05);
+    }
+
+    .claim-card-top {
+        padding: 21px 25px;
+        background: #fafbfe;
+        border-bottom: 1px solid #e7ebf2;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .claim-id {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #2563eb;
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    .claim-id-icon {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: #eaf1ff;
+        color: #2563eb;
+    }
+
+    .claim-date {
+        color: #7b869a;
+        font-size: 12px;
+        margin-top: 5px;
+        padding-left: 46px;
+    }
+
+    /* =========================================================
+       STATUS
+    ========================================================= */
+
+    .claim-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .claim-status.pending {
+        background: #fff7df;
+        color: #946c00;
+    }
+
+    .claim-status.approved {
+        background: #e8f8ef;
+        color: #18753d;
+    }
+
+    .claim-status.rejected {
+        background: #fff0f0;
+        color: #b42318;
+    }
+
+    .claim-status.returned,
+    .claim-status.claimed {
+        background: #e9f2ff;
+        color: #2563eb;
+    }
+
+    /* =========================================================
+       CLAIM BODY
+    ========================================================= */
+
+    .claim-card-body {
+        padding: 25px;
+    }
+
+    /* =========================================================
+       CLAIMANT
+    ========================================================= */
+
+    .claimant-panel {
+        background: #f7f9fc;
+        border: 1px solid #edf0f5;
+        border-radius: 14px;
+        padding: 18px;
+        margin-bottom: 22px;
+    }
+
+    .claimant-heading {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #7b869a;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .65px;
+        margin-bottom: 10px;
+    }
+
+    .claimant-heading i {
+        color: #2563eb;
+    }
+
+    .claimant-name {
+        color: #172033;
+        font-size: 17px;
+        font-weight: 800;
+    }
+
+    .claimant-email {
+        color: #718096;
+        font-size: 13px;
+        margin-top: 4px;
+    }
+
+    /* =========================================================
+       ITEMS
+    ========================================================= */
+
+    .items-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 22px;
+    }
+
+    .claim-item-box {
+        border: 1px solid #e4e9f1;
+        border-radius: 15px;
+        padding: 21px;
+        background: #ffffff;
+    }
+
+    .claim-item-box.lost {
+        border-left: 4px solid #ef4444;
+    }
+
+    .claim-item-box.found {
+        border-left: 4px solid #22c55e;
+    }
+
+    .item-box-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #7b869a;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .65px;
+        margin-bottom: 11px;
+    }
+
+    .claim-item-box.lost .item-box-heading i {
+        color: #ef4444;
+    }
+
+    .claim-item-box.found .item-box-heading i {
+        color: #22c55e;
+    }
+
+    .claim-item-box h3 {
+        margin: 0 0 12px;
+        color: #172033;
+        font-size: 19px;
+        font-weight: 800;
+    }
+
+    .item-detail {
+        color: #657187;
+        font-size: 13px;
+        line-height: 1.65;
+        margin: 4px 0;
+    }
+
+    .item-detail strong {
+        color: #172033;
+        font-weight: 750;
+    }
+
+    .item-description {
+        margin-top: 11px;
+        padding-top: 11px;
+        border-top: 1px solid #edf0f5;
+    }
+
+    /* =========================================================
+       MESSAGE BOX
+    ========================================================= */
+
+    .claim-message-box {
+        background: #f7f9fc;
+        border: 1px solid #edf0f5;
+        border-radius: 14px;
+        padding: 18px;
+        margin-bottom: 20px;
+    }
+
+    .claim-message-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #172033;
+        font-size: 13px;
+        font-weight: 800;
+        margin-bottom: 9px;
+    }
+
+    .claim-message-heading i {
+        color: #2563eb;
+    }
+
+    .claim-message-text {
+        color: #5f6c81;
+        font-size: 14px;
+        line-height: 1.7;
+        white-space: pre-line;
+        word-break: break-word;
+    }
+
+    /* =========================================================
+       PREVIOUS ADMIN NOTE
+    ========================================================= */
+
+    .previous-note {
+        background: #fffaf0;
+        border: 1px solid #f3e2b5;
+        border-radius: 14px;
+        padding: 18px;
+        margin-bottom: 22px;
+    }
+
+    .previous-note-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #805d00;
+        font-size: 13px;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+    .previous-note-text {
+        color: #725f2b;
+        font-size: 13px;
+        line-height: 1.65;
+        white-space: pre-line;
+        word-break: break-word;
+    }
+
+    /* =========================================================
+       ADMIN ACTION AREA
+    ========================================================= */
+
+    .admin-action-area {
+        border-top: 1px solid #e8ecf2;
+        padding-top: 22px;
+    }
+
+    .admin-action-area label {
+        display: block;
+        color: #273247;
+        font-size: 13px;
+        font-weight: 750;
+        margin-bottom: 8px;
+    }
+
+    .admin-note-input {
+        width: 100%;
+        min-height: 95px;
+        resize: vertical;
+        border: 1px solid #dce2eb;
+        border-radius: 11px;
+        padding: 13px 14px;
+        font-family: inherit;
+        font-size: 14px;
+        color: #172033;
+        background: #ffffff;
+        outline: none;
+        transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .admin-note-input::placeholder {
+        color: #9aa3b2;
+    }
+
+    .admin-note-input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+    }
+
+    .admin-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 13px;
+    }
+
+    .admin-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: none;
+        border-radius: 10px;
+        padding: 11px 17px;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: transform .15s ease, background .2s ease;
+    }
+
+    .admin-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .admin-btn.approve {
+        background: #16a34a;
+        color: #ffffff;
+    }
+
+    .admin-btn.approve:hover {
+        background: #15803d;
+    }
+
+    .admin-btn.reject {
+        background: #dc2626;
+        color: #ffffff;
+    }
+
+    .admin-btn.reject:hover {
+        background: #b91c1c;
+    }
+
+    .admin-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* =========================================================
+       COMPLETED CLAIM
+    ========================================================= */
+
+    .claim-completed {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding-top: 19px;
+        border-top: 1px solid #e8ecf2;
+        color: #68748b;
+        font-size: 13px;
+        font-weight: 650;
+    }
+
+    .claim-completed.approved-message {
+        color: #18753d;
+    }
+
+    .claim-completed.rejected-message {
+        color: #b42318;
+    }
+
+    /* =========================================================
+       EMPTY STATE
+    ========================================================= */
+
+    .claims-empty {
+        background: #ffffff;
+        border: 1px solid #e3e8f0;
+        border-radius: 20px;
+        padding: 70px 25px;
+        text-align: center;
+        box-shadow: 0 7px 25px rgba(15, 23, 42, 0.04);
+    }
+
+    .claims-empty-icon {
+        width: 65px;
+        height: 65px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 17px;
+        border-radius: 18px;
+        background: #f1f4f9;
+        color: #8a94a8;
+        font-size: 24px;
+    }
+
+    .claims-empty h2 {
+        margin: 0 0 9px;
+        color: #273247;
+        font-size: 20px;
+    }
+
+    .claims-empty p {
+        margin: 0;
+        color: #718096;
+        font-size: 14px;
+    }
+
+    .back-dashboard-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 20px;
+        padding: 10px 15px;
+        border-radius: 10px;
+        background: #eef4ff;
+        color: #2563eb;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 750;
+    }
+
+    .back-dashboard-btn:hover {
+        background: #e1ebff;
+        color: #1d4ed8;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 800px) {
+
+        .claims-header {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .items-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .claim-card-top {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .claim-status {
+            align-self: flex-start;
+        }
+    }
+
+    @media (max-width: 600px) {
+
+        .admin-claims-page {
+            padding: 30px 15px 55px;
+        }
+
+        .claims-header h1 {
+            font-size: 28px;
+        }
+
+        .claim-card-body {
+            padding: 18px;
+        }
+
+        .claim-card-top {
+            padding: 18px;
+        }
+
+        .admin-buttons {
+            flex-direction: column;
+        }
+
+        .admin-btn {
+            width: 100%;
+        }
+
+        .claimant-panel,
+        .claim-message-box,
+        .previous-note,
+        .claim-item-box {
+            padding: 16px;
+        }
+
+        .claim-date {
+            padding-left: 0;
+        }
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<main class="admin-claims-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="claims-header">
+
+        <div>
+
+            <h1>
+                Claim Management
+            </h1>
+
+            <p>
+                Review and verify claims submitted by users
+                before approving item recovery.
+            </p>
+
+        </div>
+
+        <div class="claims-header-badge">
+
+            <i class="fa-solid fa-shield-halved"></i>
+
+            ADMIN VERIFICATION
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FLASH MESSAGES
+    ====================================================== -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            <div class="claims-flash-container">
+
+                {% for category, message in messages %}
+
+                    <div class="claims-flash {{ category }}">
+
+                        {% if category == "success" %}
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                        {% elif category == "error" or category == "danger" %}
+
+                            <i class="fa-solid fa-circle-exclamation"></i>
+
+                        {% elif category == "warning" %}
+
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+
+                        {% else %}
+
+                            <i class="fa-solid fa-circle-info"></i>
+
+                        {% endif %}
+
+                        <span>
+                            {{ message }}
+                        </span>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- =====================================================
+         CLAIM LIST
+    ====================================================== -->
+
+    {% if claims %}
+
+        {% for claim in claims %}
+
+            <article class="admin-claim-card">
+
+                <!-- =================================================
+                     CLAIM HEADER
+                ================================================== -->
+
+                <div class="claim-card-top">
+
+                    <div>
+
+                        <div class="claim-id">
+
+                            <span class="claim-id-icon">
+
+                                <i class="fa-solid fa-file-signature"></i>
+
+                            </span>
+
+                            <span>
+                                Claim #{{ claim.claim_id }}
+                            </span>
+
+                        </div>
+
+                        <div class="claim-date">
+
+                            Submitted:
+                            {{ claim.created_at }}
+
+                        </div>
+
+                    </div>
+
+
+                    <span
+                        class="claim-status {{ claim.claim_status|lower }}"
+                    >
+
+                        {% if claim.claim_status|lower == "pending" %}
+
+                            <i class="fa-solid fa-clock"></i>
+
+                        {% elif claim.claim_status|lower == "approved" %}
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                        {% elif claim.claim_status|lower == "rejected" %}
+
+                            <i class="fa-solid fa-circle-xmark"></i>
+
+                        {% elif claim.claim_status|lower == "returned" %}
+
+                            <i class="fa-solid fa-box-check"></i>
+
+                        {% elif claim.claim_status|lower == "claimed" %}
+
+                            <i class="fa-solid fa-box-open"></i>
+
+                        {% else %}
+
+                            <i class="fa-solid fa-circle-info"></i>
+
+                        {% endif %}
+
+                        {{ claim.claim_status }}
+
+                    </span>
+
+                </div>
+
+
+                <!-- =================================================
+                     CLAIM BODY
+                ================================================== -->
+
+                <div class="claim-card-body">
+
+                    <!-- CLAIMANT -->
+
+                    <div class="claimant-panel">
+
+                        <div class="claimant-heading">
+
+                            <i class="fa-solid fa-user"></i>
+
+                            Claimant
+
+                        </div>
+
+                        <div class="claimant-name">
+
+                            {{ claim.claimant_name }}
+
+                        </div>
+
+                        <div class="claimant-email">
+
+                            {{ claim.claimant_email }}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LOST / FOUND ITEMS -->
+
+                    <div class="items-grid">
+
+                        <!-- LOST ITEM -->
+
+                        <div class="claim-item-box lost">
+
+                            <div class="item-box-heading">
+
+                                <i class="fa-solid fa-magnifying-glass"></i>
+
+                                User Lost Item
+
+                            </div>
+
+                            <h3>
+                                {{ claim.lost_item_name }}
+                            </h3>
+
+                            <p class="item-detail">
+                                <strong>Category:</strong>
+                                {{ claim.lost_category }}
+                            </p>
+
+                            <p class="item-detail">
+                                <strong>Location:</strong>
+                                {{ claim.lost_location }}
+                            </p>
+
+                            <p class="item-detail">
+                                <strong>Date:</strong>
+                                {{ claim.lost_date }}
+                            </p>
+
+                            <p class="item-detail">
+                                <strong>Color:</strong>
+                                {{ claim.lost_color or "Not provided" }}
+                            </p>
+
+                            <p class="item-detail item-description">
+                                <strong>Description:</strong>
+                                {{ claim.lost_description }}
+                            </p>
+
+                            {% if claim.lost_identification %}
+
+                                <p class="item-detail">
+                                    <strong>Identification:</strong>
+                                    {{ claim.lost_identification }}
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- FOUND ITEM -->
+
+                        <div class="claim-item-box found">
+
+                            <div class="item-box-heading">
+
+                                <i class="fa-solid fa-box-open"></i>
+
+                                Found Item
+
+                            </div>
+
+                            <h3>
+                                {{ claim.found_item_name }}
+                            </h3>
+
+                            <p class="item-detail">
+                                <strong>Category:</strong>
+                                {{ claim.found_category }}
+                            </p>
+
+                            <p class="item-detail">
+                                <strong>Location:</strong>
+                                {{ claim.found_location }}
+                            </p>
+
+                            <p class="item-detail">
+                                <strong>Date:</strong>
+                                {{ claim.found_date }}
+                            </p>
+
+                            <p class="item-detail">
+                                <strong>Color:</strong>
+                                {{ claim.found_color or "Not provided" }}
+                            </p>
+
+                            <p class="item-detail item-description">
+                                <strong>Description:</strong>
+                                {{ claim.found_description }}
+                            </p>
+
+                            {% if claim.found_identification %}
+
+                                <p class="item-detail">
+                                    <strong>Identification:</strong>
+                                    {{ claim.found_identification }}
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CLAIM MESSAGE -->
+
+                    <div class="claim-message-box">
+
+                        <div class="claim-message-heading">
+
+                            <i class="fa-solid fa-comment-dots"></i>
+
+                            Claim Explanation
+
+                        </div>
+
+                        <div class="claim-message-text">
+
+                            {{ claim.claim_message }}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PREVIOUS ADMIN NOTE -->
+
+                    {% if claim.admin_note %}
+
+                        <div class="previous-note">
+
+                            <div class="previous-note-heading">
+
+                                <i class="fa-solid fa-note-sticky"></i>
+
+                                Previous Admin Note
+
+                            </div>
+
+                            <div class="previous-note-text">
+
+                                {{ claim.admin_note }}
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- PENDING ACTION -->
+
+                    {% if claim.claim_status == "Pending" %}
+
+                        <div class="admin-action-area">
+
+                            <form
+                                method="POST"
+                                action="{{ url_for(
+                                    'admin_update_claim',
+                                    claim_id=claim.claim_id
+                                ) }}"
+                                onsubmit="return confirmClaimAction(this);"
+                            >
+
+                                <label
+                                    for="admin_note_{{ claim.claim_id }}"
+                                >
+                                    Admin Verification Note
+                                </label>
+
+                                <textarea
+                                    id="admin_note_{{ claim.claim_id }}"
+                                    name="admin_note"
+                                    class="admin-note-input"
+                                    placeholder="Write a verification note for the claimant..."
+                                    maxlength="2000"
+                                ></textarea>
+
+
+                                <div class="admin-buttons">
+
+                                    <button
+                                        type="submit"
+                                        name="action"
+                                        value="approve"
+                                        class="admin-btn approve"
+                                    >
+
+                                        <i class="fa-solid fa-check"></i>
+
+                                        Approve Claim
+
+                                    </button>
+
+
+                                    <button
+                                        type="submit"
+                                        name="action"
+                                        value="reject"
+                                        class="admin-btn reject"
+                                    >
+
+                                        <i class="fa-solid fa-xmark"></i>
+
+                                        Reject Claim
+
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+
+                    {% elif claim.claim_status == "Approved" %}
+
+                        <div class="claim-completed approved-message">
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            This claim has been approved by the administrator.
+
+                        </div>
+
+
+                    {% elif claim.claim_status == "Rejected" %}
+
+                        <div class="claim-completed rejected-message">
+
+                            <i class="fa-solid fa-circle-xmark"></i>
+
+                            This claim has been rejected by the administrator.
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+        {% endfor %}
+
+
+    {% else %}
+
+        <!-- =====================================================
+             EMPTY STATE
+        ====================================================== -->
+
+        <div class="claims-empty">
+
+            <div class="claims-empty-icon">
+
+                <i class="fa-regular fa-folder-open"></i>
+
+            </div>
+
+            <h2>
+                No Claims Found
+            </h2>
+
+            <p>
+                There are currently no claim requests waiting
+                for administrator review.
+            </p>
+
+            <a
+                href="{{ url_for('admin_dashboard') }}"
+                class="back-dashboard-btn"
+            >
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Admin Dashboard
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</main>
+
+
+<script>
+
+    function confirmClaimAction(form) {
+
+        const clickedButton = document.activeElement;
+
+        if (!clickedButton) {
+            return true;
+        }
+
+        const action = clickedButton.value;
+
+        if (action === "approve") {
+
+            return confirm(
+                "Are you sure you want to approve this claim?"
+            );
+
+        }
+
+        if (action === "reject") {
+
+            return confirm(
+                "Are you sure you want to reject this claim?"
+            );
+
+        }
+
+        return true;
+    }
+
+</script>
+
+{% endblock %}

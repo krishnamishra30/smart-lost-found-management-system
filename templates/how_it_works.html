@@ -1,0 +1,1012 @@
+{% extends "base.html" %}
+
+{% block title %}How It Works | Smart Lost & Found{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    /* =====================================================
+       HOW IT WORKS PAGE
+    ===================================================== */
+
+    .how-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 35px 25px 60px;
+    }
+
+
+    /* =====================================================
+       BACK BUTTON
+    ===================================================== */
+
+    .how-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 9px 14px;
+
+        background: #ffffff;
+
+        border: 1px solid #e1e7f0;
+
+        border-radius: 9px;
+
+        color: #566174;
+
+        text-decoration: none;
+
+        font-size: 12px;
+        font-weight: 700;
+
+        margin-bottom: 25px;
+
+        transition: all 0.2s ease;
+    }
+
+    .how-back:hover {
+        color: #2563eb;
+        background: #f5f8ff;
+        border-color: #cddcff;
+        transform: translateX(-2px);
+    }
+
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .how-hero {
+        text-align: center;
+
+        padding: 30px 15px 35px;
+
+        margin-bottom: 10px;
+    }
+
+    .how-eyebrow {
+        display: inline-flex;
+
+        align-items: center;
+        gap: 7px;
+
+        padding: 7px 11px;
+
+        background: #eef4ff;
+
+        color: #2563eb;
+
+        border-radius: 7px;
+
+        font-size: 11px;
+
+        font-weight: 800;
+
+        letter-spacing: 0.6px;
+
+        text-transform: uppercase;
+
+        margin-bottom: 14px;
+    }
+
+    .how-hero h1 {
+        margin: 0 0 10px;
+
+        font-size: 34px;
+
+        line-height: 1.2;
+
+        color: #172033;
+    }
+
+    .how-hero p {
+        margin: 0 auto;
+
+        max-width: 650px;
+
+        color: #697386;
+
+        font-size: 14px;
+
+        line-height: 1.7;
+    }
+
+
+    /* =====================================================
+       STEPS
+    ===================================================== */
+
+    .how-steps {
+        display: grid;
+
+        grid-template-columns:
+            repeat(5, minmax(0, 1fr));
+
+        gap: 15px;
+    }
+
+    .how-step {
+        background: #ffffff;
+
+        border: 1px solid #e2e8f0;
+
+        border-radius: 16px;
+
+        padding: 21px 17px;
+
+        box-shadow:
+            0 7px 22px rgba(15, 23, 42, 0.05);
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            border-color 0.2s ease;
+
+        position: relative;
+    }
+
+    .how-step:hover {
+        transform: translateY(-4px);
+
+        border-color: #d3ddf0;
+
+        box-shadow:
+            0 13px 30px rgba(15, 23, 42, 0.08);
+    }
+
+
+    /* =====================================================
+       STEP NUMBER
+    ===================================================== */
+
+    .how-number {
+        width: 42px;
+        height: 42px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+        color: #ffffff;
+
+        font-size: 13px;
+
+        font-weight: 800;
+
+        margin-bottom: 15px;
+    }
+
+
+    .how-step h3 {
+        margin: 0 0 8px;
+
+        font-size: 15px;
+
+        color: #172033;
+
+        line-height: 1.4;
+    }
+
+    .how-step p {
+        margin: 0;
+
+        color: #64748b;
+
+        font-size: 12px;
+
+        line-height: 1.65;
+    }
+
+
+    /* =====================================================
+       FLOW
+    ===================================================== */
+
+    .how-flow-section {
+        margin-top: 28px;
+    }
+
+    .how-flow {
+        background:
+            linear-gradient(
+                135deg,
+                #172554,
+                #1e40af
+            );
+
+        color: #ffffff;
+
+        border-radius: 17px;
+
+        padding: 24px 22px;
+
+        text-align: center;
+
+        box-shadow:
+            0 10px 25px rgba(30, 64, 175, 0.12);
+    }
+
+    .how-flow-label {
+        font-size: 10px;
+
+        font-weight: 800;
+
+        letter-spacing: 0.7px;
+
+        text-transform: uppercase;
+
+        color: #bfdbfe;
+
+        margin-bottom: 11px;
+    }
+
+    .how-flow-text {
+        font-size: 14px;
+
+        font-weight: 800;
+
+        line-height: 1.8;
+    }
+
+
+    /* =====================================================
+       PURPOSE CARD
+    ===================================================== */
+
+    .how-purpose {
+        margin-top: 22px;
+
+        display: flex;
+
+        align-items: flex-start;
+
+        gap: 14px;
+
+        background: #eff6ff;
+
+        border: 1px solid #bfdbfe;
+
+        padding: 18px;
+
+        border-radius: 14px;
+
+        color: #1e40af;
+
+        line-height: 1.65;
+    }
+
+    .how-purpose-icon {
+        width: 34px;
+        height: 34px;
+
+        flex-shrink: 0;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+
+        background: #ffffff;
+
+        color: #2563eb;
+
+        box-shadow:
+            0 3px 10px rgba(37, 99, 235, 0.08);
+    }
+
+    .how-purpose-text {
+        font-size: 12px;
+    }
+
+    .how-purpose-text strong {
+        color: #172554;
+    }
+
+
+    /* =====================================================
+       SYSTEM BENEFITS / MODULES
+    ===================================================== */
+
+    .how-modules {
+        margin-top: 28px;
+
+        background: #ffffff;
+
+        border: 1px solid #e5eaf1;
+
+        border-radius: 16px;
+
+        padding: 23px;
+
+        box-shadow:
+            0 6px 20px rgba(15, 23, 42, 0.04);
+    }
+
+    .how-modules-header {
+        margin-bottom: 18px;
+    }
+
+    .how-modules-header h2 {
+        margin: 0 0 5px;
+
+        font-size: 19px;
+
+        color: #172033;
+    }
+
+    .how-modules-header p {
+        margin: 0;
+
+        font-size: 12px;
+
+        color: #7b8494;
+    }
+
+    .how-module-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 12px;
+    }
+
+    .how-module {
+        padding: 15px;
+
+        background: #f8fafc;
+
+        border: 1px solid #edf0f5;
+
+        border-radius: 11px;
+    }
+
+    .how-module-icon {
+        width: 32px;
+        height: 32px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        background: #eef4ff;
+
+        color: #2563eb;
+
+        border-radius: 8px;
+
+        font-size: 12px;
+
+        margin-bottom: 10px;
+    }
+
+    .how-module strong {
+        display: block;
+
+        font-size: 12px;
+
+        color: #172033;
+
+        margin-bottom: 5px;
+    }
+
+    .how-module span {
+        display: block;
+
+        font-size: 11px;
+
+        color: #7b8494;
+
+        line-height: 1.55;
+    }
+
+
+    /* =====================================================
+       CTA
+    ===================================================== */
+
+    .how-cta {
+        margin-top: 28px;
+
+        padding: 26px;
+
+        border-radius: 17px;
+
+        background: #ffffff;
+
+        border: 1px solid #e5eaf1;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 20px;
+    }
+
+    .how-cta h2 {
+        margin: 0 0 5px;
+
+        color: #172033;
+
+        font-size: 19px;
+    }
+
+    .how-cta p {
+        margin: 0;
+
+        color: #7b8494;
+
+        font-size: 12px;
+
+        line-height: 1.6;
+    }
+
+    .how-cta-btn {
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 7px;
+
+        padding: 11px 17px;
+
+        border-radius: 9px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+        color: #ffffff;
+
+        text-decoration: none;
+
+        font-size: 12px;
+
+        font-weight: 800;
+
+        white-space: nowrap;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .how-cta-btn:hover {
+        color: #ffffff;
+
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 8px 18px rgba(37, 99, 235, 0.22);
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 950px) {
+
+        .how-steps {
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+        }
+
+    }
+
+
+    @media (max-width: 700px) {
+
+        .how-page {
+            padding: 25px 15px 45px;
+        }
+
+        .how-steps {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+
+        .how-module-grid {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+
+        .how-cta {
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+
+        .how-cta-btn {
+            width: 100%;
+        }
+
+    }
+
+
+    @media (max-width: 500px) {
+
+        .how-hero {
+            padding: 22px 5px 28px;
+        }
+
+        .how-hero h1 {
+            font-size: 28px;
+        }
+
+        .how-hero p {
+            font-size: 13px;
+        }
+
+        .how-steps {
+            grid-template-columns: 1fr;
+        }
+
+        .how-module-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .how-flow {
+            padding: 20px 16px;
+        }
+
+        .how-flow-text {
+            font-size: 12px;
+        }
+
+        .how-purpose {
+            padding: 15px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="how-page">
+
+
+    <!-- =================================================
+         BACK BUTTON
+    ================================================= -->
+
+    <a
+        href="javascript:history.back()"
+        class="how-back">
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+        Back
+
+    </a>
+
+
+    <!-- =================================================
+         HERO
+    ================================================= -->
+
+    <section class="how-hero">
+
+        <div class="how-eyebrow">
+
+            <i class="fa-solid fa-graduation-cap"></i>
+
+            Smart Campus Platform
+
+        </div>
+
+
+        <h1>
+            How Smart Lost & Found Works
+        </h1>
+
+
+        <p>
+            From reporting an item to successful recovery,
+            the platform provides a simple and centralized
+            process for managing lost and found belongings
+            on campus.
+        </p>
+
+    </section>
+
+
+    <!-- =================================================
+         FIVE STEPS
+    ================================================= -->
+
+    <section class="how-steps">
+
+
+        <!-- STEP 1 -->
+
+        <article class="how-step">
+
+            <div class="how-number">
+                1
+            </div>
+
+            <h3>
+                Report
+            </h3>
+
+            <p>
+                Report a lost or found item by providing
+                important details such as category,
+                description, location, date and other
+                identifying information.
+            </p>
+
+        </article>
+
+
+        <!-- STEP 2 -->
+
+        <article class="how-step">
+
+            <div class="how-number">
+                2
+            </div>
+
+            <h3>
+                Smart Matching
+            </h3>
+
+            <p>
+                The system compares item information
+                and identifies possible matches between
+                lost and found reports.
+            </p>
+
+        </article>
+
+
+        <!-- STEP 3 -->
+
+        <article class="how-step">
+
+            <div class="how-number">
+                3
+            </div>
+
+            <h3>
+                Claim
+            </h3>
+
+            <p>
+                If a found item appears to match your
+                lost item, submit a claim with an
+                explanation for verification.
+            </p>
+
+        </article>
+
+
+        <!-- STEP 4 -->
+
+        <article class="how-step">
+
+            <div class="how-number">
+                4
+            </div>
+
+            <h3>
+                Verification
+            </h3>
+
+            <p>
+                An authorized administrator reviews the
+                claim and verifies the information before
+                approving or rejecting it.
+            </p>
+
+        </article>
+
+
+        <!-- STEP 5 -->
+
+        <article class="how-step">
+
+            <div class="how-number">
+                5
+            </div>
+
+            <h3>
+                Recovery
+            </h3>
+
+            <p>
+                After successful verification, the item
+                status can be updated and the recovery
+                process can be tracked.
+            </p>
+
+        </article>
+
+
+    </section>
+
+
+    <!-- =================================================
+         FLOW
+    ================================================= -->
+
+    <section class="how-flow-section">
+
+        <div class="how-flow">
+
+            <div class="how-flow-label">
+                Complete Recovery Flow
+            </div>
+
+            <div class="how-flow-text">
+                Register / Login
+                <span>→</span>
+                Report
+                <span>→</span>
+                Smart Match
+                <span>→</span>
+                Claim
+                <span>→</span>
+                Admin Verification
+                <span>→</span>
+                Returned
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         PURPOSE
+    ================================================= -->
+
+    <section class="how-purpose">
+
+        <div class="how-purpose-icon">
+
+            <i class="fa-solid fa-bullseye"></i>
+
+        </div>
+
+
+        <div class="how-purpose-text">
+
+            <strong>
+                Purpose:
+            </strong>
+
+            Keep campus lost-and-found information
+            centralized instead of depending on notice
+            boards, messaging groups or verbal communication.
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         SYSTEM MODULES
+    ================================================= -->
+
+    <section class="how-modules">
+
+
+        <div class="how-modules-header">
+
+            <h2>
+                What the System Provides
+            </h2>
+
+            <p>
+                Key features that support the complete
+                lost-and-found recovery process.
+            </p>
+
+        </div>
+
+
+        <div class="how-module-grid">
+
+
+            <!-- MODULE 1 -->
+
+            <div class="how-module">
+
+                <div class="how-module-icon">
+
+                    <i class="fa-solid fa-user-lock"></i>
+
+                </div>
+
+                <strong>
+                    User Authentication
+                </strong>
+
+                <span>
+                    Secure registration and login for
+                    accessing the platform.
+                </span>
+
+            </div>
+
+
+            <!-- MODULE 2 -->
+
+            <div class="how-module">
+
+                <div class="how-module-icon">
+
+                    <i class="fa-solid fa-file-circle-plus"></i>
+
+                </div>
+
+                <strong>
+                    Lost & Found Reports
+                </strong>
+
+                <span>
+                    Submit detailed lost and found
+                    item reports.
+                </span>
+
+            </div>
+
+
+            <!-- MODULE 3 -->
+
+            <div class="how-module">
+
+                <div class="how-module-icon">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                </div>
+
+                <strong>
+                    Search & Filtering
+                </strong>
+
+                <span>
+                    Find relevant reports using search
+                    and filtering options.
+                </span>
+
+            </div>
+
+
+            <!-- MODULE 4 -->
+
+            <div class="how-module">
+
+                <div class="how-module-icon">
+
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                </div>
+
+                <strong>
+                    Smart Matching
+                </strong>
+
+                <span>
+                    Compare item information to identify
+                    possible matches.
+                </span>
+
+            </div>
+
+
+            <!-- MODULE 5 -->
+
+            <div class="how-module">
+
+                <div class="how-module-icon">
+
+                    <i class="fa-solid fa-file-shield"></i>
+
+                </div>
+
+                <strong>
+                    Claim Management
+                </strong>
+
+                <span>
+                    Submit and monitor claims through
+                    administrator verification.
+                </span>
+
+            </div>
+
+
+            <!-- MODULE 6 -->
+
+            <div class="how-module">
+
+                <div class="how-module-icon">
+
+                    <i class="fa-solid fa-route"></i>
+
+                </div>
+
+                <strong>
+                    Status Tracking
+                </strong>
+
+                <span>
+                    Track report and claim status through
+                    the recovery process.
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         CTA
+    ================================================= -->
+
+    <section class="how-cta">
+
+
+        <div>
+
+            <h2>
+                Ready to Find Your Item?
+            </h2>
+
+            <p>
+                Search existing reports or submit a new
+                lost item report to begin the recovery process.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('search') }}"
+            class="how-cta-btn">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            Search Items
+
+        </a>
+
+
+    </section>
+
+
+</div>
+
+{% endblock %}

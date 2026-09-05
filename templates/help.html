@@ -1,0 +1,901 @@
+{% extends "base.html" %}
+
+{% block title %}Help & Support | Smart Lost & Found{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    /* =====================================================
+       HELP PAGE
+    ===================================================== */
+
+    .help-page {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 35px 25px 60px;
+    }
+
+
+    /* =====================================================
+       BACK BUTTON
+    ===================================================== */
+
+    .help-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 9px 14px;
+
+        background: #ffffff;
+
+        border: 1px solid #e1e7f0;
+
+        border-radius: 9px;
+
+        color: #566174;
+
+        text-decoration: none;
+
+        font-size: 12px;
+        font-weight: 700;
+
+        margin-bottom: 25px;
+
+        transition: all 0.2s ease;
+    }
+
+    .help-back:hover {
+        color: #2563eb;
+        background: #f5f8ff;
+        border-color: #cddcff;
+        transform: translateX(-2px);
+    }
+
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .help-hero {
+        text-align: center;
+
+        padding: 35px 20px;
+
+        margin-bottom: 25px;
+    }
+
+    .help-label {
+        display: inline-flex;
+
+        align-items: center;
+        gap: 7px;
+
+        padding: 7px 11px;
+
+        background: #eef4ff;
+
+        color: #2563eb;
+
+        border-radius: 7px;
+
+        font-size: 11px;
+
+        font-weight: 800;
+
+        letter-spacing: 0.5px;
+
+        margin-bottom: 13px;
+    }
+
+    .help-hero h1 {
+        margin: 0 0 10px;
+
+        font-size: 34px;
+
+        line-height: 1.2;
+
+        color: #172033;
+    }
+
+    .help-hero p {
+        margin: 0 auto;
+
+        max-width: 650px;
+
+        color: #697386;
+
+        font-size: 14px;
+
+        line-height: 1.7;
+    }
+
+
+    /* =====================================================
+       FAQ
+    ===================================================== */
+
+    .help-list {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+    .help-faq {
+        background: #ffffff;
+
+        border: 1px solid #e2e8f0;
+
+        border-radius: 15px;
+
+        padding: 20px 22px;
+
+        box-shadow:
+            0 5px 18px rgba(15, 23, 42, 0.05);
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            border-color 0.2s ease;
+    }
+
+    .help-faq:hover {
+        transform: translateY(-2px);
+
+        border-color: #d5def0;
+
+        box-shadow:
+            0 10px 25px rgba(15, 23, 42, 0.08);
+    }
+
+
+    .help-question {
+        display: flex;
+
+        align-items: flex-start;
+
+        gap: 12px;
+
+        margin-bottom: 8px;
+    }
+
+    .help-question-icon {
+        width: 30px;
+        height: 30px;
+
+        flex-shrink: 0;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        background: #eef4ff;
+
+        color: #2563eb;
+
+        border-radius: 8px;
+
+        font-size: 12px;
+    }
+
+    .help-faq h3 {
+        margin: 4px 0 0;
+
+        font-size: 15px;
+
+        color: #172033;
+
+        line-height: 1.4;
+    }
+
+    .help-faq p {
+        margin: 0 0 0 42px;
+
+        color: #64748b;
+
+        font-size: 13px;
+
+        line-height: 1.7;
+    }
+
+
+    /* =====================================================
+       SUPPORT CARD
+    ===================================================== */
+
+    .help-support {
+        margin-top: 28px;
+
+        padding: 25px;
+
+        border-radius: 16px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #0f172a,
+                #172554
+            );
+
+        color: #ffffff;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 20px;
+    }
+
+    .help-support-content {
+        min-width: 0;
+    }
+
+    .help-support h2 {
+        margin: 0 0 6px;
+
+        font-size: 19px;
+    }
+
+    .help-support p {
+        margin: 0;
+
+        color: #cbd5e1;
+
+        font-size: 12px;
+
+        line-height: 1.6;
+    }
+
+    .help-support-btn {
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 7px;
+
+        padding: 11px 16px;
+
+        border-radius: 9px;
+
+        background: #ffffff;
+
+        color: #1d4ed8;
+
+        text-decoration: none;
+
+        font-size: 12px;
+
+        font-weight: 800;
+
+        white-space: nowrap;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .help-support-btn:hover {
+        color: #1d4ed8;
+
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 8px 18px rgba(0, 0, 0, 0.15);
+    }
+
+
+    /* =====================================================
+       QUICK GUIDE
+    ===================================================== */
+
+    .help-guide {
+        margin-top: 28px;
+
+        background: #ffffff;
+
+        border: 1px solid #e5eaf1;
+
+        border-radius: 15px;
+
+        padding: 22px;
+
+        box-shadow:
+            0 5px 18px rgba(15, 23, 42, 0.04);
+    }
+
+    .help-guide h2 {
+        margin: 0 0 5px;
+
+        font-size: 18px;
+
+        color: #172033;
+    }
+
+    .help-guide-subtitle {
+        margin: 0 0 18px;
+
+        color: #7b8494;
+
+        font-size: 12px;
+    }
+
+    .help-guide-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 13px;
+    }
+
+    .help-guide-item {
+        padding: 15px;
+
+        border-radius: 11px;
+
+        background: #f8fafc;
+
+        border: 1px solid #edf0f5;
+    }
+
+    .help-guide-number {
+        width: 30px;
+        height: 30px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 8px;
+
+        background: #eef4ff;
+
+        color: #2563eb;
+
+        font-size: 11px;
+
+        font-weight: 800;
+
+        margin-bottom: 10px;
+    }
+
+    .help-guide-item strong {
+        display: block;
+
+        color: #172033;
+
+        font-size: 12px;
+
+        margin-bottom: 5px;
+    }
+
+    .help-guide-item span {
+        display: block;
+
+        color: #7b8494;
+
+        font-size: 11px;
+
+        line-height: 1.55;
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 800px) {
+
+        .help-guide-grid {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+
+        .help-support {
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+
+    }
+
+
+    @media (max-width: 550px) {
+
+        .help-page {
+            padding: 25px 15px 45px;
+        }
+
+        .help-hero {
+            padding: 25px 10px;
+        }
+
+        .help-hero h1 {
+            font-size: 28px;
+        }
+
+        .help-faq {
+            padding: 17px;
+        }
+
+        .help-faq p {
+            margin-left: 0;
+
+            margin-top: 10px;
+        }
+
+        .help-guide-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .help-support {
+            padding: 22px 18px;
+        }
+
+        .help-support-btn {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="help-page">
+
+
+    <!-- =================================================
+         BACK BUTTON
+    ================================================= -->
+
+    <a
+        href="javascript:history.back()"
+        class="help-back">
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+        Back
+
+    </a>
+
+
+    <!-- =================================================
+         HERO
+    ================================================= -->
+
+    <section class="help-hero">
+
+        <div class="help-label">
+
+            <i class="fa-solid fa-circle-question"></i>
+
+            HELP & SUPPORT
+
+        </div>
+
+
+        <h1>
+            Help & Support
+        </h1>
+
+
+        <p>
+            Find quick answers to common questions and
+            learn how to use the Smart Lost & Found
+            Management System.
+        </p>
+
+    </section>
+
+
+    <!-- =================================================
+         FAQ
+    ================================================= -->
+
+    <div class="help-list">
+
+
+        <!-- FAQ 1 -->
+
+        <article class="help-faq">
+
+            <div class="help-question">
+
+                <div class="help-question-icon">
+
+                    <i class="fa-solid fa-file-circle-plus"></i>
+
+                </div>
+
+                <h3>
+                    How do I report a lost item?
+                </h3>
+
+            </div>
+
+            <p>
+                Login to your account, open
+                <strong>Report Lost Item</strong>, enter the
+                required item details and submit the report.
+            </p>
+
+        </article>
+
+
+        <!-- FAQ 2 -->
+
+        <article class="help-faq">
+
+            <div class="help-question">
+
+                <div class="help-question-icon">
+
+                    <i class="fa-solid fa-box-open"></i>
+
+                </div>
+
+                <h3>
+                    How do I report a found item?
+                </h3>
+
+            </div>
+
+            <p>
+                Login to your account, select
+                <strong>Report Found Item</strong>, provide the
+                found item's details and submit the report.
+            </p>
+
+        </article>
+
+
+        <!-- FAQ 3 -->
+
+        <article class="help-faq">
+
+            <div class="help-question">
+
+                <div class="help-question-icon">
+
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                </div>
+
+                <h3>
+                    How does Smart Matching work?
+                </h3>
+
+            </div>
+
+            <p>
+                The system compares details such as
+                category, item name, description, location
+                and color to identify possible matches
+                between lost and found reports.
+            </p>
+
+        </article>
+
+
+        <!-- FAQ 4 -->
+
+        <article class="help-faq">
+
+            <div class="help-question">
+
+                <div class="help-question-icon">
+
+                    <i class="fa-solid fa-hand-holding"></i>
+
+                </div>
+
+                <h3>
+                    How do I claim an item?
+                </h3>
+
+            </div>
+
+            <p>
+                Open <strong>Smart Matches</strong>, select a
+                suitable found item and choose
+                <strong>Claim This Item</strong>. Explain why
+                the item belongs to you and submit the claim.
+            </p>
+
+        </article>
+
+
+        <!-- FAQ 5 -->
+
+        <article class="help-faq">
+
+            <div class="help-question">
+
+                <div class="help-question-icon">
+
+                    <i class="fa-solid fa-user-shield"></i>
+
+                </div>
+
+                <h3>
+                    Who verifies claims?
+                </h3>
+
+            </div>
+
+            <p>
+                An authorized administrator reviews submitted
+                claims and can approve or reject them after
+                checking the provided information.
+            </p>
+
+        </article>
+
+
+        <!-- FAQ 6 -->
+
+        <article class="help-faq">
+
+            <div class="help-question">
+
+                <div class="help-question-icon">
+
+                    <i class="fa-solid fa-route"></i>
+
+                </div>
+
+                <h3>
+                    Where can I track my status?
+                </h3>
+
+            </div>
+
+            <p>
+                You can monitor your reports from
+                <strong>My Reports</strong>, your claims from
+                <strong>My Claims</strong>, or view the combined
+                recovery information from <strong>Track & Recover</strong>.
+            </p>
+
+        </article>
+
+
+        <!-- FAQ 7 -->
+
+        <article class="help-faq">
+
+            <div class="help-question">
+
+                <div class="help-question-icon">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                </div>
+
+                <h3>
+                    How can I search for an item?
+                </h3>
+
+            </div>
+
+            <p>
+                Open the <strong>Search</strong> page and use
+                keywords, category, item type or location to
+                narrow down the available lost and found reports.
+            </p>
+
+        </article>
+
+
+        <!-- FAQ 8 -->
+
+        <article class="help-faq">
+
+            <div class="help-question">
+
+                <div class="help-question-icon">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                </div>
+
+                <h3>
+                    What happens after a claim is submitted?
+                </h3>
+
+            </div>
+
+            <p>
+                Your claim remains in a pending state until an
+                authorized administrator reviews it. The result
+                can be monitored through <strong>My Claims</strong>
+                and <strong>Track & Recover</strong>.
+            </p>
+
+        </article>
+
+
+    </div>
+
+
+    <!-- =================================================
+         QUICK GUIDE
+    ================================================= -->
+
+    <section class="help-guide">
+
+        <h2>
+            Quick Guide
+        </h2>
+
+        <p class="help-guide-subtitle">
+            Follow these simple steps to recover a lost item.
+        </p>
+
+
+        <div class="help-guide-grid">
+
+
+            <div class="help-guide-item">
+
+                <div class="help-guide-number">
+                    01
+                </div>
+
+                <strong>
+                    Report
+                </strong>
+
+                <span>
+                    Submit accurate details about your lost
+                    or found item.
+                </span>
+
+            </div>
+
+
+            <div class="help-guide-item">
+
+                <div class="help-guide-number">
+                    02
+                </div>
+
+                <strong>
+                    Search
+                </strong>
+
+                <span>
+                    Search existing reports or check
+                    Smart Matches.
+                </span>
+
+            </div>
+
+
+            <div class="help-guide-item">
+
+                <div class="help-guide-number">
+                    03
+                </div>
+
+                <strong>
+                    Claim
+                </strong>
+
+                <span>
+                    Submit a claim when you identify
+                    your possible item.
+                </span>
+
+            </div>
+
+
+            <div class="help-guide-item">
+
+                <div class="help-guide-number">
+                    04
+                </div>
+
+                <strong>
+                    Verification
+                </strong>
+
+                <span>
+                    The administrator reviews the
+                    submitted claim.
+                </span>
+
+            </div>
+
+
+            <div class="help-guide-item">
+
+                <div class="help-guide-number">
+                    05
+                </div>
+
+                <strong>
+                    Track
+                </strong>
+
+                <span>
+                    Monitor the claim and report status
+                    from Track & Recover.
+                </span>
+
+            </div>
+
+
+            <div class="help-guide-item">
+
+                <div class="help-guide-number">
+                    06
+                </div>
+
+                <strong>
+                    Recover
+                </strong>
+
+                <span>
+                    Follow the approved recovery process
+                    to get your belonging back.
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         SUPPORT
+    ================================================= -->
+
+    <section class="help-support">
+
+
+        <div class="help-support-content">
+
+            <h2>
+                Still Need Help?
+            </h2>
+
+            <p>
+                If you cannot find the answer you need,
+                contact the Smart Lost & Found support team.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('contact') }}"
+            class="help-support-btn">
+
+            <i class="fa-solid fa-envelope"></i>
+
+            Contact Us
+
+        </a>
+
+
+    </section>
+
+
+</div>
+
+{% endblock %}

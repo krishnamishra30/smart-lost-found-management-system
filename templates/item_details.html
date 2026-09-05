@@ -1,0 +1,522 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}Item Details | Smart Lost & Found{% endblock %}
+
+{% block extra_css %}
+<style>
+    .details-page {
+        min-height: calc(100vh - 150px);
+        padding: 40px 20px 70px;
+        background: #f6f8fb;
+    }
+
+    .details-container {
+        max-width: 1050px;
+        margin: 0 auto;
+    }
+
+    .details-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 22px;
+        color: #475569;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .details-back:hover {
+        color: #2563eb;
+    }
+
+    .details-header {
+        background: linear-gradient(135deg, #1d4ed8, #2563eb);
+        color: white;
+        border-radius: 22px;
+        padding: 32px;
+        margin-bottom: 24px;
+        box-shadow: 0 15px 35px rgba(37, 99, 235, 0.18);
+    }
+
+    .details-type {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.16);
+        border: 1px solid rgba(255,255,255,0.25);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        margin-bottom: 14px;
+    }
+
+    .details-header h1 {
+        margin: 0 0 10px;
+        font-size: 34px;
+        line-height: 1.2;
+    }
+
+    .details-header p {
+        margin: 0;
+        color: rgba(255,255,255,.88);
+        font-size: 15px;
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: 1.35fr .65fr;
+        gap: 24px;
+    }
+
+    .details-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+    }
+
+    .details-card h2 {
+        margin: 0 0 22px;
+        font-size: 20px;
+        color: #0f172a;
+    }
+
+    .info-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+
+    .info-box {
+        padding: 16px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+    }
+
+    .info-box.full {
+        grid-column: 1 / -1;
+    }
+
+    .info-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 7px;
+    }
+
+    .info-label i {
+        color: #2563eb;
+    }
+
+    .info-value {
+        color: #0f172a;
+        font-size: 15px;
+        line-height: 1.55;
+        word-break: break-word;
+    }
+
+    .status-box {
+        text-align: center;
+        padding: 24px;
+        border-radius: 18px;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        margin-bottom: 22px;
+    }
+
+    .status-icon {
+        width: 58px;
+        height: 58px;
+        margin: 0 auto 12px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        color: #2563eb;
+        font-size: 24px;
+        box-shadow: 0 5px 15px rgba(37,99,235,.12);
+    }
+
+    .status-title {
+        color: #1e3a8a;
+        font-weight: 800;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        margin-bottom: 5px;
+    }
+
+    .status-value {
+        color: #1d4ed8;
+        font-size: 22px;
+        font-weight: 900;
+    }
+
+    .reporter-box {
+        padding: 18px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        margin-bottom: 22px;
+    }
+
+    .reporter-box h3 {
+        margin: 0 0 12px;
+        font-size: 15px;
+        color: #0f172a;
+    }
+
+    .reporter-detail {
+        color: #475569;
+        font-size: 14px;
+        margin: 6px 0;
+        word-break: break-word;
+    }
+
+    .reporter-detail i {
+        width: 20px;
+        color: #2563eb;
+    }
+
+    .action-area {
+        display: flex;
+        flex-direction: column;
+        gap: 11px;
+    }
+
+    .action-btn {
+        width: 100%;
+        min-height: 48px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 14px;
+        transition: .2s ease;
+        box-sizing: border-box;
+    }
+
+    .action-primary {
+        background: #2563eb;
+        color: white;
+        border: 1px solid #2563eb;
+    }
+
+    .action-primary:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+    }
+
+    .action-secondary {
+        background: white;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+    }
+
+    .action-secondary:hover {
+        background: #f8fafc;
+        border-color: #94a3b8;
+    }
+
+    .image-box {
+        margin-top: 20px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+    }
+
+    .image-box img {
+        width: 100%;
+        max-height: 350px;
+        object-fit: contain;
+        display: block;
+    }
+
+    .empty-image {
+        padding: 45px 20px;
+        text-align: center;
+        color: #94a3b8;
+    }
+
+    .empty-image i {
+        font-size: 35px;
+        margin-bottom: 10px;
+    }
+
+    @media (max-width: 850px) {
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .details-page {
+            padding: 25px 14px 50px;
+        }
+
+        .details-header {
+            padding: 24px 20px;
+            border-radius: 18px;
+        }
+
+        .details-header h1 {
+            font-size: 27px;
+        }
+
+        .details-card {
+            padding: 20px;
+            border-radius: 17px;
+        }
+
+        .info-list {
+            grid-template-columns: 1fr;
+        }
+
+        .info-box.full {
+            grid-column: auto;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="details-page">
+    <div class="details-container">
+
+        <a href="{{ url_for('search') }}" class="details-back">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Search
+        </a>
+
+        <div class="details-header">
+            <div class="details-type">
+                {% if item_type == "lost" %}
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Lost Report
+                {% else %}
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                    Found Report
+                {% endif %}
+            </div>
+
+            <h1>{{ item.item_name }}</h1>
+
+            <p>
+                Full details of this {{ item_type }} item report
+                submitted to Smart Lost & Found.
+            </p>
+        </div>
+
+        <div class="details-grid">
+
+            <!-- MAIN DETAILS -->
+            <div class="details-card">
+                <h2>
+                    <i class="fa-solid fa-circle-info"></i>
+                    Item Information
+                </h2>
+
+                <div class="info-list">
+
+                    <div class="info-box">
+                        <div class="info-label">
+                            <i class="fa-solid fa-tag"></i>
+                            Item Name
+                        </div>
+                        <div class="info-value">
+                            {{ item.item_name }}
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">
+                            <i class="fa-solid fa-layer-group"></i>
+                            Category
+                        </div>
+                        <div class="info-value">
+                            {{ item.category }}
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">
+                            <i class="fa-solid fa-location-dot"></i>
+                            Location
+                        </div>
+                        <div class="info-value">
+                            {{ item.location }}
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            Date
+                        </div>
+                        <div class="info-value">
+                            {{ item.item_date }}
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">
+                            <i class="fa-solid fa-palette"></i>
+                            Color
+                        </div>
+                        <div class="info-value">
+                            {{ item.color if item.color else "Not specified" }}
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-label">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Status
+                        </div>
+                        <div class="info-value">
+                            {{ item.status }}
+                        </div>
+                    </div>
+
+                    <div class="info-box full">
+                        <div class="info-label">
+                            <i class="fa-solid fa-align-left"></i>
+                            Description
+                        </div>
+                        <div class="info-value">
+                            {{ item.description }}
+                        </div>
+                    </div>
+
+                    <div class="info-box full">
+                        <div class="info-label">
+                            <i class="fa-solid fa-fingerprint"></i>
+                            Identification Details
+                        </div>
+                        <div class="info-value">
+                            {% if item.identification_details %}
+                                {{ item.identification_details }}
+                            {% else %}
+                                No additional identification details provided.
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+
+                {% if item.image %}
+                <div class="image-box">
+                    <img
+                        src="{{ url_for('static', filename=item.image) }}"
+                        alt="{{ item.item_name }}"
+                        onerror="this.style.display='none';"
+                    >
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- SIDE PANEL -->
+            <div class="details-card">
+
+                <div class="status-box">
+                    <div class="status-icon">
+                        {% if item_type == "lost" %}
+                            <i class="fa-solid fa-search"></i>
+                        {% else %}
+                            <i class="fa-solid fa-box-open"></i>
+                        {% endif %}
+                    </div>
+
+                    <div class="status-title">
+                        Current Status
+                    </div>
+
+                    <div class="status-value">
+                        {{ item.status }}
+                    </div>
+                </div>
+
+                <div class="reporter-box">
+                    <h3>
+                        <i class="fa-solid fa-user"></i>
+                        Reported By
+                    </h3>
+
+                    <div class="reporter-detail">
+                        <i class="fa-solid fa-user"></i>
+                        {{ item.reporter_name if item.reporter_name else "Unknown User" }}
+                    </div>
+
+                    {% if item.reporter_email %}
+                    <div class="reporter-detail">
+                        <i class="fa-solid fa-envelope"></i>
+                        {{ item.reporter_email }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="action-area">
+
+                    {% if item_type == "found" and item.status == "Found" %}
+                    <a
+                        href="{{ url_for(
+                            'matches'
+                        ) }}"
+                        class="action-btn action-primary"
+                    >
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        Check Smart Match
+                    </a>
+                    {% endif %}
+
+                    {% if item_type == "lost" %}
+                    <a
+                        href="{{ url_for('matches') }}"
+                        class="action-btn action-primary"
+                    >
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        Check Smart Matches
+                    </a>
+                    {% endif %}
+
+                    <a
+                        href="{{ url_for('search') }}"
+                        class="action-btn action-secondary"
+                    >
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Search Other Items
+                    </a>
+
+                    <a
+                        href="{{ url_for('dashboard') }}"
+                        class="action-btn action-secondary"
+                    >
+                        <i class="fa-solid fa-house"></i>
+                        Dashboard
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+```
