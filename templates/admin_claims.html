@@ -16,6 +16,10 @@
         padding: 42px 20px 70px;
     }
 
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
     .claims-header {
         display: flex;
         justify-content: space-between;
@@ -396,6 +400,7 @@
         background: #ffffff;
         outline: none;
         transition: border-color .2s ease, box-shadow .2s ease;
+        box-sizing: border-box;
     }
 
     .admin-note-input::placeholder {
@@ -819,35 +824,53 @@
                             </h3>
 
                             <p class="item-detail">
+
                                 <strong>Category:</strong>
+
                                 {{ claim.lost_category }}
+
                             </p>
 
                             <p class="item-detail">
+
                                 <strong>Location:</strong>
+
                                 {{ claim.lost_location }}
+
                             </p>
 
                             <p class="item-detail">
+
                                 <strong>Date:</strong>
+
                                 {{ claim.lost_date }}
+
                             </p>
 
                             <p class="item-detail">
+
                                 <strong>Color:</strong>
+
                                 {{ claim.lost_color or "Not provided" }}
+
                             </p>
 
                             <p class="item-detail item-description">
+
                                 <strong>Description:</strong>
+
                                 {{ claim.lost_description }}
+
                             </p>
 
                             {% if claim.lost_identification %}
 
                                 <p class="item-detail">
+
                                     <strong>Identification:</strong>
+
                                     {{ claim.lost_identification }}
+
                                 </p>
 
                             {% endif %}
@@ -872,35 +895,53 @@
                             </h3>
 
                             <p class="item-detail">
+
                                 <strong>Category:</strong>
+
                                 {{ claim.found_category }}
+
                             </p>
 
                             <p class="item-detail">
+
                                 <strong>Location:</strong>
+
                                 {{ claim.found_location }}
+
                             </p>
 
                             <p class="item-detail">
+
                                 <strong>Date:</strong>
+
                                 {{ claim.found_date }}
+
                             </p>
 
                             <p class="item-detail">
+
                                 <strong>Color:</strong>
+
                                 {{ claim.found_color or "Not provided" }}
+
                             </p>
 
                             <p class="item-detail item-description">
+
                                 <strong>Description:</strong>
+
                                 {{ claim.found_description }}
+
                             </p>
 
                             {% if claim.found_identification %}
 
                                 <p class="item-detail">
+
                                     <strong>Identification:</strong>
+
                                     {{ claim.found_identification }}
+
                                 </p>
 
                             {% endif %}
@@ -958,14 +999,14 @@
 
                     <!-- PENDING ACTION -->
 
-                    {% if claim.claim_status == "Pending" %}
+                    {% if claim.claim_status|lower == "pending" %}
 
                         <div class="admin-action-area">
 
                             <form
                                 method="POST"
                                 action="{{ url_for(
-                                    'admin_update_claim',
+                                    'update_claim',
                                     claim_id=claim.claim_id
                                 ) }}"
                                 onsubmit="return confirmClaimAction(this);"
@@ -974,7 +1015,9 @@
                                 <label
                                     for="admin_note_{{ claim.claim_id }}"
                                 >
+
                                     Admin Verification Note
+
                                 </label>
 
                                 <textarea
@@ -988,10 +1031,12 @@
 
                                 <div class="admin-buttons">
 
+                                    <!-- APPROVE -->
+
                                     <button
                                         type="submit"
                                         name="action"
-                                        value="approve"
+                                        value="Approved"
                                         class="admin-btn approve"
                                     >
 
@@ -1002,10 +1047,12 @@
                                     </button>
 
 
+                                    <!-- REJECT -->
+
                                     <button
                                         type="submit"
                                         name="action"
-                                        value="reject"
+                                        value="Rejected"
                                         class="admin-btn reject"
                                     >
 
@@ -1022,7 +1069,7 @@
                         </div>
 
 
-                    {% elif claim.claim_status == "Approved" %}
+                    {% elif claim.claim_status|lower == "approved" %}
 
                         <div class="claim-completed approved-message">
 
@@ -1033,7 +1080,7 @@
                         </div>
 
 
-                    {% elif claim.claim_status == "Rejected" %}
+                    {% elif claim.claim_status|lower == "rejected" %}
 
                         <div class="claim-completed rejected-message">
 
@@ -1042,6 +1089,18 @@
                             This claim has been rejected by the administrator.
 
                         </div>
+
+
+                    {% elif claim.claim_status|lower == "returned" %}
+
+                        <div class="claim-completed approved-message">
+
+                            <i class="fa-solid fa-box-check"></i>
+
+                            This item has been marked as returned.
+
+                        </div>
+
 
                     {% endif %}
 
@@ -1105,7 +1164,7 @@
 
         const action = clickedButton.value;
 
-        if (action === "approve") {
+        if (action === "Approved") {
 
             return confirm(
                 "Are you sure you want to approve this claim?"
@@ -1113,7 +1172,7 @@
 
         }
 
-        if (action === "reject") {
+        if (action === "Rejected") {
 
             return confirm(
                 "Are you sure you want to reject this claim?"

@@ -195,9 +195,10 @@
         color: #111827;
         font-family: inherit;
         font-size: 12px;
-        transition: border-color .2s ease,
-                    box-shadow .2s ease,
-                    background .2s ease;
+        transition:
+            border-color .2s ease,
+            box-shadow .2s ease,
+            background .2s ease;
     }
 
     .form-input,
@@ -240,6 +241,62 @@
         color: #9ca3af;
         font-size: 9px;
         line-height: 1.5;
+    }
+
+    /* =====================================================
+       FILE INPUT
+    ====================================================== */
+
+    .file-input {
+        padding: 9px 10px;
+        cursor: pointer;
+        background: #ffffff;
+    }
+
+    .file-input:hover {
+        background: #f8fafc;
+    }
+
+    .file-input::file-selector-button {
+        margin-right: 10px;
+        padding: 6px 10px;
+        border: 0;
+        border-radius: 7px;
+        background: #eff6ff;
+        color: #2563eb;
+        font-family: inherit;
+        font-size: 10px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+    .file-input::file-selector-button:hover {
+        background: #dbeafe;
+    }
+
+    .image-preview {
+        display: none;
+        margin-top: 10px;
+        padding: 9px;
+        border: 1px solid #e5e7eb;
+        border-radius: 9px;
+        background: #f8fafc;
+    }
+
+    .image-preview img {
+        display: block;
+        width: 100%;
+        max-height: 180px;
+        object-fit: contain;
+        border-radius: 7px;
+        background: #ffffff;
+    }
+
+    .image-preview-text {
+        margin-top: 6px;
+        color: #6b7280;
+        font-size: 9px;
+        line-height: 1.4;
     }
 
     /* =====================================================
@@ -356,6 +413,13 @@
 
     .submit-btn:active {
         transform: translateY(0);
+    }
+
+    .submit-btn:disabled {
+        opacity: .75;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
     }
 
     .submit-btn i {
@@ -715,7 +779,9 @@
             <form
                 method="POST"
                 action="{{ url_for('report_lost') }}"
+                enctype="multipart/form-data"
                 autocomplete="off"
+                id="lostReportForm"
             >
 
                 <!-- =================================================
@@ -976,7 +1042,7 @@
                         </div>
 
 
-                        <!-- IMAGE -->
+                        <!-- IMAGE UPLOAD -->
 
                         <div class="form-group">
 
@@ -984,20 +1050,39 @@
                                 class="form-label"
                                 for="image"
                             >
-                                Image URL
+                                Item Image
                             </label>
 
                             <input
-                                type="url"
+                                type="file"
                                 id="image"
                                 name="image"
-                                class="form-input"
-                                placeholder="Optional image URL"
-                                maxlength="255"
+                                class="form-input file-input"
+                                accept=".jpg,.jpeg,.png,.gif,.webp,image/jpeg,image/png,image/gif,image/webp"
                             >
 
                             <div class="field-help">
-                                Add an image URL if you have one available.
+                                Optional. JPG, JPEG, PNG, GIF or WEBP. Maximum 5 MB.
+                            </div>
+
+                            <div
+                                class="image-preview"
+                                id="imagePreview"
+                            >
+
+                                <img
+                                    id="previewImage"
+                                    src=""
+                                    alt="Selected item preview"
+                                >
+
+                                <div
+                                    class="image-preview-text"
+                                    id="imagePreviewText"
+                                >
+                                    Image preview
+                                </div>
+
                             </div>
 
                         </div>
@@ -1077,6 +1162,7 @@
                     <button
                         type="submit"
                         class="submit-btn"
+                        id="submitButton"
                     >
 
                         <i class="fa-solid fa-paper-plane"></i>
@@ -1379,31 +1465,159 @@
 
 
         /* =================================================
+           IMAGE PREVIEW
+        ================================================== */
+
+        const imageInput =
+            document.getElementById("image");
+
+        const imagePreview =
+            document.getElementById("imagePreview");
+
+        const previewImage =
+            document.getElementById("previewImage");
+
+        const imagePreviewText =
+            document.getElementById("imagePreviewText");
+
+        if (
+            imageInput &&
+            imagePreview &&
+            previewImage &&
+            imagePreviewText
+        ) {
+
+            imageInput.addEventListener(
+                "change",
+                function () {
+
+                    const file =
+                        imageInput.files[0];
+
+                    if (!file) {
+
+                        imagePreview.style.display =
+                            "none";
+
+                        previewImage.src =
+                            "";
+
+                        return;
+
+                    }
+
+                    const allowedTypes = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/gif",
+                        "image/webp"
+                    ];
+
+                    if (
+                        !allowedTypes.includes(
+                            file.type
+                        )
+                    ) {
+
+                        alert(
+                            "Please select a JPG, JPEG, PNG, GIF or WEBP image."
+                        );
+
+                        imageInput.value = "";
+
+                        imagePreview.style.display =
+                            "none";
+
+                        previewImage.src =
+                            "";
+
+                        return;
+
+                    }
+
+                    if (
+                        file.size >
+                        5 * 1024 * 1024
+                    ) {
+
+                        alert(
+                            "Image size must be 5 MB or less."
+                        );
+
+                        imageInput.value = "";
+
+                        imagePreview.style.display =
+                            "none";
+
+                        previewImage.src =
+                            "";
+
+                        return;
+
+                    }
+
+                    const reader =
+                        new FileReader();
+
+                    reader.onload =
+                        function (event) {
+
+                            previewImage.src =
+                                event.target.result;
+
+                            imagePreviewText.textContent =
+                                file.name;
+
+                            imagePreview.style.display =
+                                "block";
+
+                        };
+
+                    reader.readAsDataURL(file);
+
+                }
+            );
+
+        }
+
+
+        /* =================================================
            SUBMIT BUTTON LOADING STATE
         ================================================== */
 
         const form =
-            document.querySelector(
-                'form[action="{{ url_for("report_lost") }}"]'
+            document.getElementById(
+                "lostReportForm"
             );
 
         const submitButton =
-            document.querySelector(".submit-btn");
+            document.getElementById(
+                "submitButton"
+            );
 
-        if (form && submitButton) {
+        if (
+            form &&
+            submitButton
+        ) {
 
-            form.addEventListener("submit", function (event) {
+            form.addEventListener(
+                "submit",
+                function (event) {
 
-                if (!form.checkValidity()) {
-                    return;
+                    if (!form.checkValidity()) {
+
+                        return;
+
+                    }
+
+                    submitButton.disabled =
+                        true;
+
+                    submitButton.innerHTML =
+                        '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+
                 }
-
-                submitButton.disabled = true;
-
-                submitButton.innerHTML =
-                    '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
-
-            });
+            );
 
         }
 

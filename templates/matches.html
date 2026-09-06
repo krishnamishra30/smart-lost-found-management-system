@@ -675,7 +675,7 @@
                         <div class="match-title">
 
                             <h2>
-                                {{ match.lost.item_name }}
+                                {{ match.lost_item.item_name }}
                             </h2>
 
 
@@ -758,7 +758,7 @@
                             </span>
 
                             <span class="detail-value">
-                                {{ match.lost.item_name }}
+                                {{ match.lost_item.item_name }}
                             </span>
 
                         </div>
@@ -771,7 +771,7 @@
                             </span>
 
                             <span class="detail-value">
-                                {{ match.lost.category or "Not specified" }}
+                                {{ match.lost_item.category or "Not specified" }}
                             </span>
 
                         </div>
@@ -784,7 +784,7 @@
                             </span>
 
                             <span class="detail-value">
-                                {{ match.lost.lost_location or "Not specified" }}
+                                {{ match.lost_item.lost_location or "Not specified" }}
                             </span>
 
                         </div>
@@ -797,7 +797,7 @@
                             </span>
 
                             <span class="detail-value">
-                                {{ match.lost.lost_date or "Not specified" }}
+                                {{ match.lost_item.lost_date or "Not specified" }}
                             </span>
 
                         </div>
@@ -810,7 +810,7 @@
                             </span>
 
                             <span class="detail-value">
-                                {{ match.lost.color or "Not specified" }}
+                                {{ match.lost_item.color or "Not specified" }}
                             </span>
 
                         </div>
@@ -824,7 +824,7 @@
                             </div>
 
                             <div class="description-text">
-                                {{ match.lost.description or "No description provided." }}
+                                {{ match.lost_item.description or "No description provided." }}
                             </div>
 
                         </div>
@@ -856,7 +856,7 @@
                             </span>
 
                             <span class="detail-value">
-                                {{ match.found.item_name }}
+                                {{ match.found_item.item_name }}
                             </span>
 
                         </div>
@@ -869,7 +869,7 @@
                             </span>
 
                             <span class="detail-value">
-                                {{ match.found.category or "Not specified" }}
+                                {{ match.found_item.category or "Not specified" }}
                             </span>
 
                         </div>
@@ -882,7 +882,7 @@
                             </span>
 
                             <span class="detail-value">
-                                {{ match.found.found_location or "Not specified" }}
+                                {{ match.found_item.found_location or "Not specified" }}
                             </span>
 
                         </div>
@@ -895,7 +895,7 @@
                             </span>
 
                             <span class="detail-value">
-                                {{ match.found.found_date or "Not specified" }}
+                                {{ match.found_item.found_date or "Not specified" }}
                             </span>
 
                         </div>
@@ -908,7 +908,7 @@
                             </span>
 
                             <span class="detail-value">
-                                {{ match.found.color or "Not specified" }}
+                                {{ match.found_item.color or "Not specified" }}
                             </span>
 
                         </div>
@@ -922,7 +922,7 @@
                             </div>
 
                             <div class="description-text">
-                                {{ match.found.description or "No description provided." }}
+                                {{ match.found_item.description or "No description provided." }}
                             </div>
 
                         </div>
@@ -938,10 +938,10 @@
 
                 <div class="match-indicators">
 
-                    {% if match.lost.category and
-                          match.found.category and
-                          match.lost.category|lower ==
-                          match.found.category|lower %}
+                    {% if match.lost_item.category and
+                          match.found_item.category and
+                          match.lost_item.category|lower ==
+                          match.found_item.category|lower %}
 
                         <span class="indicator">
                             <i class="fa-solid fa-check"></i>
@@ -951,10 +951,10 @@
                     {% endif %}
 
 
-                    {% if match.lost.color and
-                          match.found.color and
-                          match.lost.color|lower ==
-                          match.found.color|lower %}
+                    {% if match.lost_item.color and
+                          match.found_item.color and
+                          match.lost_item.color|lower ==
+                          match.found_item.color|lower %}
 
                         <span class="indicator">
                             <i class="fa-solid fa-check"></i>
@@ -964,10 +964,10 @@
                     {% endif %}
 
 
-                    {% if match.lost.lost_location and
-                          match.found.found_location and
-                          match.lost.lost_location|lower ==
-                          match.found.found_location|lower %}
+                    {% if match.lost_item.lost_location and
+                          match.found_item.found_location and
+                          match.lost_item.lost_location|lower ==
+                          match.found_item.found_location|lower %}
 
                         <span class="indicator">
                             <i class="fa-solid fa-check"></i>
@@ -1001,9 +1001,9 @@
 
 
                     <a href="{{ url_for(
-                        'claim_item',
-                        found_item_id=match.found.id,
-                        lost_item_id=match.lost.id
+                        'claim',
+                        found_item_id=match.found_item.id,
+                        lost_item_id=match.lost_item.id
                     ) }}"
                        class="match-action claim-btn">
 

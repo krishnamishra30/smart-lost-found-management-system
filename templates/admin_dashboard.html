@@ -617,13 +617,21 @@
                     <div class="admin-flash {{ category }}">
 
                         {% if category == "success" %}
+
                             <i class="fa-solid fa-circle-check"></i>
+
                         {% elif category == "error" or category == "danger" %}
+
                             <i class="fa-solid fa-circle-exclamation"></i>
+
                         {% elif category == "warning" %}
+
                             <i class="fa-solid fa-triangle-exclamation"></i>
+
                         {% else %}
+
                             <i class="fa-solid fa-circle-info"></i>
+
                         {% endif %}
 
                         <span>
@@ -990,6 +998,10 @@
 
                                             <i class="fa-solid fa-xmark"></i>
 
+                                        {% elif claim.claim_status|lower == "returned" %}
+
+                                            <i class="fa-solid fa-box-open"></i>
+
                                         {% else %}
 
                                             <i class="fa-solid fa-circle-info"></i>
@@ -1127,7 +1139,7 @@
             <!-- WEBSITE -->
 
             <a
-                href="{{ url_for('home') }}"
+                href="{{ url_for('index') }}"
                 class="admin-action-card"
             >
 

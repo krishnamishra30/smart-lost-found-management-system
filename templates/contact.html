@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block title %}Contact Us | Smart Lost & Found{% endblock %}
@@ -273,7 +272,7 @@
 <div class="contact-page">
     <div class="contact-container">
 
-        <a href="{{ url_for('home') }}" class="contact-back">
+        <a href="{{ url_for('index') }}" class="contact-back">
             <i class="fa-solid fa-arrow-left"></i>
             Back to Home
         </a>
@@ -379,7 +378,7 @@
 
                 <div class="quick-links">
 
-                    <a href="{{ url_for('help_page') }}" class="quick-link">
+                    <a href="{{ url_for('help') }}" class="quick-link">
                         <div class="quick-link-left">
                             <div class="quick-link-icon">
                                 <i class="fa-solid fa-circle-question"></i>
@@ -469,4 +468,3 @@
     </div>
 </div>
 {% endblock %}
-

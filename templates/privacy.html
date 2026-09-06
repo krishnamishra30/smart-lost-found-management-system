@@ -5,172 +5,275 @@
 {% block extra_css %}
 
 <style>
+
     .privacy-page {
         min-height: calc(100vh - 150px);
+
         padding: 50px 20px 70px;
+
         background:
-            radial-gradient(circle at top left, rgba(37, 99, 235, 0.07), transparent 32%),
+            radial-gradient(
+                circle at top left,
+                rgba(37, 99, 235, 0.07),
+                transparent 32%
+            ),
             #f8fafc;
     }
 
+
     .privacy-container {
         width: 100%;
+
         max-width: 950px;
+
         margin: 0 auto;
     }
 
+
     .privacy-header {
         text-align: center;
+
         margin-bottom: 30px;
     }
+
 
     .privacy-icon {
         width: 70px;
         height: 70px;
+
         margin: 0 auto 18px;
+
         border-radius: 18px;
+
         display: flex;
+
         align-items: center;
         justify-content: center;
+
         background: #eff6ff;
+
         color: #2563eb;
+
         font-size: 30px;
-        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.12);
+
+        box-shadow:
+            0 8px 22px rgba(37, 99, 235, 0.12);
     }
+
 
     .privacy-header h1 {
         margin: 0 0 10px;
+
         font-size: 38px;
+
         line-height: 1.2;
+
         color: #0f172a;
+
         font-weight: 800;
     }
 
+
     .privacy-header p {
         margin: 0;
+
         color: #64748b;
+
         font-size: 16px;
+
         line-height: 1.7;
     }
 
+
     .privacy-card {
         background: #ffffff;
+
         border: 1px solid #e2e8f0;
+
         border-radius: 22px;
+
         padding: 38px;
-        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.07);
+
+        box-shadow:
+            0 12px 35px rgba(15, 23, 42, 0.07);
     }
+
 
     .privacy-section {
         padding: 0 0 28px;
+
         margin-bottom: 28px;
+
         border-bottom: 1px solid #e2e8f0;
     }
 
+
     .privacy-section:last-child {
         margin-bottom: 0;
+
         padding-bottom: 0;
+
         border-bottom: none;
     }
 
+
     .privacy-section h2 {
         display: flex;
+
         align-items: center;
+
         gap: 11px;
+
         margin: 0 0 12px;
+
         color: #0f172a;
+
         font-size: 21px;
+
         font-weight: 750;
     }
+
 
     .privacy-section h2 i {
         width: 34px;
         height: 34px;
+
         border-radius: 9px;
+
         display: inline-flex;
+
         align-items: center;
         justify-content: center;
+
         background: #f1f5f9;
+
         color: #2563eb;
+
         font-size: 15px;
+
         flex-shrink: 0;
     }
 
+
     .privacy-section p {
         margin: 0;
+
         color: #64748b;
+
         font-size: 15px;
+
         line-height: 1.8;
     }
 
+
     .privacy-note {
         margin-top: 30px;
+
         padding: 18px 20px;
+
         border-radius: 14px;
+
         background: #f8fafc;
+
         border: 1px solid #e2e8f0;
+
         display: flex;
+
         gap: 13px;
+
         align-items: flex-start;
     }
 
+
     .privacy-note i {
         color: #2563eb;
+
         font-size: 18px;
+
         margin-top: 2px;
     }
 
+
     .privacy-note p {
         margin: 0;
+
         color: #64748b;
+
         font-size: 14px;
+
         line-height: 1.7;
     }
 
+
     .privacy-actions {
         display: flex;
+
         justify-content: center;
+
         gap: 12px;
+
         margin-top: 28px;
+
         flex-wrap: wrap;
     }
 
+
     .privacy-btn {
         display: inline-flex;
+
         align-items: center;
         justify-content: center;
+
         gap: 8px;
+
         min-height: 44px;
+
         padding: 0 18px;
+
         border-radius: 10px;
+
         text-decoration: none;
+
         font-size: 14px;
+
         font-weight: 700;
+
         transition: 0.2s ease;
     }
 
+
     .privacy-btn-primary {
         background: #2563eb;
+
         color: #ffffff;
     }
 
+
     .privacy-btn-primary:hover {
         background: #1d4ed8;
+
         transform: translateY(-1px);
     }
 
+
     .privacy-btn-secondary {
         background: #ffffff;
+
         color: #334155;
+
         border: 1px solid #cbd5e1;
     }
 
+
     .privacy-btn-secondary:hover {
         background: #f8fafc;
+
         border-color: #94a3b8;
     }
 
+
     @media (max-width: 700px) {
+
         .privacy-page {
             padding: 35px 15px 50px;
         }
@@ -185,6 +288,7 @@
 
         .privacy-card {
             padding: 25px 20px;
+
             border-radius: 18px;
         }
 
@@ -203,163 +307,283 @@
         .privacy-btn {
             width: 100%;
         }
+
     }
+
 </style>
 
 {% endblock %}
+
 
 {% block content %}
 
 <div class="privacy-page">
 
-```
-<div class="privacy-container">
+    <div class="privacy-container">
 
-    <div class="privacy-header">
-        <div class="privacy-icon">
-            <i class="fa-solid fa-shield-halved"></i>
-        </div>
 
-        <h1>Privacy Policy</h1>
+        <!-- =================================================
+             HEADER
+        ================================================== -->
 
-        <p>
-            Learn how information is handled within the Smart Lost & Found
-            Management System.
-        </p>
-    </div>
+        <div class="privacy-header">
 
-    <div class="privacy-card">
+            <div class="privacy-icon">
 
-        <div class="privacy-section">
-            <h2>
-                <i class="fa-solid fa-circle-info"></i>
-                About This Policy
-            </h2>
+                <i class="fa-solid fa-shield-halved"></i>
+
+            </div>
+
+
+            <h1>
+                Privacy Policy
+            </h1>
+
 
             <p>
-                This project is designed as a campus lost-and-found
-                management system. This Privacy Policy explains the
-                intended handling of information used by the system for
-                reporting, searching, matching, claiming, and tracking
-                lost and found items.
+                Learn how information is handled within the
+                Smart Lost & Found Management System.
             </p>
+
         </div>
 
-        <div class="privacy-section">
-            <h2>
-                <i class="fa-solid fa-database"></i>
-                Information We Store
-            </h2>
 
-            <p>
-                Account details and item-report information are stored
-                to provide reporting, smart matching, claim management,
-                and status tracking functionality. The stored information
-                may include user account details and information related
-                to reported lost and found items.
-            </p>
-        </div>
+        <!-- =================================================
+             PRIVACY CARD
+        ================================================== -->
 
-        <div class="privacy-section">
-            <h2>
-                <i class="fa-solid fa-lock"></i>
-                Password Security
-            </h2>
+        <div class="privacy-card">
 
-            <p>
-                Website passwords are stored using password hashing rather
-                than plain-text storage. This helps protect user passwords
-                from being directly exposed in the database.
-            </p>
-        </div>
 
-        <div class="privacy-section">
-            <h2>
-                <i class="fa-solid fa-user-shield"></i>
-                Access Control
-            </h2>
+            <!-- ABOUT POLICY -->
 
-            <p>
-                Administrative functions are restricted to accounts assigned
-                the administrator role. Regular users cannot directly access
-                administrator-only management functions through the normal
-                application interface.
-            </p>
-        </div>
+            <div class="privacy-section">
 
-        <div class="privacy-section">
-            <h2>
-                <i class="fa-solid fa-box-open"></i>
-                Item Information
-            </h2>
+                <h2>
 
-            <p>
-                Item descriptions, categories, locations, dates, colors,
-                images, and identification details may be used for searching,
-                smart matching, claim verification, and recovery of lost
-                property.
-            </p>
-        </div>
+                    <i class="fa-solid fa-circle-info"></i>
 
-        <div class="privacy-section">
-            <h2>
-                <i class="fa-solid fa-gears"></i>
-                System Usage
-            </h2>
+                    About This Policy
 
-            <p>
-                Information submitted through the system is used to provide
-                the application's core features, including lost-item
-                reporting, found-item reporting, search, smart matching,
-                claim management, and recovery tracking.
-            </p>
-        </div>
+                </h2>
 
-        <div class="privacy-section">
-            <h2>
-                <i class="fa-solid fa-graduation-cap"></i>
-                Academic Project Use
-            </h2>
 
-            <p>
-                This policy describes the intended information handling
-                for the academic Smart Lost & Found Management System.
-                Additional privacy, security, retention, and institutional
-                compliance requirements should be added before deploying
-                the system for real-world institutional use.
-            </p>
-        </div>
+                <p>
+                    This project is designed as a campus
+                    lost-and-found management system. This
+                    Privacy Policy explains the intended
+                    handling of information used by the system
+                    for reporting, searching, matching,
+                    claiming, and tracking lost and found items.
+                </p>
 
-        <div class="privacy-note">
-            <i class="fa-solid fa-circle-check"></i>
+            </div>
 
-            <p>
-                <strong>Important:</strong>
-                This website is developed as an academic project.
-                The privacy practices described here represent the intended
-                behavior of the project and may require further enhancement
-                for production deployment.
-            </p>
-        </div>
 
-        <div class="privacy-actions">
-            <a href="{{ url_for('home') }}"
-               class="privacy-btn privacy-btn-primary">
-                <i class="fa-solid fa-house"></i>
-                Back to Home
-            </a>
+            <!-- INFORMATION -->
 
-            <a href="{{ url_for('help_page') }}"
-               class="privacy-btn privacy-btn-secondary">
-                <i class="fa-solid fa-circle-question"></i>
-                Help & Support
-            </a>
+            <div class="privacy-section">
+
+                <h2>
+
+                    <i class="fa-solid fa-database"></i>
+
+                    Information We Store
+
+                </h2>
+
+
+                <p>
+                    Account details and item-report information
+                    are stored to provide reporting, smart
+                    matching, claim management, and status
+                    tracking functionality. The stored information
+                    may include user account details and information
+                    related to reported lost and found items.
+                </p>
+
+            </div>
+
+
+            <!-- PASSWORD SECURITY -->
+
+            <div class="privacy-section">
+
+                <h2>
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    Password Security
+
+                </h2>
+
+
+                <p>
+                    Website passwords are stored using password
+                    hashing rather than plain-text storage. This
+                    helps protect user passwords from being
+                    directly exposed in the database.
+                </p>
+
+            </div>
+
+
+            <!-- ACCESS CONTROL -->
+
+            <div class="privacy-section">
+
+                <h2>
+
+                    <i class="fa-solid fa-user-shield"></i>
+
+                    Access Control
+
+                </h2>
+
+
+                <p>
+                    Administrative functions are restricted to
+                    accounts assigned the administrator role.
+                    Regular users cannot directly access
+                    administrator-only management functions
+                    through the normal application interface.
+                </p>
+
+            </div>
+
+
+            <!-- ITEM INFORMATION -->
+
+            <div class="privacy-section">
+
+                <h2>
+
+                    <i class="fa-solid fa-box-open"></i>
+
+                    Item Information
+
+                </h2>
+
+
+                <p>
+                    Item descriptions, categories, locations,
+                    dates, colors, images, and identification
+                    details may be used for searching, smart
+                    matching, claim verification, and recovery
+                    of lost property.
+                </p>
+
+            </div>
+
+
+            <!-- SYSTEM USAGE -->
+
+            <div class="privacy-section">
+
+                <h2>
+
+                    <i class="fa-solid fa-gears"></i>
+
+                    System Usage
+
+                </h2>
+
+
+                <p>
+                    Information submitted through the system is
+                    used to provide the application's core
+                    features, including lost-item reporting,
+                    found-item reporting, search, smart matching,
+                    claim management, and recovery tracking.
+                </p>
+
+            </div>
+
+
+            <!-- ACADEMIC PROJECT -->
+
+            <div class="privacy-section">
+
+                <h2>
+
+                    <i class="fa-solid fa-graduation-cap"></i>
+
+                    Academic Project Use
+
+                </h2>
+
+
+                <p>
+                    This policy describes the intended information
+                    handling for the academic Smart Lost & Found
+                    Management System. Additional privacy,
+                    security, retention, and institutional
+                    compliance requirements should be added before
+                    deploying the system for real-world
+                    institutional use.
+                </p>
+
+            </div>
+
+
+            <!-- IMPORTANT NOTE -->
+
+            <div class="privacy-note">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+
+                <p>
+
+                    <strong>Important:</strong>
+
+                    This website is developed as an academic
+                    project. The privacy practices described here
+                    represent the intended behavior of the project
+                    and may require further enhancement for
+                    production deployment.
+
+                </p>
+
+            </div>
+
+
+            <!-- ACTION BUTTONS -->
+
+            <div class="privacy-actions">
+
+
+                <a
+                    href="{{ url_for('index') }}"
+                    class="privacy-btn privacy-btn-primary"
+                >
+
+                    <i class="fa-solid fa-house"></i>
+
+                    Back to Home
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('help') }}"
+                    class="privacy-btn privacy-btn-secondary"
+                >
+
+                    <i class="fa-solid fa-circle-question"></i>
+
+                    Help & Support
+
+                </a>
+
+
+            </div>
+
+
         </div>
 
     </div>
 
 </div>
-```
 
-</div>
 {% endblock %}

@@ -14,6 +14,9 @@ Dashboard | Smart Lost & Found
 
     .dashboard-page {
         width: 100%;
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 10px 0 35px;
     }
 
     /* =====================================================
@@ -24,35 +27,35 @@ Dashboard | Smart Lost & Found
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 28px;
+        gap: 30px;
+        margin-bottom: 35px;
     }
 
     .dashboard-header-left {
-        max-width: 650px;
+        max-width: 800px;
     }
 
     .dashboard-eyebrow {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 6px 9px;
-        border-radius: 20px;
+        gap: 8px;
+        padding: 9px 13px;
+        border-radius: 22px;
         background: #eff6ff;
         color: #2563eb;
-        font-size: 8px;
+        font-size: 11px;
         font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 10px;
+        letter-spacing: 0.6px;
+        margin-bottom: 14px;
     }
 
     .dashboard-title {
-        font-size: 28px;
+        font-size: 38px;
         line-height: 1.2;
         font-weight: 800;
         color: #172033;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
     }
 
     .dashboard-title span {
@@ -60,29 +63,32 @@ Dashboard | Smart Lost & Found
     }
 
     .dashboard-subtitle {
-        font-size: 11px;
+        font-size: 15px;
         line-height: 1.7;
         color: #718096;
-        max-width: 580px;
+        max-width: 760px;
     }
 
     .dashboard-date {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 10px 13px;
+        gap: 10px;
+        padding: 14px 18px;
         border: 1px solid #e7ebf2;
-        border-radius: 10px;
+        border-radius: 13px;
         background: white;
         color: #64748b;
-        font-size: 9px;
+        font-size: 12px;
         font-weight: 700;
-        box-shadow: 0 4px 15px rgba(15,23,42,0.035);
+        box-shadow: 0 6px 20px rgba(15,23,42,0.05);
+        white-space: nowrap;
     }
 
     .dashboard-date i {
         color: #2563eb;
+        font-size: 14px;
     }
+
 
     /* =====================================================
        STATISTICS
@@ -91,53 +97,54 @@ Dashboard | Smart Lost & Found
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-        margin-bottom: 25px;
+        gap: 20px;
+        margin-bottom: 32px;
     }
 
     .stat-card {
         position: relative;
         overflow: hidden;
+        min-height: 150px;
         background: white;
         border: 1px solid #e7ebf2;
-        border-radius: 14px;
-        padding: 17px;
-        box-shadow: 0 6px 22px rgba(15,23,42,0.04);
+        border-radius: 17px;
+        padding: 23px;
+        box-shadow: 0 8px 28px rgba(15,23,42,0.05);
         transition: 0.25s ease;
     }
 
     .stat-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 30px rgba(15,23,42,0.07);
+        transform: translateY(-4px);
+        box-shadow: 0 15px 35px rgba(15,23,42,0.09);
     }
 
     .stat-card::after {
         content: "";
         position: absolute;
-        width: 70px;
-        height: 70px;
+        width: 90px;
+        height: 90px;
         border-radius: 50%;
-        right: -25px;
-        bottom: -28px;
+        right: -30px;
+        bottom: -35px;
         background: #f8fafc;
-        opacity: 0.8;
+        opacity: 0.9;
     }
 
     .stat-top {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        margin-bottom: 17px;
+        margin-bottom: 25px;
     }
 
     .stat-icon {
-        width: 38px;
-        height: 38px;
-        border-radius: 10px;
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 13px;
+        font-size: 16px;
     }
 
     .stat-icon.blue {
@@ -161,18 +168,19 @@ Dashboard | Smart Lost & Found
     }
 
     .stat-label {
-        font-size: 9px;
+        font-size: 12px;
         font-weight: 700;
         color: #718096;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
     }
 
     .stat-number {
-        font-size: 25px;
+        font-size: 34px;
         line-height: 1;
         font-weight: 800;
         color: #172033;
     }
+
 
     /* =====================================================
        MAIN GRID
@@ -180,10 +188,11 @@ Dashboard | Smart Lost & Found
 
     .dashboard-main-grid {
         display: grid;
-        grid-template-columns: 1.4fr 0.8fr;
-        gap: 18px;
-        margin-bottom: 22px;
+        grid-template-columns: 1.45fr 0.85fr;
+        gap: 24px;
+        margin-bottom: 28px;
     }
+
 
     /* =====================================================
        COMMON SECTION CARD
@@ -194,68 +203,70 @@ Dashboard | Smart Lost & Found
     .process-card {
         background: white;
         border: 1px solid #e7ebf2;
-        border-radius: 15px;
-        box-shadow: 0 6px 22px rgba(15,23,42,0.04);
+        border-radius: 17px;
+        box-shadow: 0 8px 28px rgba(15,23,42,0.05);
     }
 
     .section-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 15px;
-        padding: 18px 19px;
+        gap: 18px;
+        padding: 23px 24px;
         border-bottom: 1px solid #edf0f5;
     }
 
     .section-title-wrap {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 13px;
     }
 
     .section-title-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
+        width: 42px;
+        height: 42px;
+        border-radius: 11px;
         display: flex;
         align-items: center;
         justify-content: center;
         background: #eff6ff;
         color: #2563eb;
-        font-size: 11px;
+        font-size: 15px;
         flex-shrink: 0;
     }
 
     .section-title {
-        font-size: 12px;
+        font-size: 16px;
         font-weight: 800;
         color: #172033;
     }
 
     .section-description {
-        font-size: 8px;
+        font-size: 11px;
         color: #94a3b8;
-        margin-top: 3px;
+        margin-top: 5px;
     }
+
 
     /* =====================================================
        QUICK ACTIONS
     ====================================================== */
 
     .quick-actions {
-        padding: 16px;
+        padding: 21px;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 11px;
+        gap: 15px;
     }
 
     .action-card {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 14px;
+        gap: 15px;
+        min-height: 72px;
+        padding: 17px;
         border: 1px solid #edf0f5;
-        border-radius: 11px;
+        border-radius: 13px;
         background: #fcfdff;
         text-decoration: none;
         transition: 0.2s ease;
@@ -264,18 +275,19 @@ Dashboard | Smart Lost & Found
     .action-card:hover {
         border-color: #cfe0ff;
         background: #f8fbff;
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 7px 20px rgba(37,99,235,0.07);
     }
 
     .action-icon {
-        width: 36px;
-        height: 36px;
+        width: 46px;
+        height: 46px;
         flex-shrink: 0;
-        border-radius: 9px;
+        border-radius: 11px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 12px;
+        font-size: 15px;
     }
 
     .action-icon.lost {
@@ -304,28 +316,29 @@ Dashboard | Smart Lost & Found
     }
 
     .action-title {
-        font-size: 10px;
+        font-size: 13px;
         font-weight: 800;
         color: #334155;
-        margin-bottom: 4px;
+        margin-bottom: 5px;
     }
 
     .action-text {
-        font-size: 8px;
+        font-size: 10px;
         line-height: 1.5;
         color: #94a3b8;
     }
 
     .action-arrow {
         color: #cbd5e1;
-        font-size: 9px;
+        font-size: 11px;
         transition: 0.2s ease;
     }
 
     .action-card:hover .action-arrow {
         color: #2563eb;
-        transform: translateX(2px);
+        transform: translateX(3px);
     }
+
 
     /* =====================================================
        SMART MATCH CARD
@@ -334,46 +347,47 @@ Dashboard | Smart Lost & Found
     .smart-card {
         position: relative;
         overflow: hidden;
-        padding: 20px;
+        min-height: 275px;
+        padding: 28px;
         background: linear-gradient(145deg, #172554, #1e3a8a);
-        border-radius: 15px;
+        border-radius: 17px;
         color: white;
-        box-shadow: 0 10px 30px rgba(30,58,138,0.15);
+        box-shadow: 0 13px 35px rgba(30,58,138,0.18);
     }
 
     .smart-card::before {
         content: "";
         position: absolute;
-        width: 170px;
-        height: 170px;
+        width: 210px;
+        height: 210px;
         border-radius: 50%;
-        top: -85px;
-        right: -55px;
+        top: -105px;
+        right: -65px;
         border: 1px solid rgba(255,255,255,0.10);
     }
 
     .smart-card::after {
         content: "";
         position: absolute;
-        width: 110px;
-        height: 110px;
+        width: 140px;
+        height: 140px;
         border-radius: 50%;
-        bottom: -60px;
-        left: -40px;
+        bottom: -75px;
+        left: -50px;
         border: 1px solid rgba(255,255,255,0.08);
     }
 
     .smart-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 11px;
+        width: 50px;
+        height: 50px;
+        border-radius: 13px;
         display: flex;
         align-items: center;
         justify-content: center;
         background: rgba(255,255,255,0.12);
         color: white;
-        font-size: 14px;
-        margin-bottom: 17px;
+        font-size: 17px;
+        margin-bottom: 24px;
         position: relative;
         z-index: 1;
     }
@@ -381,18 +395,19 @@ Dashboard | Smart Lost & Found
     .smart-card h3 {
         position: relative;
         z-index: 1;
-        font-size: 15px;
+        font-size: 21px;
         font-weight: 800;
-        margin-bottom: 8px;
+        margin-bottom: 11px;
     }
 
     .smart-card p {
         position: relative;
         z-index: 1;
         color: #bfdbfe;
-        font-size: 9px;
-        line-height: 1.7;
-        margin-bottom: 19px;
+        font-size: 12px;
+        line-height: 1.75;
+        margin-bottom: 24px;
+        max-width: 440px;
     }
 
     .smart-button {
@@ -400,60 +415,61 @@ Dashboard | Smart Lost & Found
         z-index: 1;
         display: inline-flex;
         align-items: center;
-        gap: 7px;
-        padding: 9px 12px;
-        border-radius: 8px;
+        gap: 9px;
+        padding: 12px 17px;
+        border-radius: 9px;
         background: white;
         color: #1e3a8a;
-        font-size: 9px;
+        font-size: 11px;
         font-weight: 800;
         text-decoration: none;
         transition: 0.2s ease;
     }
 
     .smart-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+        transform: translateY(-2px);
+        box-shadow: 0 7px 18px rgba(0,0,0,0.14);
     }
+
 
     /* =====================================================
        OVERVIEW
     ====================================================== */
 
     .overview-card {
-        margin-bottom: 22px;
+        margin-bottom: 28px;
     }
 
     .overview-content {
-        padding: 19px;
+        padding: 24px;
     }
 
     .overview-items {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
+        gap: 15px;
     }
 
     .overview-item {
         display: flex;
         align-items: center;
-        gap: 11px;
-        padding: 13px;
+        gap: 14px;
+        padding: 17px;
         background: #f8fafc;
         border: 1px solid #edf0f5;
-        border-radius: 10px;
+        border-radius: 12px;
     }
 
     .overview-item-icon {
-        width: 34px;
-        height: 34px;
-        border-radius: 9px;
+        width: 43px;
+        height: 43px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
         background: white;
         color: #2563eb;
-        font-size: 11px;
+        font-size: 14px;
         flex-shrink: 0;
     }
 
@@ -462,63 +478,65 @@ Dashboard | Smart Lost & Found
     }
 
     .overview-item-label {
-        font-size: 8px;
+        font-size: 10px;
         color: #94a3b8;
-        margin-bottom: 3px;
+        margin-bottom: 4px;
     }
 
     .overview-item-value {
-        font-size: 11px;
+        font-size: 13px;
         color: #334155;
         font-weight: 800;
     }
+
 
     /* =====================================================
        HOW IT WORKS
     ====================================================== */
 
     .process-content {
-        padding: 20px;
+        padding: 25px;
     }
 
     .process-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
+        gap: 20px;
     }
 
     .process-step {
         position: relative;
         text-align: center;
-        padding: 10px;
+        padding: 12px;
     }
 
     .process-number {
-        width: 34px;
-        height: 34px;
-        margin: 0 auto 10px;
+        width: 43px;
+        height: 43px;
+        margin: 0 auto 13px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         background: #eff6ff;
         color: #2563eb;
-        font-size: 10px;
+        font-size: 12px;
         font-weight: 800;
     }
 
     .process-step h4 {
-        font-size: 9px;
+        font-size: 12px;
         font-weight: 800;
         color: #334155;
-        margin-bottom: 5px;
+        margin-bottom: 7px;
     }
 
     .process-step p {
-        font-size: 8px;
-        line-height: 1.5;
+        font-size: 10px;
+        line-height: 1.6;
         color: #94a3b8;
     }
+
 
     /* =====================================================
        BUTTON COMPATIBILITY
@@ -527,13 +545,13 @@ Dashboard | Smart Lost & Found
     .btn.btn-secondary {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 8px 11px;
+        gap: 8px;
+        padding: 10px 14px;
         border: 1px solid #dfe5ee;
-        border-radius: 8px;
+        border-radius: 9px;
         background: white;
         color: #475569;
-        font-size: 9px;
+        font-size: 11px;
         font-weight: 700;
         text-decoration: none;
         transition: 0.2s ease;
@@ -546,11 +564,55 @@ Dashboard | Smart Lost & Found
         background: #f8fbff;
     }
 
+
+    /* =====================================================
+       LARGE SCREEN
+    ====================================================== */
+
+    @media (min-width: 1400px) {
+
+        .dashboard-page {
+            max-width: 1600px;
+        }
+
+        .dashboard-title {
+            font-size: 42px;
+        }
+
+        .dashboard-subtitle {
+            font-size: 16px;
+        }
+
+        .stat-card {
+            min-height: 165px;
+            padding: 26px;
+        }
+
+        .stat-number {
+            font-size: 38px;
+        }
+
+        .smart-card {
+            min-height: 305px;
+            padding: 32px;
+        }
+
+        .smart-card h3 {
+            font-size: 23px;
+        }
+
+        .smart-card p {
+            font-size: 13px;
+        }
+
+    }
+
+
     /* =====================================================
        RESPONSIVE
     ====================================================== */
 
-    @media (max-width: 1000px) {
+    @media (max-width: 1100px) {
 
         .stats-grid {
             grid-template-columns: repeat(2, 1fr);
@@ -562,19 +624,29 @@ Dashboard | Smart Lost & Found
 
     }
 
-    @media (max-width: 700px) {
+
+    @media (max-width: 800px) {
+
+        .dashboard-page {
+            padding: 5px 0 25px;
+        }
 
         .dashboard-header {
             align-items: flex-start;
             flex-direction: column;
+            margin-bottom: 28px;
         }
 
         .dashboard-title {
-            font-size: 23px;
+            font-size: 32px;
         }
 
-        .quick-actions {
-            grid-template-columns: 1fr;
+        .dashboard-subtitle {
+            font-size: 13px;
+        }
+
+        .dashboard-date {
+            width: auto;
         }
 
         .overview-items {
@@ -585,15 +657,25 @@ Dashboard | Smart Lost & Found
             grid-template-columns: repeat(2, 1fr);
         }
 
-        .section-header {
-            align-items: flex-start;
-        }
-
     }
 
-    @media (max-width: 480px) {
+
+    @media (max-width: 600px) {
 
         .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+
+        .dashboard-title {
+            font-size: 28px;
+        }
+
+        .dashboard-subtitle {
+            font-size: 12px;
+        }
+
+        .quick-actions {
             grid-template-columns: 1fr;
         }
 
@@ -601,12 +683,30 @@ Dashboard | Smart Lost & Found
             grid-template-columns: 1fr;
         }
 
-        .dashboard-title {
-            font-size: 21px;
+        .section-header {
+            padding: 18px;
         }
 
-        .dashboard-subtitle {
-            font-size: 10px;
+        .quick-actions {
+            padding: 15px;
+        }
+
+        .overview-content,
+        .process-content {
+            padding: 17px;
+        }
+
+        .smart-card {
+            padding: 23px;
+        }
+
+    }
+
+
+    @media (max-width: 420px) {
+
+        .dashboard-title {
+            font-size: 25px;
         }
 
         .dashboard-date {
@@ -614,17 +714,12 @@ Dashboard | Smart Lost & Found
             box-sizing: border-box;
         }
 
-        .section-header {
-            padding: 15px;
+        .stat-card {
+            padding: 20px;
         }
 
-        .quick-actions {
-            padding: 12px;
-        }
-
-        .overview-content,
-        .process-content {
-            padding: 14px;
+        .smart-card h3 {
+            font-size: 19px;
         }
 
     }

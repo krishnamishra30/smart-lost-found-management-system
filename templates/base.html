@@ -13,8 +13,9 @@
         Smart Lost & Found
         {% endblock %}
     </title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
 
@@ -131,6 +132,64 @@
             align-items: center;
 
             gap: 14px;
+        }
+
+
+        /* =========================
+           GUEST AUTH BUTTONS
+        ========================= */
+
+        .auth-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 40px;
+
+            padding: 0 15px;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            transition: 0.2s ease;
+        }
+
+
+        .login-btn {
+            background: #ffffff;
+
+            color: #374151;
+
+            border: 1px solid #d1d5db;
+        }
+
+
+        .login-btn:hover {
+            background: #f3f4f6;
+
+            color: #2563eb;
+
+            border-color: #cbd5e1;
+        }
+
+
+        .register-btn {
+            background: #2563eb;
+
+            color: #ffffff;
+
+            border: 1px solid #2563eb;
+        }
+
+
+        .register-btn:hover {
+            background: #1d4ed8;
+
+            border-color: #1d4ed8;
+
+            transform: translateY(-1px);
         }
 
 
@@ -657,6 +716,15 @@
             }
 
 
+            .auth-btn {
+                min-height: 38px;
+
+                padding: 0 11px;
+
+                font-size: 12px;
+            }
+
+
             .footer-container {
                 grid-template-columns: 1fr;
 
@@ -679,6 +747,13 @@
 
             .report-btn {
                 display: none;
+            }
+
+
+            .auth-btn {
+                padding: 0 9px;
+
+                font-size: 11px;
             }
 
 
@@ -876,8 +951,6 @@
                             </div>
 
 
-                            <!-- MY REPORTS -->
-
                             <a href="{{ url_for('my_reports') }}"
                                class="menu-item">
 
@@ -886,8 +959,6 @@
                             </a>
 
 
-                            <!-- MY CLAIMS -->
-
                             <a href="{{ url_for('my_claims') }}"
                                class="menu-item">
 
@@ -895,8 +966,6 @@
 
                             </a>
 
-
-                            <!-- TRACK -->
 
                             <a href="{{ url_for('track') }}"
                                class="menu-item">
@@ -926,8 +995,6 @@
                             </div>
 
 
-                            <!-- SEARCH -->
-
                             <a href="{{ url_for('search') }}"
                                class="menu-item">
 
@@ -935,8 +1002,6 @@
 
                             </a>
 
-
-                            <!-- SMART MATCH -->
 
                             <a href="{{ url_for('matches') }}"
                                class="menu-item">
@@ -969,8 +1034,6 @@
                             </div>
 
 
-                            <!-- ADMIN DASHBOARD -->
-
                             <a href="{{ url_for('admin_dashboard') }}"
                                class="menu-item">
 
@@ -978,8 +1041,6 @@
 
                             </a>
 
-
-                            <!-- ADMIN CLAIMS -->
 
                             <a href="{{ url_for('admin_claims') }}"
                                class="menu-item">
@@ -1012,8 +1073,6 @@
                             </div>
 
 
-                            <!-- ABOUT -->
-
                             <a href="{{ url_for('about') }}"
                                class="menu-item">
 
@@ -1021,8 +1080,6 @@
 
                             </a>
 
-
-                            <!-- HOW IT WORKS -->
 
                             <a href="{{ url_for('how_it_works') }}"
                                class="menu-item">
@@ -1032,17 +1089,13 @@
                             </a>
 
 
-                            <!-- HELP -->
-
-                            <a href="{{ url_for('help_page') }}"
+                            <a href="{{ url_for('help') }}"
                                class="menu-item">
 
                                 Help & Support
 
                             </a>
 
-
-                            <!-- PRIVACY -->
 
                             <a href="{{ url_for('privacy') }}"
                                class="menu-item">
@@ -1051,8 +1104,6 @@
 
                             </a>
 
-
-                            <!-- CONTACT -->
 
                             <a href="{{ url_for('contact') }}"
                                class="menu-item">
@@ -1096,7 +1147,27 @@
 
 
                 <!-- =================================
-                     GUEST MENU
+                     GUEST AUTH BUTTONS
+                ================================== -->
+
+                <a href="{{ url_for('login') }}"
+                   class="auth-btn login-btn">
+
+                    Login
+
+                </a>
+
+
+                <a href="{{ url_for('register') }}"
+                   class="auth-btn register-btn">
+
+                    Register
+
+                </a>
+
+
+                <!-- =================================
+                     GUEST THREE DOT MENU
                 ================================== -->
 
                 <div class="menu-wrapper">
@@ -1144,7 +1215,7 @@
                             </a>
 
 
-                            <a href="{{ url_for('help_page') }}"
+                            <a href="{{ url_for('help') }}"
                                class="menu-item">
 
                                 Help & Support
@@ -1371,7 +1442,7 @@
                 <div class="footer-links">
 
 
-                    <a href="{{ url_for('help_page') }}">
+                    <a href="{{ url_for('help') }}">
 
                         Help & Support
 

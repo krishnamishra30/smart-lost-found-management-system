@@ -1,4 +1,3 @@
-```html
 {% extends "base.html" %}
 
 {% block title %}Item Details | Smart Lost & Found{% endblock %}
@@ -296,227 +295,468 @@
 </style>
 {% endblock %}
 
+
 {% block content %}
 <div class="details-page">
+
     <div class="details-container">
 
-        <a href="{{ url_for('search') }}" class="details-back">
+        <!-- BACK TO SEARCH -->
+        <a
+            href="{{ url_for('search') }}"
+            class="details-back"
+        >
             <i class="fa-solid fa-arrow-left"></i>
             Back to Search
         </a>
 
+
+        <!-- HEADER -->
         <div class="details-header">
+
             <div class="details-type">
-                {% if item_type == "lost" %}
+
+                {% if item.item_type == "lost" %}
+
                     <i class="fa-solid fa-magnifying-glass"></i>
                     Lost Report
+
                 {% else %}
+
                     <i class="fa-solid fa-hand-holding-heart"></i>
                     Found Report
+
                 {% endif %}
+
             </div>
 
-            <h1>{{ item.item_name }}</h1>
+
+            <h1>
+                {{ item.item_name }}
+            </h1>
+
 
             <p>
-                Full details of this {{ item_type }} item report
-                submitted to Smart Lost & Found.
+
+                Full details of this
+                {{ item.item_type }}
+                item report submitted to
+                Smart Lost & Found.
+
             </p>
+
         </div>
 
+
+        <!-- MAIN GRID -->
         <div class="details-grid">
 
-            <!-- MAIN DETAILS -->
+
+            <!-- =====================================================
+                 MAIN DETAILS
+                 ===================================================== -->
+
             <div class="details-card">
+
                 <h2>
                     <i class="fa-solid fa-circle-info"></i>
                     Item Information
                 </h2>
 
+
                 <div class="info-list">
 
+
+                    <!-- ITEM NAME -->
                     <div class="info-box">
+
                         <div class="info-label">
+
                             <i class="fa-solid fa-tag"></i>
+
                             Item Name
+
                         </div>
+
+
                         <div class="info-value">
+
                             {{ item.item_name }}
+
                         </div>
+
                     </div>
 
+
+                    <!-- CATEGORY -->
                     <div class="info-box">
+
                         <div class="info-label">
+
                             <i class="fa-solid fa-layer-group"></i>
+
                             Category
+
                         </div>
+
+
                         <div class="info-value">
+
                             {{ item.category }}
+
                         </div>
+
                     </div>
 
+
+                    <!-- LOCATION -->
                     <div class="info-box">
+
                         <div class="info-label">
+
                             <i class="fa-solid fa-location-dot"></i>
+
                             Location
-                        </div>
-                        <div class="info-value">
-                            {{ item.location }}
-                        </div>
-                    </div>
 
-                    <div class="info-box">
-                        <div class="info-label">
-                            <i class="fa-solid fa-calendar-days"></i>
-                            Date
                         </div>
-                        <div class="info-value">
-                            {{ item.item_date }}
-                        </div>
-                    </div>
 
-                    <div class="info-box">
-                        <div class="info-label">
-                            <i class="fa-solid fa-palette"></i>
-                            Color
-                        </div>
-                        <div class="info-value">
-                            {{ item.color if item.color else "Not specified" }}
-                        </div>
-                    </div>
 
-                    <div class="info-box">
-                        <div class="info-label">
-                            <i class="fa-solid fa-circle-check"></i>
-                            Status
-                        </div>
                         <div class="info-value">
-                            {{ item.status }}
-                        </div>
-                    </div>
 
-                    <div class="info-box full">
-                        <div class="info-label">
-                            <i class="fa-solid fa-align-left"></i>
-                            Description
-                        </div>
-                        <div class="info-value">
-                            {{ item.description }}
-                        </div>
-                    </div>
+                            {% if item.item_type == "lost" %}
 
-                    <div class="info-box full">
-                        <div class="info-label">
-                            <i class="fa-solid fa-fingerprint"></i>
-                            Identification Details
-                        </div>
-                        <div class="info-value">
-                            {% if item.identification_details %}
-                                {{ item.identification_details }}
+                                {{ item.lost_location }}
+
                             {% else %}
-                                No additional identification details provided.
+
+                                {{ item.found_location }}
+
                             {% endif %}
+
                         </div>
+
                     </div>
+
+
+                    <!-- DATE -->
+                    <div class="info-box">
+
+                        <div class="info-label">
+
+                            <i class="fa-solid fa-calendar-days"></i>
+
+                            Date
+
+                        </div>
+
+
+                        <div class="info-value">
+
+                            {% if item.item_type == "lost" %}
+
+                                {{ item.lost_date }}
+
+                            {% else %}
+
+                                {{ item.found_date }}
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- COLOR -->
+                    <div class="info-box">
+
+                        <div class="info-label">
+
+                            <i class="fa-solid fa-palette"></i>
+
+                            Color
+
+                        </div>
+
+
+                        <div class="info-value">
+
+                            {% if item.color %}
+
+                                {{ item.color }}
+
+                            {% else %}
+
+                                Not specified
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- STATUS -->
+                    <div class="info-box">
+
+                        <div class="info-label">
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            Status
+
+                        </div>
+
+
+                        <div class="info-value">
+
+                            {{ item.status }}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+                    <div class="info-box full">
+
+                        <div class="info-label">
+
+                            <i class="fa-solid fa-align-left"></i>
+
+                            Description
+
+                        </div>
+
+
+                        <div class="info-value">
+
+                            {{ item.description }}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- IDENTIFICATION DETAILS -->
+                    <div class="info-box full">
+
+                        <div class="info-label">
+
+                            <i class="fa-solid fa-fingerprint"></i>
+
+                            Identification Details
+
+                        </div>
+
+
+                        <div class="info-value">
+
+                            {% if item.identification_details %}
+
+                                {{ item.identification_details }}
+
+                            {% else %}
+
+                                No additional identification details provided.
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
 
                 </div>
+
+
+                <!-- =================================================
+                     IMAGE
+                     ================================================= -->
 
                 {% if item.image %}
+
                 <div class="image-box">
+
                     <img
-                        src="{{ url_for('static', filename=item.image) }}"
+                        src="{{ url_for('uploaded_file', filename=item.image) }}"
                         alt="{{ item.item_name }}"
-                        onerror="this.style.display='none';"
+                        onerror="this.parentElement.innerHTML='<div class=&quot;empty-image&quot;><i class=&quot;fa-regular fa-image&quot;></i><div>Image unavailable</div></div>';"
                     >
+
                 </div>
+
+                {% else %}
+
+                <div class="image-box">
+
+                    <div class="empty-image">
+
+                        <i class="fa-regular fa-image"></i>
+
+                        <div>
+                            No image provided for this report.
+                        </div>
+
+                    </div>
+
+                </div>
+
                 {% endif %}
+
+
             </div>
 
-            <!-- SIDE PANEL -->
+
+            <!-- =====================================================
+                 SIDE PANEL
+                 ===================================================== -->
+
             <div class="details-card">
 
+
+                <!-- STATUS -->
                 <div class="status-box">
+
                     <div class="status-icon">
-                        {% if item_type == "lost" %}
-                            <i class="fa-solid fa-search"></i>
+
+                        {% if item.item_type == "lost" %}
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
                         {% else %}
+
                             <i class="fa-solid fa-box-open"></i>
+
                         {% endif %}
+
                     </div>
+
 
                     <div class="status-title">
+
                         Current Status
+
                     </div>
+
 
                     <div class="status-value">
+
                         {{ item.status }}
+
                     </div>
+
                 </div>
 
+
+                <!-- REPORTER -->
                 <div class="reporter-box">
+
                     <h3>
+
                         <i class="fa-solid fa-user"></i>
+
                         Reported By
+
                     </h3>
 
+
                     <div class="reporter-detail">
+
                         <i class="fa-solid fa-user"></i>
+
                         {{ item.reporter_name if item.reporter_name else "Unknown User" }}
+
                     </div>
+
 
                     {% if item.reporter_email %}
+
                     <div class="reporter-detail">
+
                         <i class="fa-solid fa-envelope"></i>
+
                         {{ item.reporter_email }}
+
                     </div>
+
                     {% endif %}
+
                 </div>
 
+
+                <!-- ACTIONS -->
                 <div class="action-area">
 
-                    {% if item_type == "found" and item.status == "Found" %}
-                    <a
-                        href="{{ url_for(
-                            'matches'
-                        ) }}"
-                        class="action-btn action-primary"
-                    >
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        Check Smart Match
-                    </a>
-                    {% endif %}
 
-                    {% if item_type == "lost" %}
+                    <!-- FOUND ITEM -->
+                    {% if item.item_type == "found" and item.status == "Found" %}
+
                     <a
                         href="{{ url_for('matches') }}"
                         class="action-btn action-primary"
                     >
+
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        Check Smart Matches
+
+                        Check Smart Match
+
                     </a>
+
                     {% endif %}
 
+
+                    <!-- LOST ITEM -->
+                    {% if item.item_type == "lost" and item.status == "Lost" %}
+
+                    <a
+                        href="{{ url_for('matches') }}"
+                        class="action-btn action-primary"
+                    >
+
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                        Check Smart Matches
+
+                    </a>
+
+                    {% endif %}
+
+
+                    <!-- SEARCH -->
                     <a
                         href="{{ url_for('search') }}"
                         class="action-btn action-secondary"
                     >
+
                         <i class="fa-solid fa-magnifying-glass"></i>
+
                         Search Other Items
+
                     </a>
 
+
+                    <!-- DASHBOARD -->
                     <a
                         href="{{ url_for('dashboard') }}"
                         class="action-btn action-secondary"
                     >
+
                         <i class="fa-solid fa-house"></i>
+
                         Dashboard
+
                     </a>
+
 
                 </div>
 
+
             </div>
+
         </div>
+
     </div>
+
 </div>
 {% endblock %}
-```

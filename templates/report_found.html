@@ -193,6 +193,49 @@
         color: #9ca3af;
     }
 
+    .image-upload-wrapper {
+        position: relative;
+    }
+
+    .image-upload-input {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px dashed #cbd5e1;
+        border-radius: 10px;
+        background: #f8fafc;
+        color: #374151;
+        font-family: inherit;
+        font-size: 13px;
+        padding: 10px;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .image-upload-input:hover {
+        border-color: #16a34a;
+        background: #f0fdf4;
+    }
+
+    .image-preview {
+        display: none;
+        margin-top: 10px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+        background: #f8fafc;
+    }
+
+    .image-preview img {
+        display: block;
+        width: 100%;
+        max-height: 220px;
+        object-fit: cover;
+    }
+
+    .image-preview.active {
+        display: block;
+    }
+
     .submit-area {
         display: flex;
         justify-content: space-between;
@@ -238,6 +281,13 @@
         background: #15803d;
         transform: translateY(-1px);
         box-shadow: 0 7px 18px rgba(22, 163, 74, 0.22);
+    }
+
+    .submit-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
     }
 
     .info-column {
@@ -454,9 +504,13 @@
             </div>
 
 
-            <form method="POST"
-                  action="{{ url_for('report_found') }}"
-                  autocomplete="off">
+            <form
+                method="POST"
+                action="{{ url_for('report_found') }}"
+                enctype="multipart/form-data"
+                autocomplete="off"
+                id="foundReportForm"
+            >
 
                 <!-- BASIC INFORMATION -->
                 <div class="form-section">
@@ -625,20 +679,34 @@
                         <div class="form-group">
 
                             <label class="form-label" for="image">
-                                Image URL
+                                Item Image
                             </label>
 
-                            <input
-                                type="text"
-                                id="image"
-                                name="image"
-                                class="form-input"
-                                placeholder="Optional image URL"
-                                maxlength="255"
-                            >
+                            <div class="image-upload-wrapper">
 
-                            <div class="field-help">
-                                Add an image URL if you have one available.
+                                <input
+                                    type="file"
+                                    id="image"
+                                    name="image"
+                                    class="image-upload-input"
+                                    accept=".jpg,.jpeg,.png,.gif,.webp,image/jpeg,image/png,image/gif,image/webp"
+                                >
+
+                                <div class="field-help">
+                                    Optional. JPG, JPEG, PNG, GIF or WEBP. Maximum size: 5 MB.
+                                </div>
+
+                                <div
+                                    class="image-preview"
+                                    id="imagePreview"
+                                >
+                                    <img
+                                        id="previewImage"
+                                        src=""
+                                        alt="Selected item preview"
+                                    >
+                                </div>
+
                             </div>
 
                         </div>
@@ -704,11 +772,17 @@
                     </div>
 
 
-                    <button type="submit" class="submit-btn">
+                    <button
+                        type="submit"
+                        class="submit-btn"
+                        id="submitBtn"
+                    >
 
                         <i class="fa-solid fa-paper-plane"></i>
 
-                        Submit Found Report
+                        <span id="submitText">
+                            Submit Found Report
+                        </span>
 
                     </button>
 
@@ -918,12 +992,35 @@
 
     document.addEventListener("DOMContentLoaded", function () {
 
+        const form = document.getElementById("foundReportForm");
+
         const dateInput = document.getElementById("found_date");
+
         const description = document.getElementById("description");
-        const descriptionCount = document.getElementById("descriptionCount");
+
+        const descriptionCount =
+            document.getElementById("descriptionCount");
+
+        const imageInput =
+            document.getElementById("image");
+
+        const imagePreview =
+            document.getElementById("imagePreview");
+
+        const previewImage =
+            document.getElementById("previewImage");
+
+        const submitBtn =
+            document.getElementById("submitBtn");
+
+        const submitText =
+            document.getElementById("submitText");
 
 
-        // Prevent selecting a future date
+        /* =========================================
+           PREVENT FUTURE DATE
+        ========================================= */
+
         if (dateInput) {
 
             const today = new Date()
@@ -934,7 +1031,10 @@
         }
 
 
-        // Description character counter
+        /* =========================================
+           DESCRIPTION CHARACTER COUNTER
+        ========================================= */
+
         if (description && descriptionCount) {
 
             function updateDescriptionCount() {
@@ -950,6 +1050,132 @@
             );
 
             updateDescriptionCount();
+        }
+
+
+        /* =========================================
+           IMAGE PREVIEW
+        ========================================= */
+
+        if (imageInput) {
+
+            imageInput.addEventListener(
+                "change",
+                function () {
+
+                    const file = this.files[0];
+
+                    if (!file) {
+
+                        imagePreview.classList.remove(
+                            "active"
+                        );
+
+                        previewImage.src = "";
+
+                        return;
+                    }
+
+
+                    const allowedTypes = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/gif",
+                        "image/webp"
+                    ];
+
+
+                    if (!allowedTypes.includes(
+                        file.type
+                    )) {
+
+                        alert(
+                            "Please select a JPG, JPEG, PNG, GIF or WEBP image."
+                        );
+
+                        this.value = "";
+
+                        imagePreview.classList.remove(
+                            "active"
+                        );
+
+                        previewImage.src = "";
+
+                        return;
+                    }
+
+
+                    const maxSize =
+                        5 * 1024 * 1024;
+
+
+                    if (file.size > maxSize) {
+
+                        alert(
+                            "Image size must not exceed 5 MB."
+                        );
+
+                        this.value = "";
+
+                        imagePreview.classList.remove(
+                            "active"
+                        );
+
+                        previewImage.src = "";
+
+                        return;
+                    }
+
+
+                    const reader =
+                        new FileReader();
+
+
+                    reader.onload = function (event) {
+
+                        previewImage.src =
+                            event.target.result;
+
+                        imagePreview.classList.add(
+                            "active"
+                        );
+
+                    };
+
+
+                    reader.readAsDataURL(file);
+
+                }
+            );
+        }
+
+
+        /* =========================================
+           SUBMIT BUTTON
+        ========================================= */
+
+        if (form && submitBtn && submitText) {
+
+            form.addEventListener(
+                "submit",
+                function () {
+
+                    submitBtn.disabled = true;
+
+                    submitText.textContent =
+                        "Submitting...";
+
+                    const icon =
+                        submitBtn.querySelector("i");
+
+                    if (icon) {
+
+                        icon.className =
+                            "fa-solid fa-spinner fa-spin";
+                    }
+
+                }
+            );
         }
 
     });
