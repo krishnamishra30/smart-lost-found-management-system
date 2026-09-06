@@ -733,6 +733,8 @@
                     </div>
 
 
+                    <!-- STATUS -->
+
                     <span
                         class="claim-status {{ claim.claim_status|lower }}"
                     >
@@ -776,7 +778,9 @@
 
                 <div class="claim-card-body">
 
-                    <!-- CLAIMANT -->
+                    <!-- =================================================
+                         CLAIMANT
+                    ================================================== -->
 
                     <div class="claimant-panel">
 
@@ -803,7 +807,9 @@
                     </div>
 
 
-                    <!-- LOST / FOUND ITEMS -->
+                    <!-- =================================================
+                         LOST / FOUND ITEMS
+                    ================================================== -->
 
                     <div class="items-grid">
 
@@ -859,7 +865,7 @@
 
                                 <strong>Description:</strong>
 
-                                {{ claim.lost_description }}
+                                {{ claim.lost_description or "Not provided" }}
 
                             </p>
 
@@ -930,7 +936,7 @@
 
                                 <strong>Description:</strong>
 
-                                {{ claim.found_description }}
+                                {{ claim.found_description or "Not provided" }}
 
                             </p>
 
@@ -951,7 +957,9 @@
                     </div>
 
 
-                    <!-- CLAIM MESSAGE -->
+                    <!-- =================================================
+                         CLAIM EXPLANATION
+                    ================================================== -->
 
                     <div class="claim-message-box">
 
@@ -972,7 +980,9 @@
                     </div>
 
 
-                    <!-- PREVIOUS ADMIN NOTE -->
+                    <!-- =================================================
+                         PREVIOUS ADMIN NOTE
+                    ================================================== -->
 
                     {% if claim.admin_note %}
 
@@ -997,7 +1007,9 @@
                     {% endif %}
 
 
-                    <!-- PENDING ACTION -->
+                    <!-- =================================================
+                         PENDING ACTION
+                    ================================================== -->
 
                     {% if claim.claim_status|lower == "pending" %}
 
@@ -1069,6 +1081,10 @@
                         </div>
 
 
+                    <!-- =================================================
+                         APPROVED
+                    ================================================== -->
+
                     {% elif claim.claim_status|lower == "approved" %}
 
                         <div class="claim-completed approved-message">
@@ -1079,6 +1095,10 @@
 
                         </div>
 
+
+                    <!-- =================================================
+                         REJECTED
+                    ================================================== -->
 
                     {% elif claim.claim_status|lower == "rejected" %}
 
@@ -1091,6 +1111,10 @@
                         </div>
 
 
+                    <!-- =================================================
+                         RETURNED
+                    ================================================== -->
+
                     {% elif claim.claim_status|lower == "returned" %}
 
                         <div class="claim-completed approved-message">
@@ -1100,7 +1124,6 @@
                             This item has been marked as returned.
 
                         </div>
-
 
                     {% endif %}
 
@@ -1151,6 +1174,10 @@
 
 </main>
 
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
 
 <script>
 

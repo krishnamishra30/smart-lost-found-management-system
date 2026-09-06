@@ -40,6 +40,8 @@ app.secret_key = os.environ.get(
 
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
+# Maximum request size = 5 MB
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 
 
@@ -157,7 +159,10 @@ def delete_uploaded_image(filename):
     try:
 
         if os.path.isfile(file_path):
-            os.remove(file_path)
+
+            os.remove(
+                file_path
+            )
 
     except OSError as error:
 
@@ -182,6 +187,7 @@ def similarity(value1, value2):
     ).strip().lower()
 
     if not value1 or not value2:
+
         return 0
 
     return SequenceMatcher(
@@ -385,6 +391,10 @@ def register():
         ""
     )
 
+    # -----------------------------------------------------
+    # NAME VALIDATION
+    # -----------------------------------------------------
+
     if not name:
 
         flash(
@@ -407,6 +417,10 @@ def register():
             "register.html"
         )
 
+    # -----------------------------------------------------
+    # EMAIL VALIDATION
+    # -----------------------------------------------------
+
     email_pattern = (
         r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
     )
@@ -424,6 +438,10 @@ def register():
         return render_template(
             "register.html"
         )
+
+    # -----------------------------------------------------
+    # PASSWORD VALIDATION
+    # -----------------------------------------------------
 
     if len(password) < 6:
 
@@ -446,6 +464,10 @@ def register():
         return render_template(
             "register.html"
         )
+
+    # -----------------------------------------------------
+    # DATABASE CONNECTION
+    # -----------------------------------------------------
 
     connection = get_db_connection()
 
@@ -549,6 +571,7 @@ def register():
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -688,6 +711,7 @@ def login():
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -731,6 +755,10 @@ def dashboard():
 
         user_id = session["user_id"]
 
+        # -------------------------------------------------
+        # LOST REPORT COUNT
+        # -------------------------------------------------
+
         cursor.execute(
             """
             SELECT COUNT(*)
@@ -741,6 +769,10 @@ def dashboard():
         )
 
         lost_count = cursor.fetchone()[0]
+
+        # -------------------------------------------------
+        # FOUND REPORT COUNT
+        # -------------------------------------------------
 
         cursor.execute(
             """
@@ -813,6 +845,7 @@ def dashboard():
             )
 
             if match_score >= 35:
+
                 possible_matches += 1
 
         # -------------------------------------------------
@@ -823,8 +856,10 @@ def dashboard():
             """
             SELECT COUNT(*)
             FROM claims c
+
             INNER JOIN lost_items l
                 ON c.lost_item_id = l.id
+
             WHERE c.claimant_id = %s
             AND c.status = 'Approved'
             """,
@@ -859,6 +894,7 @@ def dashboard():
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -921,6 +957,10 @@ def report_lost():
         ""
     ).strip()
 
+    # -----------------------------------------------------
+    # REQUIRED FIELD VALIDATION
+    # -----------------------------------------------------
+
     if not item_name:
 
         flash(
@@ -975,6 +1015,10 @@ def report_lost():
         return render_template(
             "report_lost.html"
         )
+
+    # -----------------------------------------------------
+    # LENGTH VALIDATION
+    # -----------------------------------------------------
 
     if len(item_name) > 150:
 
@@ -1031,6 +1075,10 @@ def report_lost():
             "report_lost.html"
         )
 
+    # -----------------------------------------------------
+    # DATE VALIDATION
+    # -----------------------------------------------------
+
     try:
 
         parsed_lost_date = date.fromisoformat(
@@ -1059,6 +1107,10 @@ def report_lost():
             "report_lost.html"
         )
 
+    # -----------------------------------------------------
+    # IMAGE UPLOAD
+    # -----------------------------------------------------
+
     uploaded_image = request.files.get(
         "image"
     )
@@ -1082,12 +1134,19 @@ def report_lost():
             "report_lost.html"
         )
 
+    # -----------------------------------------------------
+    # DATABASE
+    # -----------------------------------------------------
+
     connection = get_db_connection()
 
     if connection is None:
 
         if saved_image:
-            delete_uploaded_image(saved_image)
+
+            delete_uploaded_image(
+                saved_image
+            )
 
         flash(
             "Database error. Please try again.",
@@ -1163,7 +1222,10 @@ def report_lost():
         connection.rollback()
 
         if saved_image:
-            delete_uploaded_image(saved_image)
+
+            delete_uploaded_image(
+                saved_image
+            )
 
         print(
             "Report lost error:",
@@ -1182,6 +1244,7 @@ def report_lost():
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -1244,6 +1307,10 @@ def report_found():
         ""
     ).strip()
 
+    # -----------------------------------------------------
+    # REQUIRED FIELD VALIDATION
+    # -----------------------------------------------------
+
     if not item_name:
 
         flash(
@@ -1298,6 +1365,10 @@ def report_found():
         return render_template(
             "report_found.html"
         )
+
+    # -----------------------------------------------------
+    # LENGTH VALIDATION
+    # -----------------------------------------------------
 
     if len(item_name) > 150:
 
@@ -1354,6 +1425,10 @@ def report_found():
             "report_found.html"
         )
 
+    # -----------------------------------------------------
+    # DATE VALIDATION
+    # -----------------------------------------------------
+
     try:
 
         parsed_found_date = date.fromisoformat(
@@ -1382,6 +1457,10 @@ def report_found():
             "report_found.html"
         )
 
+    # -----------------------------------------------------
+    # IMAGE UPLOAD
+    # -----------------------------------------------------
+
     uploaded_image = request.files.get(
         "image"
     )
@@ -1405,12 +1484,19 @@ def report_found():
             "report_found.html"
         )
 
+    # -----------------------------------------------------
+    # DATABASE
+    # -----------------------------------------------------
+
     connection = get_db_connection()
 
     if connection is None:
 
         if saved_image:
-            delete_uploaded_image(saved_image)
+
+            delete_uploaded_image(
+                saved_image
+            )
 
         flash(
             "Database error. Please try again.",
@@ -1486,7 +1572,10 @@ def report_found():
         connection.rollback()
 
         if saved_image:
-            delete_uploaded_image(saved_image)
+
+            delete_uploaded_image(
+                saved_image
+            )
 
         print(
             "Report found error:",
@@ -1505,6 +1594,7 @@ def report_found():
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -1611,8 +1701,10 @@ def search():
                     u.name AS reporter_name,
                     'Lost' AS report_type
                 FROM lost_items l
+
                 INNER JOIN users u
                     ON l.user_id = u.id
+
                 WHERE 1 = 1
             """
 
@@ -1694,8 +1786,10 @@ def search():
                     u.name AS reporter_name,
                     'Found' AS report_type
                 FROM found_items f
+
                 INNER JOIN users u
                     ON f.user_id = u.id
+
                 WHERE 1 = 1
             """
 
@@ -1802,6 +1896,7 @@ def search():
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -1870,9 +1965,12 @@ def item_details(
                     l.*,
                     u.name AS reporter_name,
                     u.email AS reporter_email
+
                 FROM lost_items l
+
                 INNER JOIN users u
                     ON l.user_id = u.id
+
                 WHERE l.id = %s
                 """,
                 (item_id,)
@@ -1886,9 +1984,12 @@ def item_details(
                     f.*,
                     u.name AS reporter_name,
                     u.email AS reporter_email
+
                 FROM found_items f
+
                 INNER JOIN users u
                     ON f.user_id = u.id
+
                 WHERE f.id = %s
                 """,
                 (item_id,)
@@ -1933,6 +2034,7 @@ def item_details(
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -1975,12 +2077,18 @@ def matches():
 
         user_id = session["user_id"]
 
+        # -------------------------------------------------
+        # USER LOST ITEMS
+        # -------------------------------------------------
+
         cursor.execute(
             """
             SELECT *
             FROM lost_items
+
             WHERE user_id = %s
             AND status = 'Lost'
+
             ORDER BY created_at DESC
             """,
             (user_id,)
@@ -1988,20 +2096,32 @@ def matches():
 
         lost_items = cursor.fetchall()
 
+        # -------------------------------------------------
+        # ALL ACTIVE FOUND ITEMS
+        # -------------------------------------------------
+
         cursor.execute(
             """
             SELECT
                 f.*,
                 u.name AS reporter_name
+
             FROM found_items f
+
             INNER JOIN users u
                 ON f.user_id = u.id
+
             WHERE f.status = 'Found'
+
             ORDER BY f.created_at DESC
             """
         )
 
         found_items = cursor.fetchall()
+
+        # -------------------------------------------------
+        # CALCULATE MATCHES
+        # -------------------------------------------------
 
         all_matches = []
 
@@ -2052,6 +2172,7 @@ def matches():
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -2112,7 +2233,9 @@ def my_reports():
                 image,
                 created_at,
                 'Lost' AS report_type
+
             FROM lost_items
+
             WHERE user_id = %s
             """,
             (user_id,)
@@ -2138,7 +2261,9 @@ def my_reports():
                 image,
                 created_at,
                 'Found' AS report_type
+
             FROM found_items
+
             WHERE user_id = %s
             """,
             (user_id,)
@@ -2183,6 +2308,7 @@ def my_reports():
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -2228,6 +2354,10 @@ def claim(
             dictionary=True
         )
 
+        # -------------------------------------------------
+        # GET FOUND ITEM
+        # -------------------------------------------------
+
         cursor.execute(
             """
             SELECT *
@@ -2239,10 +2369,15 @@ def claim(
 
         found_item = cursor.fetchone()
 
+        # -------------------------------------------------
+        # GET USER'S LOST ITEM
+        # -------------------------------------------------
+
         cursor.execute(
             """
             SELECT *
             FROM lost_items
+
             WHERE id = %s
             AND user_id = %s
             """,
@@ -2266,7 +2401,7 @@ def claim(
             )
 
         # -------------------------------------------------
-        # USER CANNOT CLAIM THEIR OWN FOUND REPORT
+        # USER CANNOT CLAIM OWN FOUND REPORT
         # -------------------------------------------------
 
         if found_item["user_id"] == session["user_id"]:
@@ -2281,7 +2416,7 @@ def claim(
             )
 
         # -------------------------------------------------
-        # FOUND ITEM MUST STILL BE AVAILABLE
+        # FOUND ITEM MUST BE AVAILABLE
         # -------------------------------------------------
 
         if found_item["status"] != "Found":
@@ -2310,6 +2445,10 @@ def claim(
                 url_for("matches")
             )
 
+        # -------------------------------------------------
+        # GET CLAIM PAGE
+        # -------------------------------------------------
+
         if request.method == "GET":
 
             return render_template(
@@ -2317,6 +2456,10 @@ def claim(
                 found_item=found_item,
                 lost_item=lost_item
             )
+
+        # -------------------------------------------------
+        # CLAIM MESSAGE
+        # -------------------------------------------------
 
         claim_message = request.form.get(
             "claim_message",
@@ -2371,7 +2514,9 @@ def claim(
             SELECT
                 id,
                 status
+
             FROM claims
+
             WHERE found_item_id = %s
             AND claimant_id = %s
             AND lost_item_id = %s
@@ -2407,13 +2552,14 @@ def claim(
             )
 
         # -------------------------------------------------
-        # CHECK IF ANOTHER CLAIM IS ALREADY APPROVED
+        # CHECK APPROVED CLAIM FOR FOUND ITEM
         # -------------------------------------------------
 
         cursor.execute(
             """
             SELECT id
             FROM claims
+
             WHERE found_item_id = %s
             AND status = 'Approved'
             """,
@@ -2447,6 +2593,7 @@ def claim(
                 claim_message,
                 status
             )
+
             VALUES
             (
                 %s,
@@ -2497,6 +2644,7 @@ def claim(
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -2540,6 +2688,7 @@ def my_claims():
         cursor.execute(
             """
             SELECT
+
                 c.id AS claim_id,
                 c.found_item_id,
                 c.claimant_id,
@@ -2605,6 +2754,7 @@ def my_claims():
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -2649,6 +2799,10 @@ def admin_dashboard():
 
         cursor = connection.cursor()
 
+        # -------------------------------------------------
+        # TOTAL USERS
+        # -------------------------------------------------
+
         cursor.execute(
             """
             SELECT COUNT(*)
@@ -2657,6 +2811,10 @@ def admin_dashboard():
         )
 
         total_users = cursor.fetchone()[0]
+
+        # -------------------------------------------------
+        # TOTAL LOST
+        # -------------------------------------------------
 
         cursor.execute(
             """
@@ -2667,6 +2825,10 @@ def admin_dashboard():
 
         total_lost = cursor.fetchone()[0]
 
+        # -------------------------------------------------
+        # TOTAL FOUND
+        # -------------------------------------------------
+
         cursor.execute(
             """
             SELECT COUNT(*)
@@ -2675,6 +2837,10 @@ def admin_dashboard():
         )
 
         total_found = cursor.fetchone()[0]
+
+        # -------------------------------------------------
+        # TOTAL CLAIMS
+        # -------------------------------------------------
 
         cursor.execute(
             """
@@ -2686,7 +2852,7 @@ def admin_dashboard():
         total_claims = cursor.fetchone()[0]
 
         # -------------------------------------------------
-        # CLAIM STATUS COUNTS
+        # PENDING CLAIMS
         # -------------------------------------------------
 
         cursor.execute(
@@ -2699,6 +2865,10 @@ def admin_dashboard():
 
         pending_claims = cursor.fetchone()[0]
 
+        # -------------------------------------------------
+        # APPROVED CLAIMS
+        # -------------------------------------------------
+
         cursor.execute(
             """
             SELECT COUNT(*)
@@ -2708,6 +2878,10 @@ def admin_dashboard():
         )
 
         approved_claims = cursor.fetchone()[0]
+
+        # -------------------------------------------------
+        # REJECTED CLAIMS
+        # -------------------------------------------------
 
         cursor.execute(
             """
@@ -2751,13 +2925,14 @@ def admin_dashboard():
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
 
 
 # =========================================================
-# ADMIN CLAIMS
+# ADMIN CLAIM MANAGEMENT
 # =========================================================
 
 @app.route("/admin/claims")
@@ -2791,39 +2966,60 @@ def admin_claims():
             dictionary=True
         )
 
+        # -------------------------------------------------
+        # IMPORTANT:
+        #
+        # c.status AS claim_status
+        #
+        # This matches:
+        #
+        # claim.claim_status
+        #
+        # used by admin_claims.html
+        # -------------------------------------------------
+
         cursor.execute(
             """
             SELECT
 
                 c.id AS claim_id,
+                c.found_item_id,
+                c.claimant_id,
+                c.lost_item_id,
                 c.claim_message,
-                c.status,
+                c.status AS claim_status,
                 c.admin_note,
                 c.created_at,
 
-                claimant.name AS claimant_name,
-                claimant.email AS claimant_email,
-
-                f.item_name AS found_item_name,
-                f.category AS found_category,
-                f.found_location,
-                f.found_date,
+                u.name AS claimant_name,
+                u.email AS claimant_email,
 
                 l.item_name AS lost_item_name,
                 l.category AS lost_category,
-                l.lost_location,
-                l.lost_date
+                l.lost_location AS lost_location,
+                l.lost_date AS lost_date,
+                l.color AS lost_color,
+                l.description AS lost_description,
+                l.identification_details AS lost_identification,
+
+                f.item_name AS found_item_name,
+                f.category AS found_category,
+                f.found_location AS found_location,
+                f.found_date AS found_date,
+                f.color AS found_color,
+                f.description AS found_description,
+                f.identification_details AS found_identification
 
             FROM claims c
 
-            INNER JOIN users claimant
-                ON c.claimant_id = claimant.id
-
-            INNER JOIN found_items f
-                ON c.found_item_id = f.id
+            INNER JOIN users u
+                ON c.claimant_id = u.id
 
             INNER JOIN lost_items l
                 ON c.lost_item_id = l.id
+
+            INNER JOIN found_items f
+                ON c.found_item_id = f.id
 
             ORDER BY c.created_at DESC
             """
@@ -2856,6 +3052,7 @@ def admin_claims():
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -2877,8 +3074,18 @@ def update_claim(claim_id):
             url_for("dashboard")
         )
 
-    status = request.form.get(
-        "status",
+    # =====================================================
+    # IMPORTANT FIX
+    #
+    # admin_claims.html sends:
+    #
+    # name="action"
+    #
+    # Therefore backend MUST read "action".
+    # =====================================================
+
+    action = request.form.get(
+        "action",
         ""
     ).strip()
 
@@ -2887,16 +3094,16 @@ def update_claim(claim_id):
         ""
     ).strip()
 
-    allowed_statuses = {
+    allowed_actions = {
         "Pending",
         "Approved",
         "Rejected"
     }
 
-    if status not in allowed_statuses:
+    if action not in allowed_actions:
 
         flash(
-            "Invalid claim status.",
+            "Invalid claim action.",
             "danger"
         )
 
@@ -2936,15 +3143,22 @@ def update_claim(claim_id):
             dictionary=True
         )
 
+        # -------------------------------------------------
+        # GET CLAIM
+        # -------------------------------------------------
+
         cursor.execute(
             """
             SELECT
+
                 id,
                 found_item_id,
                 lost_item_id,
                 claimant_id,
                 status
+
             FROM claims
+
             WHERE id = %s
             """,
             (claim_id,)
@@ -2963,16 +3177,23 @@ def update_claim(claim_id):
                 url_for("admin_claims")
             )
 
-        # -------------------------------------------------
+        # =================================================
         # APPROVE CLAIM
-        # -------------------------------------------------
+        # =================================================
 
-        if status == "Approved":
+        if action == "Approved":
+
+            # -------------------------------------------------
+            # DO NOT APPROVE IF CLAIM IS ALREADY APPROVED
+            # BY SOME OTHER CLAIMANT
+            # -------------------------------------------------
 
             cursor.execute(
                 """
                 SELECT id
+
                 FROM claims
+
                 WHERE found_item_id = %s
                 AND status = 'Approved'
                 AND id != %s
@@ -2996,12 +3217,18 @@ def update_claim(claim_id):
                     url_for("admin_claims")
                 )
 
+            # -------------------------------------------------
+            # APPROVE CURRENT CLAIM
+            # -------------------------------------------------
+
             cursor.execute(
                 """
                 UPDATE claims
+
                 SET
                     status = %s,
                     admin_note = %s
+
                 WHERE id = %s
                 """,
                 (
@@ -3012,13 +3239,17 @@ def update_claim(claim_id):
             )
 
             # -------------------------------------------------
-            # UPDATE LOST ITEM
+            # UPDATE USER LOST ITEM
+            #
+            # Lost -> Returned
             # -------------------------------------------------
 
             cursor.execute(
                 """
                 UPDATE lost_items
+
                 SET status = 'Returned'
+
                 WHERE id = %s
                 """,
                 (
@@ -3028,12 +3259,16 @@ def update_claim(claim_id):
 
             # -------------------------------------------------
             # UPDATE FOUND ITEM
+            #
+            # Found -> Claimed
             # -------------------------------------------------
 
             cursor.execute(
                 """
                 UPDATE found_items
+
                 SET status = 'Claimed'
+
                 WHERE id = %s
                 """,
                 (
@@ -3048,9 +3283,11 @@ def update_claim(claim_id):
             cursor.execute(
                 """
                 UPDATE claims
+
                 SET
                     status = 'Rejected',
                     admin_note = 'Another claim for this item was approved.'
+
                 WHERE found_item_id = %s
                 AND id != %s
                 AND status = 'Pending'
@@ -3061,18 +3298,20 @@ def update_claim(claim_id):
                 )
             )
 
-        # -------------------------------------------------
+        # =================================================
         # REJECT CLAIM
-        # -------------------------------------------------
+        # =================================================
 
-        elif status == "Rejected":
+        elif action == "Rejected":
 
             cursor.execute(
                 """
                 UPDATE claims
+
                 SET
                     status = %s,
                     admin_note = %s
+
                 WHERE id = %s
                 """,
                 (
@@ -3082,18 +3321,20 @@ def update_claim(claim_id):
                 )
             )
 
-        # -------------------------------------------------
-        # PENDING CLAIM
-        # -------------------------------------------------
+        # =================================================
+        # KEEP CLAIM PENDING
+        # =================================================
 
         else:
 
             cursor.execute(
                 """
                 UPDATE claims
+
                 SET
                     status = %s,
                     admin_note = %s
+
                 WHERE id = %s
                 """,
                 (
@@ -3103,12 +3344,32 @@ def update_claim(claim_id):
                 )
             )
 
+        # -------------------------------------------------
+        # COMMIT
+        # -------------------------------------------------
+
         connection.commit()
 
-        flash(
-            "Claim updated successfully.",
-            "success"
-        )
+        if action == "Approved":
+
+            flash(
+                "Claim approved successfully.",
+                "success"
+            )
+
+        elif action == "Rejected":
+
+            flash(
+                "Claim rejected successfully.",
+                "success"
+            )
+
+        else:
+
+            flash(
+                "Claim kept as pending.",
+                "success"
+            )
 
         return redirect(
             url_for("admin_claims")
@@ -3135,6 +3396,7 @@ def update_claim(claim_id):
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -3185,6 +3447,7 @@ def track():
         cursor.execute(
             """
             SELECT
+
                 id,
                 item_name,
                 category,
@@ -3193,7 +3456,9 @@ def track():
                 status,
                 created_at,
                 'Lost' AS report_type
+
             FROM lost_items
+
             WHERE user_id = %s
             """,
             (user_id,)
@@ -3208,6 +3473,7 @@ def track():
         cursor.execute(
             """
             SELECT
+
                 id,
                 item_name,
                 category,
@@ -3216,7 +3482,9 @@ def track():
                 status,
                 created_at,
                 'Found' AS report_type
+
             FROM found_items
+
             WHERE user_id = %s
             """,
             (user_id,)
@@ -3243,6 +3511,7 @@ def track():
         cursor.execute(
             """
             SELECT
+
                 c.id AS claim_id,
                 c.found_item_id,
                 c.claimant_id,
@@ -3299,6 +3568,7 @@ def track():
     finally:
 
         if cursor:
+
             cursor.close()
 
         connection.close()
@@ -3365,8 +3635,11 @@ def health():
         if connection:
 
             try:
+
                 connection.close()
+
             except Exception:
+
                 pass
 
 
