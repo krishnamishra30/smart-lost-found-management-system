@@ -23,10 +23,6 @@ from werkzeug.security import (
 from difflib import SequenceMatcher
 
 
-# =========================================================
-# FLASK APP CONFIGURATION
-# =========================================================
-
 app = Flask(__name__)
 
 app.secret_key = os.environ.get(
@@ -39,9 +35,9 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 
 
-# =========================================================
+# ============================================================
 # DATABASE CONFIGURATION
-# =========================================================
+# ============================================================
 
 DB_HOST = os.environ.get(
     "DB_HOST",
@@ -79,9 +75,9 @@ DB_SSL_CA = os.environ.get(
 ).strip()
 
 
-# =========================================================
-# AIVEN / RENDER DATABASE CONNECTION
-# =========================================================
+# ============================================================
+# DATABASE CONNECTION
+# ============================================================
 
 def get_db_connection():
 
@@ -99,20 +95,10 @@ def get_db_connection():
         "user": DB_USER,
         "password": DB_PASSWORD,
         "database": DB_NAME,
-
         "connection_timeout": 20,
-
         "autocommit": False,
-
-        # Use pure Python implementation.
-        # This avoids environment-specific connector
-        # differences on Render.
         "use_pure": True
     }
-
-    # -----------------------------------------------------
-    # LOCAL MYSQL
-    # -----------------------------------------------------
 
     if not is_remote_database:
 
@@ -120,103 +106,48 @@ def get_db_connection():
             "DATABASE MODE: LOCAL MYSQL"
         )
 
-    # -----------------------------------------------------
-    # AIVEN / REMOTE MYSQL
-    # -----------------------------------------------------
-
     else:
 
         print(
-            "DATABASE MODE: REMOTE MYSQL / AIVEN"
+            "DATABASE MODE: REMOTE MYSQL"
         )
 
-        # Aiven requires encrypted connections.
         config["ssl_disabled"] = False
 
-        # TLS versions supported by modern Aiven MySQL.
         config["tls_versions"] = [
             "TLSv1.2",
             "TLSv1.3"
         ]
 
-        # -------------------------------------------------
-        # OPTIONAL CA CERTIFICATE
-        # -------------------------------------------------
-
         if DB_SSL_CA:
 
             ssl_ca = DB_SSL_CA.strip()
 
-            try:
+            if "BEGIN CERTIFICATE" in ssl_ca:
 
-                # Case 1:
-                # Complete certificate text is stored
-                # directly inside DB_SSL_CA.
-                if "BEGIN CERTIFICATE" in ssl_ca:
-
-                    ca_file = tempfile.NamedTemporaryFile(
-                        mode="w",
-                        suffix=".pem",
-                        delete=False,
-                        encoding="utf-8"
-                    )
-
-                    ca_file.write(
-                        ssl_ca
-                    )
-
-                    ca_file.flush()
-                    ca_file.close()
-
-                    config["ssl_ca"] = ca_file.name
-
-                    config["ssl_verify_cert"] = True
-                    config["ssl_verify_identity"] = True
-
-                    print(
-                        "DATABASE SSL: CA certificate loaded from environment."
-                    )
-
-                # Case 2:
-                # DB_SSL_CA contains a file path.
-                else:
-
-                    config["ssl_ca"] = ssl_ca
-
-                    config["ssl_verify_cert"] = True
-                    config["ssl_verify_identity"] = True
-
-                    print(
-                        "DATABASE SSL: CA certificate path configured."
-                    )
-
-            except Exception as ssl_error:
-
-                print(
-                    "SSL CONFIGURATION ERROR:",
-                    repr(ssl_error)
+                temp_file = tempfile.NamedTemporaryFile(
+                    mode="w",
+                    suffix=".pem",
+                    delete=False,
+                    encoding="utf-8"
                 )
 
-                raise
+                temp_file.write(ssl_ca)
+                temp_file.close()
 
-        # -------------------------------------------------
-        # NO CA CERTIFICATE
-        # -------------------------------------------------
+                config["ssl_ca"] = temp_file.name
+
+            else:
+
+                config["ssl_ca"] = ssl_ca
+
+            config["ssl_verify_cert"] = True
+            config["ssl_verify_identity"] = True
+
         else:
 
-            # TLS encryption remains enabled.
-            # Certificate verification is disabled only
-            # because no CA certificate was supplied.
             config["ssl_verify_cert"] = False
             config["ssl_verify_identity"] = False
-
-            print(
-                "DATABASE SSL: TLS enabled without CA verification."
-            )
-
-    # -----------------------------------------------------
-    # SAFE DATABASE CONFIG LOG
-    # -----------------------------------------------------
 
     print(
         "DATABASE CONFIG:",
@@ -230,12 +161,6 @@ def get_db_connection():
         }
     )
 
-    # -----------------------------------------------------
-    # DATABASE CONNECTION
-    # -----------------------------------------------------
-
-    connection = None
-
     try:
 
         connection = mysql.connector.connect(
@@ -245,13 +170,13 @@ def get_db_connection():
         if connection.is_connected():
 
             print(
-                "DATABASE CONNECTION SUCCESSFUL"
+                "DATABASE CONNECTION: SUCCESS"
             )
 
             return connection
 
         raise ConnectionError(
-            "MySQL connection was not established."
+            "Database connection was not established."
         )
 
     except Error as e:
@@ -273,44 +198,60 @@ def get_db_connection():
         raise
 
 
-# =========================================================
-# LOGIN REQUIRED
-# =========================================================
+# ============================================================
+# HELPERS
+# ============================================================
 
-def login_required():
+def is_logged_in():
 
     return "user_id" in session
 
 
-# =========================================================
-# ADMIN REQUIRED
-# =========================================================
+def login_required():
+
+    if not is_logged_in():
+
+        flash(
+            "Please login first.",
+            "error"
+        )
+
+        return False
+
+    return True
+
 
 def admin_required():
 
-    return (
-        "user_id" in session
-        and session.get("user_role") == "admin"
-    )
+    if not is_logged_in():
 
+        flash(
+            "Please login first.",
+            "error"
+        )
 
-# =========================================================
-# SMART MATCHING
-# =========================================================
+        return False
+
+    if session.get("user_role") != "admin":
+
+        flash(
+            "Admin access required.",
+            "error"
+        )
+
+        return False
+
+    return True
+
 
 def similarity(text1, text2):
-
-    text1 = str(
-        text1 or ""
-    ).lower().strip()
-
-    text2 = str(
-        text2 or ""
-    ).lower().strip()
 
     if not text1 or not text2:
 
         return 0
+
+    text1 = str(text1).lower().strip()
+    text2 = str(text2).lower().strip()
 
     return SequenceMatcher(
         None,
@@ -319,77 +260,65 @@ def similarity(text1, text2):
     ).ratio()
 
 
-def calculate_match(lost, found):
+def calculate_match(
+    lost_item,
+    found_item
+):
 
-    score = 0
+    category_score = similarity(
+        lost_item.get("category"),
+        found_item.get("category")
+    )
 
-    # CATEGORY - 25%
-    lost_category = str(
-        lost.get("category", "")
-    ).lower().strip()
-
-    found_category = str(
-        found.get("category", "")
-    ).lower().strip()
-
-    if (
-        lost_category
-        and found_category
-        and lost_category == found_category
-    ):
-
-        score += 25
-
-    # ITEM NAME - 25%
     name_score = similarity(
-        lost.get("item_name"),
-        found.get("item_name")
+        lost_item.get("item_name"),
+        found_item.get("item_name")
     )
 
-    score += name_score * 25
-
-    # DESCRIPTION - 20%
     description_score = similarity(
-        lost.get("description"),
-        found.get("description")
+        lost_item.get("description"),
+        found_item.get("description")
     )
 
-    score += description_score * 20
-
-    # LOCATION - 20%
     location_score = similarity(
-        lost.get("lost_location"),
-        found.get("found_location")
+        lost_item.get("lost_location"),
+        found_item.get("found_location")
     )
 
-    score += location_score * 20
-
-    # COLOR - 10%
     color_score = similarity(
-        lost.get("color"),
-        found.get("color")
+        lost_item.get("color"),
+        found_item.get("color")
     )
 
-    score += color_score * 10
+    total_score = (
+        category_score * 25
+        + name_score * 25
+        + description_score * 20
+        + location_score * 20
+        + color_score * 10
+    )
 
-    return round(score)
+    return round(
+        total_score,
+        2
+    )
 
 
-# =========================================================
+# ============================================================
 # HOME
-# =========================================================
+# ============================================================
 
 @app.route("/")
-def home():
+def index():
 
     return render_template(
         "index.html"
     )
 
 
-# =========================================================
+# ============================================================
 # ABOUT
-# =========================================================
+# ============================================================
 
 @app.route("/about")
 def about():
@@ -399,9 +328,9 @@ def about():
     )
 
 
-# =========================================================
+# ============================================================
 # CONTACT
-# =========================================================
+# ============================================================
 
 @app.route("/contact")
 def contact():
@@ -411,9 +340,9 @@ def contact():
     )
 
 
-# =========================================================
+# ============================================================
 # REGISTER
-# =========================================================
+# ============================================================
 
 @app.route(
     "/register",
@@ -438,11 +367,10 @@ def register():
             ""
         )
 
-        # REQUIRED FIELDS
         if not name or not email or not password:
 
             flash(
-                "Please fill all required fields.",
+                "All fields are required.",
                 "error"
             )
 
@@ -450,22 +378,7 @@ def register():
                 "register.html"
             )
 
-        # NAME VALIDATION
         if len(name) < 2:
-
-            flash(
-                "Name must contain at least 2 characters.",
-                "error"
-            )
-
-            return render_template(
-                "register.html"
-            )
-
-        if not re.match(
-            r"^[A-Za-z .'-]+$",
-            name
-        ):
 
             flash(
                 "Please enter a valid name.",
@@ -476,11 +389,9 @@ def register():
                 "register.html"
             )
 
-        # EMAIL VALIDATION
         email_pattern = (
             r"^[A-Za-z0-9._%+-]+@"
-            r"[A-Za-z0-9.-]+\."
-            r"[A-Za-z]{2,}$"
+            r"[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
         )
 
         if not re.match(
@@ -497,11 +408,10 @@ def register():
                 "register.html"
             )
 
-        # PASSWORD VALIDATION
-        if len(password) < 8:
+        if len(password) < 6:
 
             flash(
-                "Password must be at least 8 characters.",
+                "Password must be at least 6 characters.",
                 "error"
             )
 
@@ -509,75 +419,17 @@ def register():
                 "register.html"
             )
 
-        if not re.search(
-            r"[A-Z]",
-            password
-        ):
-
-            flash(
-                "Password must contain an uppercase letter.",
-                "error"
-            )
-
-            return render_template(
-                "register.html"
-            )
-
-        if not re.search(
-            r"[a-z]",
-            password
-        ):
-
-            flash(
-                "Password must contain a lowercase letter.",
-                "error"
-            )
-
-            return render_template(
-                "register.html"
-            )
-
-        if not re.search(
-            r"[0-9]",
-            password
-        ):
-
-            flash(
-                "Password must contain a number.",
-                "error"
-            )
-
-            return render_template(
-                "register.html"
-            )
-
-        if not re.search(
-            r"[^A-Za-z0-9]",
-            password
-        ):
-
-            flash(
-                "Password must contain a special character.",
-                "error"
-            )
-
-            return render_template(
-                "register.html"
-            )
-
-        db = None
+        connection = None
         cursor = None
 
         try:
 
-            db = get_db_connection()
+            connection = get_db_connection()
 
-            cursor = db.cursor(
-                dictionary=True,
-                buffered=True
+            cursor = connection.cursor(
+                dictionary=True
             )
 
-            # CHECK EMAIL
             cursor.execute(
                 """
                 SELECT id
@@ -601,12 +453,10 @@ def register():
                     "register.html"
                 )
 
-            # HASH PASSWORD
             hashed_password = generate_password_hash(
                 password
             )
 
-            # INSERT USER
             cursor.execute(
                 """
                 INSERT INTO users
@@ -632,15 +482,10 @@ def register():
                 )
             )
 
-            db.commit()
-
-            print(
-                "REGISTER SUCCESS:",
-                email
-            )
+            connection.commit()
 
             flash(
-                "Registration successful! Please login.",
+                "Registration successful. Please login.",
                 "success"
             )
 
@@ -648,22 +493,37 @@ def register():
                 url_for("login")
             )
 
-        except Exception as e:
+        except Error as e:
+
+            if connection:
+                connection.rollback()
 
             print(
                 "REGISTER DATABASE ERROR:",
                 repr(e)
             )
 
-            if db:
-
-                try:
-                    db.rollback()
-                except Exception:
-                    pass
-
             flash(
                 "Database error. Please try again.",
+                "error"
+            )
+
+            return render_template(
+                "register.html"
+            )
+
+        except Exception as e:
+
+            if connection:
+                connection.rollback()
+
+            print(
+                "REGISTER ERROR:",
+                repr(e)
+            )
+
+            flash(
+                "Something went wrong. Please try again.",
                 "error"
             )
 
@@ -675,26 +535,20 @@ def register():
 
             if cursor:
 
-                try:
-                    cursor.close()
-                except Exception:
-                    pass
+                cursor.close()
 
-            if db:
+            if connection and connection.is_connected():
 
-                try:
-                    db.close()
-                except Exception:
-                    pass
+                connection.close()
 
     return render_template(
         "register.html"
     )
 
 
-# =========================================================
+# ============================================================
 # LOGIN
-# =========================================================
+# ============================================================
 
 @app.route(
     "/login",
@@ -717,7 +571,7 @@ def login():
         if not email or not password:
 
             flash(
-                "Please enter email and password.",
+                "Email and password are required.",
                 "error"
             )
 
@@ -725,16 +579,15 @@ def login():
                 "login.html"
             )
 
-        db = None
+        connection = None
         cursor = None
 
         try:
 
-            db = get_db_connection()
+            connection = get_db_connection()
 
-            cursor = db.cursor(
-                dictionary=True,
-                buffered=True
+            cursor = connection.cursor(
+                dictionary=True
             )
 
             cursor.execute(
@@ -765,12 +618,10 @@ def login():
                     "login.html"
                 )
 
-            password_correct = check_password_hash(
+            if not check_password_hash(
                 user["password"],
                 password
-            )
-
-            if not password_correct:
+            ):
 
                 flash(
                     "Invalid email or password.",
@@ -789,7 +640,7 @@ def login():
             session["user_role"] = user["role"]
 
             flash(
-                "Login successful!",
+                "Login successful.",
                 "success"
             )
 
@@ -797,7 +648,7 @@ def login():
                 url_for("dashboard")
             )
 
-        except Exception as e:
+        except Error as e:
 
             print(
                 "LOGIN DATABASE ERROR:",
@@ -813,30 +664,40 @@ def login():
                 "login.html"
             )
 
+        except Exception as e:
+
+            print(
+                "LOGIN ERROR:",
+                repr(e)
+            )
+
+            flash(
+                "Something went wrong. Please try again.",
+                "error"
+            )
+
+            return render_template(
+                "login.html"
+            )
+
         finally:
 
             if cursor:
 
-                try:
-                    cursor.close()
-                except Exception:
-                    pass
+                cursor.close()
 
-            if db:
+            if connection and connection.is_connected():
 
-                try:
-                    db.close()
-                except Exception:
-                    pass
+                connection.close()
 
     return render_template(
         "login.html"
     )
 
 
-# =========================================================
+# ============================================================
 # DASHBOARD
-# =========================================================
+# ============================================================
 
 @app.route("/dashboard")
 def dashboard():
@@ -847,22 +708,25 @@ def dashboard():
             url_for("login")
         )
 
-    db = None
+    connection = None
     cursor = None
 
-    total_reports = 0
-    found_reports = 0
-    possible_matches = 0
-    successful_recoveries = 0
+    stats = {
+        "lost": 0,
+        "found": 0,
+        "claims": 0,
+        "matches": 0
+    }
 
     try:
 
-        db = get_db_connection()
+        connection = get_db_connection()
 
-        cursor = db.cursor(
-            dictionary=True,
-            buffered=True
+        cursor = connection.cursor(
+            dictionary=True
         )
+
+        user_id = session["user_id"]
 
         cursor.execute(
             """
@@ -870,12 +734,12 @@ def dashboard():
             FROM lost_items
             WHERE user_id = %s
             """,
-            (session["user_id"],)
+            (user_id,)
         )
 
         result = cursor.fetchone()
 
-        lost_count = (
+        stats["lost"] = (
             result["total"]
             if result
             else 0
@@ -887,95 +751,56 @@ def dashboard():
             FROM found_items
             WHERE user_id = %s
             """,
-            (session["user_id"],)
+            (user_id,)
         )
 
         result = cursor.fetchone()
 
-        found_count = (
+        stats["found"] = (
             result["total"]
             if result
             else 0
         )
 
-        found_reports = found_count
-
-        total_reports = (
-            lost_count +
-            found_count
-        )
-
         cursor.execute(
             """
-            SELECT
-                id,
-                item_name,
-                category,
-                description,
-                lost_location,
-                lost_date,
-                color
-            FROM lost_items
-            WHERE user_id = %s
-              AND status = 'Lost'
+            SELECT COUNT(*) AS total
+            FROM claims
+            WHERE claimant_id = %s
             """,
-            (session["user_id"],)
+            (user_id,)
         )
 
-        user_lost_items = cursor.fetchall()
+        result = cursor.fetchone()
 
-        cursor.execute(
-            """
-            SELECT
-                id,
-                item_name,
-                category,
-                description,
-                found_location,
-                found_date,
-                color
-            FROM found_items
-            WHERE status = 'Found'
-            """
+        stats["claims"] = (
+            result["total"]
+            if result
+            else 0
         )
-
-        all_found_items = cursor.fetchall()
-
-        for lost in user_lost_items:
-
-            for found in all_found_items:
-
-                score = calculate_match(
-                    lost,
-                    found
-                )
-
-                if score >= 30:
-
-                    possible_matches += 1
 
         cursor.execute(
             """
             SELECT COUNT(*) AS total
             FROM lost_items
             WHERE user_id = %s
-              AND status IN ('Claimed', 'Returned')
+            AND status = 'Lost'
             """,
-            (session["user_id"],)
+            (user_id,)
         )
 
-        recovery = cursor.fetchone()
+        result = cursor.fetchone()
 
-        successful_recoveries = (
-            recovery["total"]
-            if recovery
+        stats["matches"] = (
+            result["total"]
+            if result
             else 0
         )
 
     except Exception as e:
 
         print(
-            "DASHBOARD DATABASE ERROR:",
+            "DASHBOARD ERROR:",
             repr(e)
         )
 
@@ -983,42 +808,21 @@ def dashboard():
 
         if cursor:
 
-            try:
-                cursor.close()
-            except Exception:
-                pass
+            cursor.close()
 
-        if db:
+        if connection and connection.is_connected():
 
-            try:
-                db.close()
-            except Exception:
-                pass
+            connection.close()
 
     return render_template(
         "dashboard.html",
-        name=session.get(
-            "user_name",
-            "User"
-        ),
-        email=session.get(
-            "user_email",
-            ""
-        ),
-        role=session.get(
-            "user_role",
-            "user"
-        ),
-        total_reports=total_reports,
-        found_reports=found_reports,
-        possible_matches=possible_matches,
-        successful_recoveries=successful_recoveries
+        stats=stats
     )
 
 
-# =========================================================
-# REPORT LOST
-# =========================================================
+# ============================================================
+# REPORT LOST ITEM
+# ============================================================
 
 @app.route(
     "/report-lost",
@@ -1069,10 +873,18 @@ def report_lost():
             ""
         ).strip()
 
-        if not item_name:
+        if not all(
+            [
+                item_name,
+                category,
+                description,
+                lost_location,
+                lost_date
+            ]
+        ):
 
             flash(
-                "Please enter item name.",
+                "Please fill all required fields.",
                 "error"
             )
 
@@ -1080,58 +892,47 @@ def report_lost():
                 "report_lost.html"
             )
 
-        if not category:
+        image_filename = None
 
-            flash(
-                "Please select category.",
-                "error"
+        uploaded_file = request.files.get(
+            "image"
+        )
+
+        if uploaded_file and uploaded_file.filename:
+
+            upload_folder = os.path.join(
+                app.root_path,
+                "uploads"
             )
 
-            return render_template(
-                "report_lost.html"
+            os.makedirs(
+                upload_folder,
+                exist_ok=True
             )
 
-        if not description:
-
-            flash(
-                "Please enter description.",
-                "error"
+            safe_name = re.sub(
+                r"[^A-Za-z0-9_.-]",
+                "_",
+                uploaded_file.filename
             )
 
-            return render_template(
-                "report_lost.html"
+            image_filename = safe_name
+
+            uploaded_file.save(
+                os.path.join(
+                    upload_folder,
+                    image_filename
+                )
             )
 
-        if not lost_location:
-
-            flash(
-                "Please enter lost location.",
-                "error"
-            )
-
-            return render_template(
-                "report_lost.html"
-            )
-
-        if not lost_date:
-
-            flash(
-                "Please select lost date.",
-                "error"
-            )
-
-            return render_template(
-                "report_lost.html"
-            )
-
-        db = None
+        connection = None
         cursor = None
 
         try:
 
-            db = get_db_connection()
+            connection = get_db_connection()
 
-            cursor = db.cursor()
+            cursor = connection.cursor()
 
             cursor.execute(
                 """
@@ -1145,6 +946,7 @@ def report_lost():
                     lost_date,
                     color,
                     identification_details,
+                    image,
                     status
                 )
                 VALUES
@@ -1157,7 +959,8 @@ def report_lost():
                     %s,
                     %s,
                     %s,
-                    'Lost'
+                    %s,
+                    %s
                 )
                 """,
                 (
@@ -1168,14 +971,16 @@ def report_lost():
                     lost_location,
                     lost_date,
                     color,
-                    identification_details
+                    identification_details,
+                    image_filename,
+                    "Lost"
                 )
             )
 
-            db.commit()
+            connection.commit()
 
             flash(
-                "Lost item reported successfully!",
+                "Lost item reported successfully.",
                 "success"
             )
 
@@ -1183,53 +988,54 @@ def report_lost():
                 url_for("my_reports")
             )
 
+        except Error as e:
+
+            if connection:
+                connection.rollback()
+
+            print(
+                "REPORT LOST DATABASE ERROR:",
+                repr(e)
+            )
+
+            flash(
+                "Database error. Please try again.",
+                "error"
+            )
+
         except Exception as e:
+
+            if connection:
+                connection.rollback()
 
             print(
                 "REPORT LOST ERROR:",
                 repr(e)
             )
 
-            if db:
-
-                try:
-                    db.rollback()
-                except Exception:
-                    pass
-
             flash(
-                "Unable to save lost item.",
+                "Something went wrong. Please try again.",
                 "error"
-            )
-
-            return render_template(
-                "report_lost.html"
             )
 
         finally:
 
             if cursor:
 
-                try:
-                    cursor.close()
-                except Exception:
-                    pass
+                cursor.close()
 
-            if db:
+            if connection and connection.is_connected():
 
-                try:
-                    db.close()
-                except Exception:
-                    pass
+                connection.close()
 
     return render_template(
         "report_lost.html"
     )
 
 
-# =========================================================
-# REPORT FOUND
-# =========================================================
+# ============================================================
+# REPORT FOUND ITEM
+# ============================================================
 
 @app.route(
     "/report-found",
@@ -1280,10 +1086,18 @@ def report_found():
             ""
         ).strip()
 
-        if not item_name:
+        if not all(
+            [
+                item_name,
+                category,
+                description,
+                found_location,
+                found_date
+            ]
+        ):
 
             flash(
-                "Please enter item name.",
+                "Please fill all required fields.",
                 "error"
             )
 
@@ -1291,58 +1105,47 @@ def report_found():
                 "report_found.html"
             )
 
-        if not category:
+        image_filename = None
 
-            flash(
-                "Please select category.",
-                "error"
+        uploaded_file = request.files.get(
+            "image"
+        )
+
+        if uploaded_file and uploaded_file.filename:
+
+            upload_folder = os.path.join(
+                app.root_path,
+                "uploads"
             )
 
-            return render_template(
-                "report_found.html"
+            os.makedirs(
+                upload_folder,
+                exist_ok=True
             )
 
-        if not description:
-
-            flash(
-                "Please enter description.",
-                "error"
+            safe_name = re.sub(
+                r"[^A-Za-z0-9_.-]",
+                "_",
+                uploaded_file.filename
             )
 
-            return render_template(
-                "report_found.html"
+            image_filename = safe_name
+
+            uploaded_file.save(
+                os.path.join(
+                    upload_folder,
+                    image_filename
+                )
             )
 
-        if not found_location:
-
-            flash(
-                "Please enter found location.",
-                "error"
-            )
-
-            return render_template(
-                "report_found.html"
-            )
-
-        if not found_date:
-
-            flash(
-                "Please select found date.",
-                "error"
-            )
-
-            return render_template(
-                "report_found.html"
-            )
-
-        db = None
+        connection = None
         cursor = None
 
         try:
 
-            db = get_db_connection()
+            connection = get_db_connection()
 
-            cursor = db.cursor()
+            cursor = connection.cursor()
 
             cursor.execute(
                 """
@@ -1356,6 +1159,7 @@ def report_found():
                     found_date,
                     color,
                     identification_details,
+                    image,
                     status
                 )
                 VALUES
@@ -1368,7 +1172,8 @@ def report_found():
                     %s,
                     %s,
                     %s,
-                    'Found'
+                    %s,
+                    %s
                 )
                 """,
                 (
@@ -1379,73 +1184,73 @@ def report_found():
                     found_location,
                     found_date,
                     color,
-                    identification_details
+                    identification_details,
+                    image_filename,
+                    "Found"
                 )
             )
 
-            db.commit()
+            connection.commit()
 
             flash(
-                "Found item reported successfully!",
+                "Found item reported successfully.",
                 "success"
             )
 
             return redirect(
-                url_for("my_reports")
+                url_for("search")
+            )
+
+        except Error as e:
+
+            if connection:
+                connection.rollback()
+
+            print(
+                "REPORT FOUND DATABASE ERROR:",
+                repr(e)
+            )
+
+            flash(
+                "Database error. Please try again.",
+                "error"
             )
 
         except Exception as e:
+
+            if connection:
+                connection.rollback()
 
             print(
                 "REPORT FOUND ERROR:",
                 repr(e)
             )
 
-            if db:
-
-                try:
-                    db.rollback()
-                except Exception:
-                    pass
-
             flash(
-                "Unable to save found item.",
+                "Something went wrong. Please try again.",
                 "error"
-            )
-
-            return render_template(
-                "report_found.html"
             )
 
         finally:
 
             if cursor:
 
-                try:
-                    cursor.close()
-                except Exception:
-                    pass
+                cursor.close()
 
-            if db:
+            if connection and connection.is_connected():
 
-                try:
-                    db.close()
-                except Exception:
-                    pass
+                connection.close()
 
     return render_template(
         "report_found.html"
     )
 
 
-# =========================================================
+# ============================================================
 # SEARCH
-# =========================================================
+# ============================================================
 
-@app.route(
-    "/search",
-    methods=["GET", "POST"]
-)
+@app.route("/search")
 def search():
 
     if not login_required():
@@ -1454,8 +1259,8 @@ def search():
             url_for("login")
         )
 
-    keyword = request.args.get(
-        "query",
+    query = request.args.get(
+        "q",
         ""
     ).strip()
 
@@ -1466,199 +1271,192 @@ def search():
 
     item_type = request.args.get(
         "type",
-        ""
-    ).strip()
+        "all"
+    ).strip().lower()
 
-    location = request.args.get(
-        "location",
-        ""
-    ).strip()
-
-    results = []
-
-    db = None
+    connection = None
     cursor = None
+
+    lost_items = []
+    found_items = []
 
     try:
 
-        db = get_db_connection()
+        connection = get_db_connection()
 
-        cursor = db.cursor(
-            dictionary=True,
-            buffered=True
+        cursor = connection.cursor(
+            dictionary=True
         )
 
-        # LOST
-        if item_type.lower() in [
-            "",
-            "lost"
-        ]:
+        search_value = f"%{query}%"
 
-            lost_query = """
-                SELECT
-                    l.id,
-                    l.item_name,
-                    l.category,
-                    l.description,
-                    l.lost_location AS location,
-                    l.lost_date AS item_date,
-                    l.color,
-                    l.identification_details,
-                    l.status,
-                    'Lost' AS report_type,
-                    u.name AS reporter_name
-                FROM lost_items l
-                LEFT JOIN users u
-                    ON l.user_id = u.id
-                WHERE 1 = 1
-            """
+        if item_type in ["all", "lost"]:
 
-            lost_params = []
+            if query and category:
 
-            if keyword:
+                cursor.execute(
+                    """
+                    SELECT
+                        l.*,
+                        u.name AS reporter_name
+                    FROM lost_items l
+                    JOIN users u
+                        ON l.user_id = u.id
+                    WHERE
+                        (
+                            l.item_name LIKE %s
+                            OR l.description LIKE %s
+                            OR l.lost_location LIKE %s
+                        )
+                        AND l.category = %s
+                    ORDER BY l.created_at DESC
+                    """,
+                    (
+                        search_value,
+                        search_value,
+                        search_value,
+                        category
+                    )
+                )
 
-                lost_query += """
-                    AND (
+            elif query:
+
+                cursor.execute(
+                    """
+                    SELECT
+                        l.*,
+                        u.name AS reporter_name
+                    FROM lost_items l
+                    JOIN users u
+                        ON l.user_id = u.id
+                    WHERE
                         l.item_name LIKE %s
-                        OR l.category LIKE %s
                         OR l.description LIKE %s
-                        OR l.identification_details LIKE %s
-                        OR l.color LIKE %s
+                        OR l.lost_location LIKE %s
+                    ORDER BY l.created_at DESC
+                    """,
+                    (
+                        search_value,
+                        search_value,
+                        search_value
                     )
-                """
-
-                value = "%" + keyword + "%"
-
-                lost_params.extend([
-                    value,
-                    value,
-                    value,
-                    value,
-                    value
-                ])
-
-            if category:
-
-                lost_query += """
-                    AND LOWER(l.category) = LOWER(%s)
-                """
-
-                lost_params.append(
-                    category
                 )
 
-            if location:
+            elif category:
 
-                lost_query += """
-                    AND l.lost_location LIKE %s
-                """
-
-                lost_params.append(
-                    "%" + location + "%"
+                cursor.execute(
+                    """
+                    SELECT
+                        l.*,
+                        u.name AS reporter_name
+                    FROM lost_items l
+                    JOIN users u
+                        ON l.user_id = u.id
+                    WHERE l.category = %s
+                    ORDER BY l.created_at DESC
+                    """,
+                    (category,)
                 )
 
-            cursor.execute(
-                lost_query,
-                tuple(lost_params)
-            )
+            else:
 
-            lost_results = cursor.fetchall()
+                cursor.execute(
+                    """
+                    SELECT
+                        l.*,
+                        u.name AS reporter_name
+                    FROM lost_items l
+                    JOIN users u
+                        ON l.user_id = u.id
+                    ORDER BY l.created_at DESC
+                    """
+                )
 
-        else:
+            lost_items = cursor.fetchall()
 
-            lost_results = []
+        if item_type in ["all", "found"]:
 
-        # FOUND
-        if item_type.lower() in [
-            "",
-            "found"
-        ]:
+            if query and category:
 
-            found_query = """
-                SELECT
-                    f.id,
-                    f.item_name,
-                    f.category,
-                    f.description,
-                    f.found_location AS location,
-                    f.found_date AS item_date,
-                    f.color,
-                    f.identification_details,
-                    f.status,
-                    'Found' AS report_type,
-                    u.name AS reporter_name
-                FROM found_items f
-                LEFT JOIN users u
-                    ON f.user_id = u.id
-                WHERE 1 = 1
-            """
+                cursor.execute(
+                    """
+                    SELECT
+                        f.*,
+                        u.name AS reporter_name
+                    FROM found_items f
+                    JOIN users u
+                        ON f.user_id = u.id
+                    WHERE
+                        (
+                            f.item_name LIKE %s
+                            OR f.description LIKE %s
+                            OR f.found_location LIKE %s
+                        )
+                        AND f.category = %s
+                    ORDER BY f.created_at DESC
+                    """,
+                    (
+                        search_value,
+                        search_value,
+                        search_value,
+                        category
+                    )
+                )
 
-            found_params = []
+            elif query:
 
-            if keyword:
-
-                found_query += """
-                    AND (
+                cursor.execute(
+                    """
+                    SELECT
+                        f.*,
+                        u.name AS reporter_name
+                    FROM found_items f
+                    JOIN users u
+                        ON f.user_id = u.id
+                    WHERE
                         f.item_name LIKE %s
-                        OR f.category LIKE %s
                         OR f.description LIKE %s
-                        OR f.identification_details LIKE %s
-                        OR f.color LIKE %s
+                        OR f.found_location LIKE %s
+                    ORDER BY f.created_at DESC
+                    """,
+                    (
+                        search_value,
+                        search_value,
+                        search_value
                     )
-                """
-
-                value = "%" + keyword + "%"
-
-                found_params.extend([
-                    value,
-                    value,
-                    value,
-                    value,
-                    value
-                ])
-
-            if category:
-
-                found_query += """
-                    AND LOWER(f.category) = LOWER(%s)
-                """
-
-                found_params.append(
-                    category
                 )
 
-            if location:
+            elif category:
 
-                found_query += """
-                    AND f.found_location LIKE %s
-                """
-
-                found_params.append(
-                    "%" + location + "%"
+                cursor.execute(
+                    """
+                    SELECT
+                        f.*,
+                        u.name AS reporter_name
+                    FROM found_items f
+                    JOIN users u
+                        ON f.user_id = u.id
+                    WHERE f.category = %s
+                    ORDER BY f.created_at DESC
+                    """,
+                    (category,)
                 )
 
-            cursor.execute(
-                found_query,
-                tuple(found_params)
-            )
+            else:
 
-            found_results = cursor.fetchall()
+                cursor.execute(
+                    """
+                    SELECT
+                        f.*,
+                        u.name AS reporter_name
+                    FROM found_items f
+                    JOIN users u
+                        ON f.user_id = u.id
+                    ORDER BY f.created_at DESC
+                    """
+                )
 
-        else:
-
-            found_results = []
-
-        results = (
-            lost_results +
-            found_results
-        )
-
-        results.sort(
-            key=lambda x: str(
-                x.get("item_date") or ""
-            ),
-            reverse=True
-        )
+            found_items = cursor.fetchall()
 
     except Exception as e:
 
@@ -1668,7 +1466,7 @@ def search():
         )
 
         flash(
-            "Unable to search items. Please try again.",
+            "Unable to load search results.",
             "error"
         )
 
@@ -1676,33 +1474,25 @@ def search():
 
         if cursor:
 
-            try:
-                cursor.close()
-            except Exception:
-                pass
+            cursor.close()
 
-        if db:
+        if connection and connection.is_connected():
 
-            try:
-                db.close()
-            except Exception:
-                pass
+            connection.close()
 
     return render_template(
         "search.html",
-        results=results,
-        query=keyword,
-        keyword=keyword,
+        lost_items=lost_items,
+        found_items=found_items,
+        query=query,
         category=category,
-        location=location,
-        type=item_type,
         item_type=item_type
     )
 
 
-# =========================================================
+# ============================================================
 # ITEM DETAILS
-# =========================================================
+# ============================================================
 
 @app.route(
     "/item/<string:item_type>/<int:item_id>"
@@ -1718,7 +1508,7 @@ def item_details(
             url_for("login")
         )
 
-    item_type = item_type.strip().lower()
+    item_type = item_type.lower()
 
     if item_type not in [
         "lost",
@@ -1734,17 +1524,17 @@ def item_details(
             url_for("search")
         )
 
-    db = None
+    connection = None
     cursor = None
+
     item = None
 
     try:
 
-        db = get_db_connection()
+        connection = get_db_connection()
 
-        cursor = db.cursor(
-            dictionary=True,
-            buffered=True
+        cursor = connection.cursor(
+            dictionary=True
         )
 
         if item_type == "lost":
@@ -1752,22 +1542,11 @@ def item_details(
             cursor.execute(
                 """
                 SELECT
-                    l.id,
-                    l.user_id,
-                    l.item_name,
-                    l.category,
-                    l.description,
-                    l.lost_location AS location,
-                    l.lost_date AS item_date,
-                    l.color,
-                    l.identification_details,
-                    l.image,
-                    l.status,
-                    l.created_at,
+                    l.*,
                     u.name AS reporter_name,
                     u.email AS reporter_email
                 FROM lost_items l
-                LEFT JOIN users u
+                JOIN users u
                     ON l.user_id = u.id
                 WHERE l.id = %s
                 LIMIT 1
@@ -1780,22 +1559,11 @@ def item_details(
             cursor.execute(
                 """
                 SELECT
-                    f.id,
-                    f.user_id,
-                    f.item_name,
-                    f.category,
-                    f.description,
-                    f.found_location AS location,
-                    f.found_date AS item_date,
-                    f.color,
-                    f.identification_details,
-                    f.image,
-                    f.status,
-                    f.created_at,
+                    f.*,
                     u.name AS reporter_name,
                     u.email AS reporter_email
                 FROM found_items f
-                LEFT JOIN users u
+                JOIN users u
                     ON f.user_id = u.id
                 WHERE f.id = %s
                 LIMIT 1
@@ -1805,6 +1573,17 @@ def item_details(
 
         item = cursor.fetchone()
 
+        if not item:
+
+            flash(
+                "Item not found.",
+                "error"
+            )
+
+            return redirect(
+                url_for("search")
+            )
+
     except Exception as e:
 
         print(
@@ -1813,30 +1592,7 @@ def item_details(
         )
 
         flash(
-            "Unable to load item details.",
-            "error"
-        )
-
-    finally:
-
-        if cursor:
-
-            try:
-                cursor.close()
-            except Exception:
-                pass
-
-        if db:
-
-            try:
-                db.close()
-            except Exception:
-                pass
-
-    if not item:
-
-        flash(
-            "Item not found.",
+            "Unable to load item.",
             "error"
         )
 
@@ -1844,20 +1600,26 @@ def item_details(
             url_for("search")
         )
 
+    finally:
+
+        if cursor:
+
+            cursor.close()
+
+        if connection and connection.is_connected():
+
+            connection.close()
+
     return render_template(
         "item_details.html",
         item=item,
-        item_type=item_type,
-        name=session.get(
-            "user_name",
-            "User"
-        )
+        item_type=item_type
     )
 
 
-# =========================================================
-# SMART MATCHES
-# =========================================================
+# ============================================================
+# SMART MATCHING
+# ============================================================
 
 @app.route("/matches")
 def matches():
@@ -1868,38 +1630,29 @@ def matches():
             url_for("login")
         )
 
-    db = None
+    connection = None
     cursor = None
-    matches_list = []
+
+    matches_data = []
 
     try:
 
-        db = get_db_connection()
+        connection = get_db_connection()
 
-        cursor = db.cursor(
-            dictionary=True,
-            buffered=True
+        cursor = connection.cursor(
+            dictionary=True
         )
+
+        user_id = session["user_id"]
 
         cursor.execute(
             """
-            SELECT
-                id,
-                user_id,
-                item_name,
-                category,
-                description,
-                lost_location,
-                lost_date,
-                color,
-                identification_details,
-                status
+            SELECT *
             FROM lost_items
             WHERE user_id = %s
-              AND status = 'Lost'
             ORDER BY created_at DESC
             """,
-            (session["user_id"],)
+            (user_id,)
         )
 
         lost_items = cursor.fetchall()
@@ -1907,62 +1660,51 @@ def matches():
         cursor.execute(
             """
             SELECT
-                id,
-                user_id,
-                item_name,
-                category,
-                description,
-                found_location,
-                found_date,
-                color,
-                identification_details,
-                status
-            FROM found_items
-            WHERE status = 'Found'
-            ORDER BY created_at DESC
+                f.*,
+                u.name AS reporter_name
+            FROM found_items f
+            JOIN users u
+                ON f.user_id = u.id
+            WHERE f.status = 'Found'
+            ORDER BY f.created_at DESC
             """
         )
 
         found_items = cursor.fetchall()
 
-        for lost in lost_items:
+        for lost_item in lost_items:
 
-            for found in found_items:
+            for found_item in found_items:
 
                 score = calculate_match(
-                    lost,
-                    found
+                    lost_item,
+                    found_item
                 )
 
-                if score >= 30:
+                if score >= 35:
 
-                    matches_list.append({
-                        "score": score,
-                        "lost": lost,
-                        "found": found
-                    })
+                    matches_data.append(
+                        {
+                            "lost_item": lost_item,
+                            "found_item": found_item,
+                            "score": score
+                        }
+                    )
 
-        matches_list.sort(
-            key=lambda item: item["score"],
+        matches_data.sort(
+            key=lambda x: x["score"],
             reverse=True
         )
 
     except Exception as e:
 
         print(
-            "SMART MATCH ERROR:",
+            "MATCHES ERROR:",
             repr(e)
         )
 
-        if db:
-
-            try:
-                db.rollback()
-            except Exception:
-                pass
-
         flash(
-            "Unable to load smart matches. Please try again.",
+            "Unable to calculate smart matches.",
             "error"
         )
 
@@ -1970,31 +1712,21 @@ def matches():
 
         if cursor:
 
-            try:
-                cursor.close()
-            except Exception:
-                pass
+            cursor.close()
 
-        if db:
+        if connection and connection.is_connected():
 
-            try:
-                db.close()
-            except Exception:
-                pass
+            connection.close()
 
     return render_template(
         "matches.html",
-        matches=matches_list,
-        name=session.get(
-            "user_name",
-            "User"
-        )
+        matches=matches_data
     )
 
 
-# =========================================================
+# ============================================================
 # MY REPORTS
-# =========================================================
+# ============================================================
 
 @app.route("/my-reports")
 def my_reports():
@@ -2005,58 +1737,45 @@ def my_reports():
             url_for("login")
         )
 
-    db = None
+    connection = None
     cursor = None
-    reports = []
+
+    lost_items = []
+    found_items = []
 
     try:
 
-        db = get_db_connection()
+        connection = get_db_connection()
 
-        cursor = db.cursor(
-            dictionary=True,
-            buffered=True
+        cursor = connection.cursor(
+            dictionary=True
         )
+
+        user_id = session["user_id"]
 
         cursor.execute(
             """
-            SELECT
-                id,
-                item_name,
-                category,
-                description,
-                lost_location AS location,
-                lost_date AS item_date,
-                color,
-                status,
-                'Lost' AS report_type
+            SELECT *
             FROM lost_items
             WHERE user_id = %s
-
-            UNION ALL
-
-            SELECT
-                id,
-                item_name,
-                category,
-                description,
-                found_location AS location,
-                found_date AS item_date,
-                color,
-                status,
-                'Found' AS report_type
-            FROM found_items
-            WHERE user_id = %s
-
-            ORDER BY item_date DESC
+            ORDER BY created_at DESC
             """,
-            (
-                session["user_id"],
-                session["user_id"]
-            )
+            (user_id,)
         )
 
-        reports = cursor.fetchall()
+        lost_items = cursor.fetchall()
+
+        cursor.execute(
+            """
+            SELECT *
+            FROM found_items
+            WHERE user_id = %s
+            ORDER BY created_at DESC
+            """,
+            (user_id,)
+        )
+
+        found_items = cursor.fetchall()
 
     except Exception as e:
 
@@ -2074,33 +1793,28 @@ def my_reports():
 
         if cursor:
 
-            try:
-                cursor.close()
-            except Exception:
-                pass
+            cursor.close()
 
-        if db:
+        if connection and connection.is_connected():
 
-            try:
-                db.close()
-            except Exception:
-                pass
+            connection.close()
 
     return render_template(
         "my_reports.html",
-        reports=reports
+        lost_items=lost_items,
+        found_items=found_items
     )
 
 
-# =========================================================
+# ============================================================
 # CLAIM ITEM
-# =========================================================
+# ============================================================
 
 @app.route(
     "/claim/<int:found_item_id>/<int:lost_item_id>",
     methods=["GET", "POST"]
 )
-def claim_item(
+def claim(
     found_item_id,
     lost_item_id
 ):
@@ -2111,51 +1825,25 @@ def claim_item(
             url_for("login")
         )
 
-    db = None
+    connection = None
     cursor = None
+
+    found_item = None
+    lost_item = None
 
     try:
 
-        db = get_db_connection()
+        connection = get_db_connection()
 
-        cursor = db.cursor(
-            dictionary=True,
-            buffered=True
+        cursor = connection.cursor(
+            dictionary=True
         )
-
-        cursor.execute(
-            """
-            SELECT *
-            FROM lost_items
-            WHERE id = %s
-              AND user_id = %s
-            LIMIT 1
-            """,
-            (
-                lost_item_id,
-                session["user_id"]
-            )
-        )
-
-        lost_item = cursor.fetchone()
-
-        if not lost_item:
-
-            flash(
-                "Invalid lost item.",
-                "error"
-            )
-
-            return redirect(
-                url_for("matches")
-            )
 
         cursor.execute(
             """
             SELECT *
             FROM found_items
             WHERE id = %s
-              AND status = 'Found'
             LIMIT 1
             """,
             (found_item_id,)
@@ -2163,10 +1851,22 @@ def claim_item(
 
         found_item = cursor.fetchone()
 
-        if not found_item:
+        cursor.execute(
+            """
+            SELECT *
+            FROM lost_items
+            WHERE id = %s
+            LIMIT 1
+            """,
+            (lost_item_id,)
+        )
+
+        lost_item = cursor.fetchone()
+
+        if not found_item or not lost_item:
 
             flash(
-                "Found item is no longer available.",
+                "Item not found.",
                 "error"
             )
 
@@ -2184,43 +1884,30 @@ def claim_item(
             if not claim_message:
 
                 flash(
-                    "Please explain why this item belongs to you.",
+                    "Claim message is required.",
                     "error"
                 )
 
                 return render_template(
                     "claim.html",
-                    lost_item=lost_item,
-                    found_item=found_item
-                )
-
-            if len(claim_message) < 10:
-
-                flash(
-                    "Claim explanation must contain at least 10 characters.",
-                    "error"
-                )
-
-                return render_template(
-                    "claim.html",
-                    lost_item=lost_item,
-                    found_item=found_item
+                    found_item=found_item,
+                    lost_item=lost_item
                 )
 
             cursor.execute(
                 """
                 SELECT id
                 FROM claims
-                WHERE found_item_id = %s
-                  AND lost_item_id = %s
-                  AND claimant_id = %s
-                  AND status IN ('Pending', 'Approved')
+                WHERE
+                    found_item_id = %s
+                    AND claimant_id = %s
+                    AND lost_item_id = %s
                 LIMIT 1
                 """,
                 (
                     found_item_id,
-                    lost_item_id,
-                    session["user_id"]
+                    session["user_id"],
+                    lost_item_id
                 )
             )
 
@@ -2229,7 +1916,7 @@ def claim_item(
             if existing_claim:
 
                 flash(
-                    "You already have an active claim for this item.",
+                    "You have already submitted a claim for this item.",
                     "error"
                 )
 
@@ -2253,21 +1940,22 @@ def claim_item(
                     %s,
                     %s,
                     %s,
-                    'Pending'
+                    %s
                 )
                 """,
                 (
                     found_item_id,
                     session["user_id"],
                     lost_item_id,
-                    claim_message
+                    claim_message,
+                    "Pending"
                 )
             )
 
-            db.commit()
+            connection.commit()
 
             flash(
-                "Claim submitted successfully. Waiting for admin verification.",
+                "Claim submitted successfully.",
                 "success"
             )
 
@@ -2275,55 +1963,56 @@ def claim_item(
                 url_for("my_claims")
             )
 
-        return render_template(
-            "claim.html",
-            lost_item=lost_item,
-            found_item=found_item
+    except Error as e:
+
+        if connection:
+            connection.rollback()
+
+        print(
+            "CLAIM DATABASE ERROR:",
+            repr(e)
+        )
+
+        flash(
+            "Unable to submit claim.",
+            "error"
         )
 
     except Exception as e:
+
+        if connection:
+            connection.rollback()
 
         print(
             "CLAIM ERROR:",
             repr(e)
         )
 
-        if db:
-
-            try:
-                db.rollback()
-            except Exception:
-                pass
-
         flash(
-            "Unable to process claim.",
+            "Something went wrong.",
             "error"
-        )
-
-        return redirect(
-            url_for("matches")
         )
 
     finally:
 
         if cursor:
 
-            try:
-                cursor.close()
-            except Exception:
-                pass
+            cursor.close()
 
-        if db:
+        if connection and connection.is_connected():
 
-            try:
-                db.close()
-            except Exception:
-                pass
+            connection.close()
+
+    return render_template(
+        "claim.html",
+        found_item=found_item,
+        lost_item=lost_item
+    )
 
 
-# =========================================================
+# ============================================================
 # MY CLAIMS
-# =========================================================
+# ============================================================
 
 @app.route("/my-claims")
 def my_claims():
@@ -2334,51 +2023,47 @@ def my_claims():
             url_for("login")
         )
 
-    db = None
+    connection = None
     cursor = None
-    claims = []
+
+    claims_data = []
 
     try:
 
-        db = get_db_connection()
+        connection = get_db_connection()
 
-        cursor = db.cursor(
-            dictionary=True,
-            buffered=True
+        cursor = connection.cursor(
+            dictionary=True
         )
 
         cursor.execute(
             """
             SELECT
-                c.id AS claim_id,
-                c.claim_message,
-                c.status AS claim_status,
-                c.admin_note,
-                c.created_at,
+                c.*,
 
-                l.id AS lost_item_id,
-                l.item_name AS lost_item_name,
-                l.category AS lost_category,
-                l.description AS lost_description,
-                l.lost_location,
-                l.lost_date,
-                l.color AS lost_color,
-
-                f.id AS found_item_id,
                 f.item_name AS found_item_name,
                 f.category AS found_category,
-                f.description AS found_description,
                 f.found_location,
                 f.found_date,
-                f.color AS found_color
+
+                l.item_name AS lost_item_name,
+                l.category AS lost_category,
+                l.lost_location,
+                l.lost_date,
+
+                u.name AS claimant_name,
+                u.email AS claimant_email
 
             FROM claims c
 
-            INNER JOIN lost_items l
+            JOIN found_items f
+                ON c.found_item_id = f.id
+
+            JOIN lost_items l
                 ON c.lost_item_id = l.id
 
-            INNER JOIN found_items f
-                ON c.found_item_id = f.id
+            JOIN users u
+                ON c.claimant_id = u.id
 
             WHERE c.claimant_id = %s
 
@@ -2387,7 +2072,7 @@ def my_claims():
             (session["user_id"],)
         )
 
-        claims = cursor.fetchall()
+        claims_data = cursor.fetchall()
 
     except Exception as e:
 
@@ -2397,7 +2082,7 @@ def my_claims():
         )
 
         flash(
-            "Unable to load claims.",
+            "Unable to load your claims.",
             "error"
         )
 
@@ -2405,112 +2090,105 @@ def my_claims():
 
         if cursor:
 
-            try:
-                cursor.close()
-            except Exception:
-                pass
+            cursor.close()
 
-        if db:
+        if connection and connection.is_connected():
 
-            try:
-                db.close()
-            except Exception:
-                pass
+            connection.close()
 
     return render_template(
         "my_claims.html",
-        claims=claims
+        claims=claims_data
     )
 
 
-# =========================================================
+# ============================================================
 # ADMIN DASHBOARD
-# =========================================================
+# ============================================================
 
 @app.route("/admin-dashboard")
 def admin_dashboard():
 
     if not admin_required():
 
-        if not login_required():
-
-            return redirect(
-                url_for("login")
-            )
-
-        flash(
-            "Admin access required.",
-            "error"
-        )
-
         return redirect(
             url_for("dashboard")
         )
 
-    db = None
+    connection = None
     cursor = None
 
-    total_users = 0
-    total_lost = 0
-    total_found = 0
-    total_claims = 0
-    pending_claims = 0
-    approved_claims = 0
-    rejected_claims = 0
-    recent_claims = []
+    stats = {
+        "users": 0,
+        "lost": 0,
+        "found": 0,
+        "claims": 0,
+        "pending_claims": 0
+    }
 
     try:
 
-        db = get_db_connection()
+        connection = get_db_connection()
 
-        cursor = db.cursor(
-            dictionary=True,
-            buffered=True
+        cursor = connection.cursor(
+            dictionary=True
         )
 
         cursor.execute(
-            "SELECT COUNT(*) AS total FROM users"
+            """
+            SELECT COUNT(*) AS total
+            FROM users
+            """
         )
 
         result = cursor.fetchone()
 
-        total_users = (
+        stats["users"] = (
             result["total"]
             if result
             else 0
         )
 
         cursor.execute(
-            "SELECT COUNT(*) AS total FROM lost_items"
+            """
+            SELECT COUNT(*) AS total
+            FROM lost_items
+            """
         )
 
         result = cursor.fetchone()
 
-        total_lost = (
+        stats["lost"] = (
             result["total"]
             if result
             else 0
         )
 
         cursor.execute(
-            "SELECT COUNT(*) AS total FROM found_items"
+            """
+            SELECT COUNT(*) AS total
+            FROM found_items
+            """
         )
 
         result = cursor.fetchone()
 
-        total_found = (
+        stats["found"] = (
             result["total"]
             if result
             else 0
         )
 
         cursor.execute(
-            "SELECT COUNT(*) AS total FROM claims"
+            """
+            SELECT COUNT(*) AS total
+            FROM claims
+            """
         )
 
         result = cursor.fetchone()
 
-        total_claims = (
+        stats["claims"] = (
             result["total"]
             if result
             else 0
@@ -2526,80 +2204,11 @@ def admin_dashboard():
 
         result = cursor.fetchone()
 
-        pending_claims = (
+        stats["pending_claims"] = (
             result["total"]
             if result
             else 0
         )
-
-        cursor.execute(
-            """
-            SELECT COUNT(*) AS total
-            FROM claims
-            WHERE status = 'Approved'
-            """
-        )
-
-        result = cursor.fetchone()
-
-        approved_claims = (
-            result["total"]
-            if result
-            else 0
-        )
-
-        cursor.execute(
-            """
-            SELECT COUNT(*) AS total
-            FROM claims
-            WHERE status = 'Rejected'
-            """
-        )
-
-        result = cursor.fetchone()
-
-        rejected_claims = (
-            result["total"]
-            if result
-            else 0
-        )
-
-        cursor.execute(
-            """
-            SELECT
-                c.id AS claim_id,
-                c.claim_message,
-                c.status AS claim_status,
-                c.admin_note,
-                c.created_at,
-
-                u.name AS claimant_name,
-                u.email AS claimant_email,
-
-                l.item_name AS lost_item_name,
-                l.category AS lost_category,
-
-                f.item_name AS found_item_name,
-                f.category AS found_category
-
-            FROM claims c
-
-            INNER JOIN users u
-                ON c.claimant_id = u.id
-
-            INNER JOIN lost_items l
-                ON c.lost_item_id = l.id
-
-            INNER JOIN found_items f
-                ON c.found_item_id = f.id
-
-            ORDER BY c.created_at DESC
-
-            LIMIT 20
-            """
-        )
-
-        recent_claims = cursor.fetchall()
 
     except Exception as e:
 
@@ -2617,115 +2226,78 @@ def admin_dashboard():
 
         if cursor:
 
-            try:
-                cursor.close()
-            except Exception:
-                pass
+            cursor.close()
 
-        if db:
+        if connection and connection.is_connected():
 
-            try:
-                db.close()
-            except Exception:
-                pass
+            connection.close()
 
     return render_template(
         "admin_dashboard.html",
-        total_users=total_users,
-        total_lost=total_lost,
-        total_found=total_found,
-        total_claims=total_claims,
-        pending_claims=pending_claims,
-        approved_claims=approved_claims,
-        rejected_claims=rejected_claims,
-        recent_claims=recent_claims
+        stats=stats
     )
 
 
-# =========================================================
+# ============================================================
 # ADMIN CLAIMS
-# =========================================================
+# ============================================================
 
 @app.route("/admin/claims")
 def admin_claims():
 
     if not admin_required():
 
-        if not login_required():
-
-            return redirect(
-                url_for("login")
-            )
-
-        flash(
-            "Admin access required.",
-            "error"
-        )
-
         return redirect(
             url_for("dashboard")
         )
 
-    db = None
+    connection = None
     cursor = None
-    claims = []
+
+    claims_data = []
 
     try:
 
-        db = get_db_connection()
+        connection = get_db_connection()
 
-        cursor = db.cursor(
-            dictionary=True,
-            buffered=True
+        cursor = connection.cursor(
+            dictionary=True
         )
 
         cursor.execute(
             """
             SELECT
-                c.id AS claim_id,
-                c.claim_message,
-                c.status AS claim_status,
-                c.admin_note,
-                c.created_at,
+                c.*,
 
-                u.id AS claimant_id,
-                u.name AS claimant_name,
-                u.email AS claimant_email,
-
-                l.id AS lost_item_id,
-                l.item_name AS lost_item_name,
-                l.category AS lost_category,
-                l.description AS lost_description,
-                l.lost_location,
-                l.lost_date,
-                l.color AS lost_color,
-                l.identification_details AS lost_identification,
-
-                f.id AS found_item_id,
                 f.item_name AS found_item_name,
                 f.category AS found_category,
-                f.description AS found_description,
                 f.found_location,
                 f.found_date,
-                f.color AS found_color,
-                f.identification_details AS found_identification
+
+                l.item_name AS lost_item_name,
+                l.category AS lost_category,
+                l.lost_location,
+                l.lost_date,
+
+                u.name AS claimant_name,
+                u.email AS claimant_email
 
             FROM claims c
 
-            INNER JOIN users u
-                ON c.claimant_id = u.id
+            JOIN found_items f
+                ON c.found_item_id = f.id
 
-            INNER JOIN lost_items l
+            JOIN lost_items l
                 ON c.lost_item_id = l.id
 
-            INNER JOIN found_items f
-                ON c.found_item_id = f.id
+            JOIN users u
+                ON c.claimant_id = u.id
 
             ORDER BY c.created_at DESC
             """
         )
 
-        claims = cursor.fetchall()
+        claims_data = cursor.fetchall()
 
     except Exception as e:
 
@@ -2743,70 +2315,56 @@ def admin_claims():
 
         if cursor:
 
-            try:
-                cursor.close()
-            except Exception:
-                pass
+            cursor.close()
 
-        if db:
+        if connection and connection.is_connected():
 
-            try:
-                db.close()
-            except Exception:
-                pass
+            connection.close()
 
     return render_template(
         "admin_claims.html",
-        claims=claims
+        claims=claims_data
     )
 
 
-# =========================================================
+# ============================================================
 # ADMIN UPDATE CLAIM
-# =========================================================
+# ============================================================
 
 @app.route(
     "/admin/claim/<int:claim_id>/update",
     methods=["POST"]
 )
-def admin_update_claim(
+def update_claim(
     claim_id
 ):
 
     if not admin_required():
 
-        if not login_required():
-
-            return redirect(
-                url_for("login")
-            )
-
-        flash(
-            "Admin access required.",
-            "error"
-        )
-
         return redirect(
             url_for("dashboard")
         )
 
-    action = request.form.get(
-        "action",
+    status = request.form.get(
+        "status",
         ""
-    ).strip().lower()
+    ).strip()
 
     admin_note = request.form.get(
         "admin_note",
         ""
     ).strip()
 
-    if action not in [
-        "approve",
-        "reject"
-    ]:
+    allowed_statuses = [
+        "Pending",
+        "Approved",
+        "Rejected"
+    ]
+
+    if status not in allowed_statuses:
 
         flash(
-            "Invalid claim action.",
+            "Invalid claim status.",
             "error"
         )
 
@@ -2814,243 +2372,85 @@ def admin_update_claim(
             url_for("admin_claims")
         )
 
-    if not admin_note:
-
-        if action == "approve":
-
-            admin_note = (
-                "Claim approved by administrator."
-            )
-
-        else:
-
-            admin_note = (
-                "Claim rejected by administrator."
-            )
-
-    db = None
+    connection = None
     cursor = None
 
     try:
 
-        db = get_db_connection()
+        connection = get_db_connection()
 
-        cursor = db.cursor(
-            dictionary=True,
-            buffered=True
-        )
+        cursor = connection.cursor()
 
         cursor.execute(
             """
-            SELECT
-                id,
-                found_item_id,
-                claimant_id,
-                lost_item_id,
-                status
-            FROM claims
+            UPDATE claims
+            SET
+                status = %s,
+                admin_note = %s
             WHERE id = %s
-            LIMIT 1
             """,
-            (claim_id,)
+            (
+                status,
+                admin_note,
+                claim_id
+            )
         )
 
-        claim = cursor.fetchone()
+        connection.commit()
 
-        if not claim:
-
-            flash(
-                "Claim not found.",
-                "error"
-            )
-
-            return redirect(
-                url_for("admin_claims")
-            )
-
-        if claim["status"] != "Pending":
-
-            flash(
-                "This claim has already been processed.",
-                "error"
-            )
-
-            return redirect(
-                url_for("admin_claims")
-            )
-
-        found_item_id = claim[
-            "found_item_id"
-        ]
-
-        lost_item_id = claim[
-            "lost_item_id"
-        ]
-
-        if action == "approve":
-
-            cursor.execute(
-                """
-                SELECT
-                    id,
-                    status
-                FROM found_items
-                WHERE id = %s
-                LIMIT 1
-                """,
-                (found_item_id,)
-            )
-
-            found_item = cursor.fetchone()
-
-            if not found_item:
-
-                flash(
-                    "Found item no longer exists.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for("admin_claims")
-                )
-
-            if found_item["status"] != "Found":
-
-                flash(
-                    "This found item is no longer available.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for("admin_claims")
-                )
-
-            cursor.execute(
-                """
-                UPDATE claims
-                SET
-                    status = 'Approved',
-                    admin_note = %s
-                WHERE id = %s
-                """,
-                (
-                    admin_note,
-                    claim_id
-                )
-            )
-
-            cursor.execute(
-                """
-                UPDATE lost_items
-                SET status = 'Claimed'
-                WHERE id = %s
-                """,
-                (lost_item_id,)
-            )
-
-            cursor.execute(
-                """
-                UPDATE found_items
-                SET status = 'Claimed'
-                WHERE id = %s
-                """,
-                (found_item_id,)
-            )
-
-            cursor.execute(
-                """
-                UPDATE claims
-                SET
-                    status = 'Rejected',
-                    admin_note =
-                        'This item was approved for another claim.'
-                WHERE found_item_id = %s
-                  AND id != %s
-                  AND status = 'Pending'
-                """,
-                (
-                    found_item_id,
-                    claim_id
-                )
-            )
-
-            db.commit()
-
-            flash(
-                "Claim approved successfully.",
-                "success"
-            )
-
-        else:
-
-            cursor.execute(
-                """
-                UPDATE claims
-                SET
-                    status = 'Rejected',
-                    admin_note = %s
-                WHERE id = %s
-                """,
-                (
-                    admin_note,
-                    claim_id
-                )
-            )
-
-            db.commit()
-
-            flash(
-                "Claim rejected successfully.",
-                "success"
-            )
-
-        return redirect(
-            url_for("admin_claims")
+        flash(
+            "Claim status updated successfully.",
+            "success"
         )
 
-    except Exception as e:
+    except Error as e:
+
+        if connection:
+            connection.rollback()
 
         print(
-            "ADMIN CLAIM UPDATE ERROR:",
+            "UPDATE CLAIM DATABASE ERROR:",
             repr(e)
         )
-
-        if db:
-
-            try:
-                db.rollback()
-            except Exception:
-                pass
 
         flash(
             "Unable to update claim.",
             "error"
         )
 
-        return redirect(
-            url_for("admin_claims")
+    except Exception as e:
+
+        if connection:
+            connection.rollback()
+
+        print(
+            "UPDATE CLAIM ERROR:",
+            repr(e)
+        )
+
+        flash(
+            "Something went wrong.",
+            "error"
         )
 
     finally:
 
         if cursor:
 
-            try:
-                cursor.close()
-            except Exception:
-                pass
+            cursor.close()
 
-        if db:
+        if connection and connection.is_connected():
 
-            try:
-                db.close()
-            except Exception:
-                pass
+            connection.close()
+
+    return redirect(
+        url_for("admin_claims")
+    )
 
 
-# =========================================================
-# TRACK
-# =========================================================
+# ============================================================
+# TRACK & STATUS
+# ============================================================
 
 @app.route("/track")
 def track():
@@ -3061,82 +2461,60 @@ def track():
             url_for("login")
         )
 
-    db = None
+    connection = None
     cursor = None
 
-    reports = []
-    claims = []
+    lost_items = []
+    found_items = []
+    claims_data = []
 
     try:
 
-        db = get_db_connection()
+        connection = get_db_connection()
 
-        cursor = db.cursor(
-            dictionary=True,
-            buffered=True
+        cursor = connection.cursor(
+            dictionary=True
         )
 
         user_id = session["user_id"]
 
         cursor.execute(
             """
-            SELECT
-                id,
-                item_name,
-                category,
-                lost_location AS location,
-                lost_date AS item_date,
-                status,
-                'Lost' AS report_type
+            SELECT *
             FROM lost_items
             WHERE user_id = %s
-
-            UNION ALL
-
-            SELECT
-                id,
-                item_name,
-                category,
-                found_location AS location,
-                found_date AS item_date,
-                status,
-                'Found' AS report_type
-            FROM found_items
-            WHERE user_id = %s
-
-            ORDER BY item_date DESC
+            ORDER BY created_at DESC
             """,
-            (
-                user_id,
-                user_id
-            )
+            (user_id,)
         )
 
-        reports = cursor.fetchall()
+        lost_items = cursor.fetchall()
+
+        cursor.execute(
+            """
+            SELECT *
+            FROM found_items
+            WHERE user_id = %s
+            ORDER BY created_at DESC
+            """,
+            (user_id,)
+        )
+
+        found_items = cursor.fetchall()
 
         cursor.execute(
             """
             SELECT
-                c.id AS claim_id,
-                c.claim_message,
-                c.status AS claim_status,
-                c.admin_note,
-                c.created_at,
-
-                l.item_name AS lost_item_name,
-                l.category AS lost_category,
-
+                c.*,
                 f.item_name AS found_item_name,
-                f.category AS found_category,
-                f.found_location
-
+                l.item_name AS lost_item_name
             FROM claims c
 
-            INNER JOIN lost_items l
-                ON c.lost_item_id = l.id
-
-            INNER JOIN found_items f
+            JOIN found_items f
                 ON c.found_item_id = f.id
+
+            JOIN lost_items l
+                ON c.lost_item_id = l.id
 
             WHERE c.claimant_id = %s
 
@@ -3145,12 +2523,12 @@ def track():
             (user_id,)
         )
 
-        claims = cursor.fetchall()
+        claims_data = cursor.fetchall()
 
     except Exception as e:
 
         print(
-            "TRACK DATABASE ERROR:",
+            "TRACK ERROR:",
             repr(e)
         )
 
@@ -3159,48 +2537,39 @@ def track():
             "error"
         )
 
-        return redirect(
-            url_for("dashboard")
-        )
-
     finally:
 
         if cursor:
 
-            try:
-                cursor.close()
-            except Exception:
-                pass
+            cursor.close()
 
-        if db:
+        if connection and connection.is_connected():
 
-            try:
-                db.close()
-            except Exception:
-                pass
+            connection.close()
 
     return render_template(
         "track.html",
-        reports=reports,
-        claims=claims
+        lost_items=lost_items,
+        found_items=found_items,
+        claims=claims_data
     )
 
 
-# =========================================================
+# ============================================================
 # HEALTH CHECK
-# =========================================================
+# ============================================================
 
 @app.route("/health")
 def health():
 
-    db = None
+    connection = None
     cursor = None
 
     try:
 
-        db = get_db_connection()
+        connection = get_db_connection()
 
-        cursor = db.cursor()
+        cursor = connection.cursor()
 
         cursor.execute(
             "SELECT 1"
@@ -3214,10 +2583,9 @@ def health():
 
         return {
             "status": "ok",
-            "application":
-                "Smart Lost & Found Management System",
+            "application": "Smart Lost & Found Management System",
             "database": "connected",
-            "test": result[0] if result else 1
+            "test": result[0] if result else None
         }, 200
 
     except Error as e:
@@ -3229,8 +2597,7 @@ def health():
 
         return {
             "status": "error",
-            "application":
-                "Smart Lost & Found Management System",
+            "application": "Smart Lost & Found Management System",
             "database": "unavailable"
         }, 503
 
@@ -3243,8 +2610,7 @@ def health():
 
         return {
             "status": "error",
-            "application":
-                "Smart Lost & Found Management System",
+            "application": "Smart Lost & Found Management System",
             "database": "unavailable"
         }, 503
 
@@ -3252,22 +2618,16 @@ def health():
 
         if cursor:
 
-            try:
-                cursor.close()
-            except Exception:
-                pass
+            cursor.close()
 
-        if db:
+        if connection and connection.is_connected():
 
-            try:
-                db.close()
-            except Exception:
-                pass
+            connection.close()
 
 
-# =========================================================
+# ============================================================
 # HOW IT WORKS
-# =========================================================
+# ============================================================
 
 @app.route("/how-it-works")
 def how_it_works():
@@ -3277,9 +2637,9 @@ def how_it_works():
     )
 
 
-# =========================================================
+# ============================================================
 # HELP & SUPPORT
-# =========================================================
+# ============================================================
 
 @app.route("/help")
 def help_page():
@@ -3289,9 +2649,9 @@ def help_page():
     )
 
 
-# =========================================================
+# ============================================================
 # PRIVACY POLICY
-# =========================================================
+# ============================================================
 
 @app.route("/privacy")
 def privacy():
@@ -3301,9 +2661,9 @@ def privacy():
     )
 
 
-# =========================================================
+# ============================================================
 # LOGOUT
-# =========================================================
+# ============================================================
 
 @app.route("/logout")
 def logout():
@@ -3311,61 +2671,55 @@ def logout():
     session.clear()
 
     flash(
-        "You have been logged out.",
+        "You have been logged out successfully.",
         "success"
     )
 
     return redirect(
-        url_for("home")
+        url_for("index")
     )
 
 
-# =========================================================
-# ERROR HANDLERS
-# =========================================================
+# ============================================================
+# 404 ERROR
+# ============================================================
 
 @app.errorhandler(404)
 def page_not_found(error):
-
-    print(
-        "404 ERROR:",
-        request.path
-    )
 
     return render_template(
         "404.html"
     ), 404
 
 
+# ============================================================
+# 413 ERROR
+# ============================================================
+
 @app.errorhandler(413)
-def request_too_large(error):
+def request_entity_too_large(error):
 
-    flash(
-        "The uploaded/request data is too large. Maximum size is 5 MB.",
-        "error"
+    return (
+        "File is too large. Maximum allowed size is 5 MB.",
+        413
     )
 
-    return redirect(
-        url_for("home")
-    )
 
+# ============================================================
+# 500 ERROR
+# ============================================================
 
 @app.errorhandler(500)
 def internal_server_error(error):
-
-    print(
-        "500 ERROR:",
-        repr(error)
-    )
 
     return render_template(
         "500.html"
     ), 500
 
 
-# =========================================================
+# ============================================================
 # RUN APPLICATION
-# =========================================================
+# ============================================================
 
 if __name__ == "__main__":
 
