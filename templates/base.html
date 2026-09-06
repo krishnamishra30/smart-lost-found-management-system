@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>{% block title %}Smart Lost & Found{% endblock %}</title>
 
     <meta name="description"
           content="Smart Lost & Found Management System for reporting, searching, matching and recovering lost items.">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
           rel="stylesheet">
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 
     <style>
 
@@ -58,6 +66,7 @@
             border: 0;
         }
 
+
         /* =====================================================
            NAVBAR
         ===================================================== */
@@ -66,11 +75,16 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+
             height: 74px;
+
             background: rgba(255, 255, 255, 0.97);
+
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
+
             border-bottom: 1px solid #e8ebf1;
+
             display: flex;
             align-items: center;
         }
@@ -78,11 +92,14 @@
         .nav-container {
             width: min(1200px, 94%);
             margin: auto;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             gap: 20px;
         }
+
 
         /* =====================================================
            BRAND
@@ -91,23 +108,38 @@
         .brand {
             display: flex;
             align-items: center;
+
             gap: 11px;
+
             font-weight: 800;
             font-size: 19px;
+
             color: #172033;
+
             white-space: nowrap;
         }
 
         .brand-icon {
             width: 42px;
             height: 42px;
+
             border-radius: 12px;
+
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #2563eb, #4f46e5);
+
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
             color: white;
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+
+            box-shadow:
+                0 8px 20px rgba(37, 99, 235, 0.22);
+
             flex-shrink: 0;
         }
 
@@ -115,22 +147,28 @@
             color: #2563eb;
         }
 
+
         /* =====================================================
-           NAV LINKS
+           MAIN NAVIGATION
         ===================================================== */
 
         .nav-links {
             display: flex;
             align-items: center;
+
             gap: 6px;
         }
 
         .nav-links a {
             padding: 10px 13px;
+
             border-radius: 9px;
+
             color: #596579;
+
             font-size: 14px;
             font-weight: 600;
+
             transition: all 0.2s ease;
         }
 
@@ -143,6 +181,7 @@
             margin-right: 5px;
         }
 
+
         /* =====================================================
            NAV RIGHT
         ===================================================== */
@@ -150,30 +189,48 @@
         .nav-right {
             display: flex;
             align-items: center;
+
             gap: 10px;
         }
+
+
+        /* =====================================================
+           USER BOX
+        ===================================================== */
 
         .user-box {
             display: flex;
             align-items: center;
+
             gap: 9px;
+
             padding: 7px 10px;
+
             border: 1px solid #e6e9ef;
+
             border-radius: 12px;
-            background: #fff;
+
+            background: #ffffff;
         }
 
         .user-avatar {
             width: 34px;
             height: 34px;
+
             border-radius: 50%;
+
             display: flex;
             align-items: center;
             justify-content: center;
+
             background: #eaf1ff;
+
             color: #2563eb;
+
             font-weight: 800;
+
             text-transform: uppercase;
+
             flex-shrink: 0;
         }
 
@@ -184,7 +241,9 @@
         .user-name {
             font-size: 13px;
             font-weight: 700;
+
             max-width: 125px;
+
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -192,9 +251,12 @@
 
         .user-role {
             font-size: 11px;
+
             color: #8a94a6;
+
             margin-top: 3px;
         }
+
 
         /* =====================================================
            BUTTONS
@@ -202,15 +264,22 @@
 
         .btn {
             border: none;
+
             border-radius: 10px;
+
             padding: 11px 17px;
+
             display: inline-flex;
             align-items: center;
             justify-content: center;
+
             gap: 8px;
+
             font-size: 13px;
             font-weight: 700;
+
             cursor: pointer;
+
             transition: all 0.2s ease;
         }
 
@@ -221,6 +290,7 @@
 
         .btn-primary:hover {
             background: #1d4ed8;
+
             transform: translateY(-1px);
         }
 
@@ -262,7 +332,9 @@
 
         .btn-outline {
             background: white;
+
             color: #2563eb;
+
             border: 1px solid #2563eb;
         }
 
@@ -273,13 +345,16 @@
         .get-started {
             background: #2563eb !important;
             color: white !important;
+
             padding: 10px 15px !important;
+
             border-radius: 10px !important;
         }
 
         .get-started:hover {
             background: #1d4ed8 !important;
         }
+
 
         /* =====================================================
            THREE DOT MENU
@@ -292,37 +367,59 @@
         .menu-btn {
             width: 40px;
             height: 40px;
+
             border: 1px solid #e5e8ef;
+
             background: white;
+
             border-radius: 10px;
+
             cursor: pointer;
+
             color: #475569;
+
             font-size: 17px;
+
             display: flex;
             align-items: center;
             justify-content: center;
+
             transition: all 0.2s ease;
         }
 
         .menu-btn:hover {
             background: #f1f5ff;
+
             color: #2563eb;
+
             border-color: #dbe5ff;
         }
 
         .quick-menu {
             position: absolute;
+
             right: 0;
             top: 49px;
-            width: 240px;
+
+            width: 250px;
+
             max-height: calc(100vh - 100px);
+
             overflow-y: auto;
+
             background: white;
+
             border: 1px solid #e5e8ef;
+
             border-radius: 14px;
+
             padding: 8px;
-            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.13);
+
+            box-shadow:
+                0 18px 45px rgba(15, 23, 42, 0.13);
+
             display: none;
+
             animation: menuOpen 0.18s ease;
         }
 
@@ -333,30 +430,58 @@
         .quick-menu a {
             display: flex;
             align-items: center;
+
             gap: 11px;
+
             padding: 11px 12px;
+
             border-radius: 9px;
+
             color: #475569;
+
             font-size: 13px;
+
             font-weight: 600;
+
             transition: all 0.2s ease;
         }
 
         .quick-menu a:hover {
             background: #f3f6ff;
+
             color: #2563eb;
+
+            transform: translateX(2px);
         }
 
         .quick-menu i {
             width: 18px;
+
             text-align: center;
+
             flex-shrink: 0;
         }
 
         .menu-divider {
             height: 1px;
+
             background: #edf0f4;
+
             margin: 6px 0;
+        }
+
+        .menu-section-title {
+            padding: 7px 12px 5px;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            color: #9aa4b2;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.7px;
         }
 
         .logout-link {
@@ -365,10 +490,12 @@
 
         .logout-link:hover {
             background: #fff1f2 !important;
+
             color: #dc2626 !important;
         }
 
         @keyframes menuOpen {
+
             from {
                 opacity: 0;
                 transform: translateY(-5px);
@@ -378,7 +505,9 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+
         }
+
 
         /* =====================================================
            MAIN
@@ -390,9 +519,12 @@
 
         .page-container {
             width: min(1200px, 94%);
+
             margin: auto;
+
             padding: 35px 0 60px;
         }
+
 
         /* =====================================================
            BACK BUTTON
@@ -401,18 +533,26 @@
         .back-btn {
             display: inline-flex;
             align-items: center;
+
             gap: 8px;
+
             margin-bottom: 22px;
+
             color: #64748b;
+
             font-size: 14px;
+
             font-weight: 600;
+
             transition: all 0.2s ease;
         }
 
         .back-btn:hover {
             color: #2563eb;
+
             transform: translateX(-2px);
         }
+
 
         /* =====================================================
            FLASH MESSAGES
@@ -420,26 +560,45 @@
 
         .flash-container {
             position: fixed;
+
             right: 22px;
             top: 90px;
+
             z-index: 2000;
-            width: min(380px, calc(100% - 30px));
+
+            width: min(
+                380px,
+                calc(100% - 30px)
+            );
+
             pointer-events: none;
         }
 
         .flash {
             padding: 14px 16px;
+
             margin-bottom: 10px;
+
             border-radius: 12px;
+
             background: white;
+
             border: 1px solid #e4e8ef;
-            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.12);
+
+            box-shadow:
+                0 12px 35px rgba(15, 23, 42, 0.12);
+
             font-size: 13px;
+
             font-weight: 600;
+
             display: flex;
             align-items: center;
+
             gap: 10px;
+
             animation: slideIn 0.3s ease;
+
             pointer-events: auto;
         }
 
@@ -476,16 +635,21 @@
         }
 
         @keyframes slideIn {
+
             from {
                 opacity: 0;
+
                 transform: translateX(25px);
             }
 
             to {
                 opacity: 1;
+
                 transform: translateX(0);
             }
+
         }
+
 
         /* =====================================================
            HEADINGS
@@ -497,23 +661,32 @@
 
         .page-header h1 {
             font-size: 31px;
+
             line-height: 1.2;
+
             font-weight: 800;
+
             color: #172033;
+
             margin-bottom: 8px;
         }
 
         .page-header p {
             color: #718096;
+
             font-size: 14px;
+
             line-height: 1.7;
         }
 
         .section-title {
             font-size: 20px;
+
             font-weight: 800;
+
             margin-bottom: 16px;
         }
+
 
         /* =====================================================
            CARDS
@@ -521,16 +694,24 @@
 
         .card {
             background: white;
+
             border: 1px solid #e8ebf1;
+
             border-radius: 17px;
+
             padding: 24px;
-            box-shadow: 0 7px 25px rgba(15, 23, 42, 0.04);
+
+            box-shadow:
+                0 7px 25px rgba(15, 23, 42, 0.04);
+
             transition: all 0.2s ease;
         }
 
         .card:hover {
-            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.07);
+            box-shadow:
+                0 12px 35px rgba(15, 23, 42, 0.07);
         }
+
 
         /* =====================================================
            BADGES
@@ -539,11 +720,17 @@
         .badge {
             display: inline-flex;
             align-items: center;
+
             gap: 5px;
+
             padding: 6px 10px;
+
             border-radius: 999px;
+
             font-size: 11px;
+
             font-weight: 700;
+
             white-space: nowrap;
         }
 
@@ -577,6 +764,7 @@
             color: #2563eb;
         }
 
+
         /* =====================================================
            FORMS
         ===================================================== */
@@ -587,9 +775,13 @@
 
         .form-label {
             display: block;
+
             margin-bottom: 7px;
+
             font-size: 13px;
+
             font-weight: 700;
+
             color: #334155;
         }
 
@@ -597,13 +789,21 @@
         .form-select,
         .form-textarea {
             width: 100%;
+
             border: 1px solid #dce2ea;
+
             border-radius: 10px;
+
             padding: 11px 13px;
+
             background: white;
+
             color: #172033;
+
             font-size: 13px;
+
             outline: none;
+
             transition: all 0.2s ease;
         }
 
@@ -616,17 +816,23 @@
         .form-select:focus,
         .form-textarea:focus {
             border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.09);
+
+            box-shadow:
+                0 0 0 3px rgba(37, 99, 235, 0.09);
         }
 
         .form-textarea {
             min-height: 120px;
+
             resize: vertical;
         }
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
             gap: 17px;
         }
 
@@ -634,41 +840,56 @@
             grid-column: 1 / -1;
         }
 
+
         /* =====================================================
            EMPTY STATE
         ===================================================== */
 
         .empty-state {
             text-align: center;
+
             padding: 60px 20px;
+
             background: white;
+
             border: 1px dashed #dce2ea;
+
             border-radius: 17px;
         }
 
         .empty-icon {
             width: 65px;
             height: 65px;
+
             margin: 0 auto 15px;
+
             border-radius: 50%;
+
             background: #eff6ff;
+
             color: #2563eb;
+
             display: flex;
             align-items: center;
             justify-content: center;
+
             font-size: 25px;
         }
 
         .empty-state h3 {
             font-size: 18px;
+
             margin-bottom: 7px;
         }
 
         .empty-state p {
             color: #7b8798;
+
             font-size: 13px;
+
             margin-bottom: 18px;
         }
+
 
         /* =====================================================
            TABLE
@@ -676,32 +897,47 @@
 
         .table-wrapper {
             overflow-x: auto;
+
             border-radius: 14px;
+
             border: 1px solid #e7ebf0;
         }
 
         .data-table {
             width: 100%;
+
             border-collapse: collapse;
+
             min-width: 700px;
+
             background: white;
         }
 
         .data-table th {
             background: #f8fafc;
+
             color: #64748b;
+
             font-size: 11px;
+
             text-transform: uppercase;
+
             letter-spacing: 0.5px;
+
             padding: 13px 15px;
+
             text-align: left;
         }
 
         .data-table td {
             padding: 15px;
+
             border-top: 1px solid #edf0f4;
+
             font-size: 13px;
+
             color: #475569;
+
             vertical-align: middle;
         }
 
@@ -709,76 +945,106 @@
             background: #fafcff;
         }
 
+
         /* =====================================================
            FOOTER
         ===================================================== */
 
         footer {
             background: #111827;
+
             color: #cbd5e1;
+
             margin-top: 30px;
         }
 
         .footer-container {
             width: min(1200px, 94%);
+
             margin: auto;
+
             padding: 45px 0 25px;
         }
 
         .footer-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
+
+            grid-template-columns:
+                2fr 1fr 1fr;
+
             gap: 45px;
         }
 
         .footer-brand {
             color: white;
+
             font-size: 18px;
+
             font-weight: 800;
+
             margin-bottom: 12px;
         }
 
         .footer-description {
             color: #94a3b8;
+
             max-width: 430px;
+
             font-size: 13px;
+
             line-height: 1.7;
         }
 
         .footer-title {
             color: white;
+
             font-size: 13px;
+
             font-weight: 700;
+
             margin-bottom: 14px;
         }
 
         .footer-links {
             display: flex;
+
             flex-direction: column;
+
             gap: 9px;
         }
 
         .footer-links a {
             color: #94a3b8;
+
             font-size: 12px;
+
             transition: all 0.2s ease;
         }
 
         .footer-links a:hover {
             color: white;
+
             transform: translateX(2px);
         }
 
         .footer-bottom {
             border-top: 1px solid #263244;
+
             margin-top: 35px;
+
             padding-top: 20px;
+
             display: flex;
+
             justify-content: space-between;
+
             gap: 15px;
+
             color: #64748b;
+
             font-size: 11px;
         }
+
 
         /* =====================================================
            SCROLLBAR
@@ -794,8 +1060,10 @@
 
         .quick-menu::-webkit-scrollbar-thumb {
             background: #dbe1ea;
+
             border-radius: 10px;
         }
+
 
         /* =====================================================
            RESPONSIVE
@@ -812,6 +1080,7 @@
             }
 
         }
+
 
         @media (max-width: 700px) {
 
@@ -830,6 +1099,7 @@
             .brand-icon {
                 width: 37px;
                 height: 37px;
+
                 border-radius: 10px;
             }
 
@@ -863,6 +1133,7 @@
 
             .footer-grid {
                 grid-template-columns: 1fr;
+
                 gap: 28px;
             }
 
@@ -872,10 +1143,12 @@
 
             .quick-menu {
                 right: -3px;
-                width: 225px;
+
+                width: 235px;
             }
 
         }
+
 
         @media (max-width: 420px) {
 
@@ -897,6 +1170,10 @@
                 height: 38px;
             }
 
+            .quick-menu {
+                width: 225px;
+            }
+
         }
 
     </style>
@@ -905,7 +1182,9 @@
 
 </head>
 
+
 <body>
+
 
 <!-- =====================================================
      NAVBAR
@@ -915,40 +1194,59 @@
 
     <div class="nav-container">
 
+
         <!-- BRAND -->
 
-        <a href="{{ url_for('home') }}" class="brand">
+        <a href="{{ url_for('home') }}"
+           class="brand">
 
             <div class="brand-icon">
+
                 <i class="fa-solid fa-magnifying-glass"></i>
+
             </div>
 
             <div class="brand-text">
+
                 Smart <span>Lost & Found</span>
+
             </div>
 
         </a>
 
 
-        <!-- MAIN NAVIGATION -->
+        <!-- =================================================
+             MAIN NAVIGATION
+        ================================================= -->
 
         {% if session.get("user_id") %}
 
         <div class="nav-links">
 
             <a href="{{ url_for('dashboard') }}">
+
                 <i class="fa-solid fa-house"></i>
+
                 Dashboard
+
             </a>
+
 
             <a href="{{ url_for('search') }}">
+
                 <i class="fa-solid fa-magnifying-glass"></i>
+
                 Search
+
             </a>
 
+
             <a href="{{ url_for('matches') }}">
+
                 <i class="fa-solid fa-wand-magic-sparkles"></i>
+
                 Smart Match
+
             </a>
 
         </div>
@@ -956,32 +1254,52 @@
         {% endif %}
 
 
-        <!-- RIGHT SIDE -->
+        <!-- =================================================
+             RIGHT SIDE
+        ================================================= -->
 
         <div class="nav-right">
 
+
             {% if session.get("user_id") %}
+
 
                 <!-- USER PROFILE -->
 
                 <div class="user-box">
 
                     <div class="user-avatar">
-                        {{ session.get("user_name", "U")[0]|upper }}
+
+                        {{ session.get(
+                            "user_name",
+                            "U"
+                        )[0]|upper }}
+
                     </div>
+
 
                     <div class="user-info">
 
                         <div class="user-name">
-                            {{ session.get("user_name", "User") }}
+
+                            {{ session.get(
+                                "user_name",
+                                "User"
+                            ) }}
+
                         </div>
+
 
                         <div class="user-role">
 
                             {% if session.get("user_role") == "admin" %}
+
                                 Administrator
+
                             {% else %}
+
                                 Student / User
+
                             {% endif %}
 
                         </div>
@@ -997,11 +1315,14 @@
                    class="btn get-started">
 
                     <i class="fa-solid fa-plus"></i>
+
                     Report Item
 
                 </a>
 
+
             {% else %}
+
 
                 <!-- LOGIN -->
 
@@ -1009,9 +1330,11 @@
                    class="btn btn-outline">
 
                     <i class="fa-solid fa-right-to-bracket"></i>
+
                     Login
 
                 </a>
+
 
                 <!-- REGISTER -->
 
@@ -1022,12 +1345,16 @@
 
                 </a>
 
+
             {% endif %}
 
 
-            <!-- THREE DOT MENU -->
+            <!-- =================================================
+                 THREE DOT MENU
+            ================================================= -->
 
             <div class="menu-wrapper">
+
 
                 <button
                     class="menu-btn"
@@ -1046,111 +1373,252 @@
                 <div class="quick-menu"
                      id="quickMenu">
 
+
                     {% if session.get("user_id") %}
 
+
+                        <!-- USER SECTION -->
+
+                        <div class="menu-section-title">
+
+                            My Account
+
+                        </div>
+
+
                         <a href="{{ url_for('dashboard') }}">
+
                             <i class="fa-solid fa-gauge-high"></i>
+
                             Dashboard
+
                         </a>
 
-                        <a href="{{ url_for('search') }}">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            Search Items
+
+                        <a href="{{ url_for('my_reports') }}">
+
+                            <i class="fa-solid fa-file-lines"></i>
+
+                            My Reports
+
                         </a>
 
-                        <a href="{{ url_for('matches') }}">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            Smart Matches
+
+                        <a href="{{ url_for('my_claims') }}">
+
+                            <i class="fa-solid fa-hand-holding"></i>
+
+                            My Claims
+
                         </a>
+
 
                         <a href="{{ url_for('track') }}">
+
                             <i class="fa-solid fa-route"></i>
-                            Track Status
+
+                            Track & Status
+
                         </a>
+
 
                         <div class="menu-divider"></div>
 
 
+                        <!-- DISCOVER SECTION -->
+
+                        <div class="menu-section-title">
+
+                            Explore
+
+                        </div>
+
+
+                        <a href="{{ url_for('search') }}">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                            Search Items
+
+                        </a>
+
+
+                        <a href="{{ url_for('matches') }}">
+
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                            Smart Matches
+
+                        </a>
+
+
+                        <div class="menu-divider"></div>
+
+
+                        <!-- ADMIN SECTION -->
+
                         {% if session.get("user_role") == "admin" %}
 
+
+                            <div class="menu-section-title">
+
+                                Administration
+
+                            </div>
+
+
                             <a href="{{ url_for('admin_dashboard') }}">
+
                                 <i class="fa-solid fa-user-shield"></i>
+
                                 Admin Panel
+
                             </a>
+
 
                             <a href="{{ url_for('admin_claims') }}">
+
                                 <i class="fa-solid fa-clipboard-check"></i>
+
                                 Manage Claims
+
                             </a>
 
+
                             <div class="menu-divider"></div>
+
 
                         {% endif %}
 
 
+                        <!-- INFORMATION SECTION -->
+
+                        <div class="menu-section-title">
+
+                            Information
+
+                        </div>
+
+
                         <a href="{{ url_for('about') }}">
+
                             <i class="fa-solid fa-circle-info"></i>
+
                             About Us
+
                         </a>
+
 
                         <a href="{{ url_for('how_it_works') }}">
+
                             <i class="fa-solid fa-circle-question"></i>
+
                             How It Works
+
                         </a>
 
-                        <a href="{{ url_for('contact') }}">
-                            <i class="fa-solid fa-envelope"></i>
-                            Contact Us
-                        </a>
 
                         <a href="{{ url_for('help_page') }}">
+
                             <i class="fa-solid fa-life-ring"></i>
+
                             Help & Support
+
                         </a>
+
 
                         <a href="{{ url_for('privacy') }}">
+
                             <i class="fa-solid fa-shield-halved"></i>
+
                             Privacy Policy
+
                         </a>
 
+
+                        <a href="{{ url_for('contact') }}">
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                            Contact Us
+
+                        </a>
+
+
                         <div class="menu-divider"></div>
+
+
+                        <!-- LOGOUT -->
 
                         <a href="{{ url_for('logout') }}"
                            class="logout-link">
 
                             <i class="fa-solid fa-right-from-bracket"></i>
+
                             Logout
 
                         </a>
 
+
                     {% else %}
 
+
+                        <!-- GUEST MENU -->
+
+                        <div class="menu-section-title">
+
+                            Information
+
+                        </div>
+
+
                         <a href="{{ url_for('about') }}">
+
                             <i class="fa-solid fa-circle-info"></i>
+
                             About Us
+
                         </a>
+
 
                         <a href="{{ url_for('how_it_works') }}">
+
                             <i class="fa-solid fa-circle-question"></i>
+
                             How It Works
+
                         </a>
 
-                        <a href="{{ url_for('contact') }}">
-                            <i class="fa-solid fa-envelope"></i>
-                            Contact Us
-                        </a>
 
                         <a href="{{ url_for('help_page') }}">
+
                             <i class="fa-solid fa-life-ring"></i>
+
                             Help & Support
+
                         </a>
+
 
                         <a href="{{ url_for('privacy') }}">
+
                             <i class="fa-solid fa-shield-halved"></i>
+
                             Privacy Policy
+
                         </a>
 
+
+                        <a href="{{ url_for('contact') }}">
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                            Contact Us
+
+                        </a>
+
+
                     {% endif %}
+
 
                 </div>
 
@@ -1167,43 +1635,62 @@
      FLASH MESSAGES
 ===================================================== -->
 
-{% with messages = get_flashed_messages(with_categories=true) %}
+{% with messages = get_flashed_messages(
+    with_categories=true
+) %}
+
 
     {% if messages %}
 
         <div class="flash-container">
 
+
             {% for category, message in messages %}
 
+
                 <div class="flash {{ category }}">
+
 
                     {% if category == "success" %}
 
                         <i class="fa-solid fa-circle-check"></i>
 
+
                     {% elif category == "error" %}
 
                         <i class="fa-solid fa-circle-exclamation"></i>
+
 
                     {% elif category == "warning" %}
 
                         <i class="fa-solid fa-triangle-exclamation"></i>
 
+
                     {% else %}
 
                         <i class="fa-solid fa-circle-info"></i>
 
+
                     {% endif %}
 
-                    <span>{{ message }}</span>
+
+                    <span>
+
+                        {{ message }}
+
+                    </span>
+
 
                 </div>
 
+
             {% endfor %}
+
 
         </div>
 
     {% endif %}
+
 
 {% endwith %}
 
@@ -1216,20 +1703,29 @@
 
     <div class="page-container">
 
-        {% if request.endpoint not in ["home", "login", "register"] %}
+
+        {% if request.endpoint not in [
+            "home",
+            "login",
+            "register"
+        ] %}
+
 
             <a href="javascript:history.back()"
                class="back-btn">
 
                 <i class="fa-solid fa-arrow-left"></i>
+
                 Back
 
             </a>
+
 
         {% endif %}
 
 
         {% block content %}{% endblock %}
+
 
     </div>
 
@@ -1244,20 +1740,28 @@
 
     <div class="footer-container">
 
+
         <div class="footer-grid">
+
 
             <!-- ABOUT -->
 
             <div>
 
                 <div class="footer-brand">
+
                     Smart Lost & Found
+
                 </div>
 
+
                 <p class="footer-description">
-                    A smart campus platform designed to help students
-                    and staff report, search, match and recover lost
-                    belongings quickly and efficiently.
+
+                    A smart campus platform designed to help
+                    students and staff report, search, match
+                    and recover lost belongings quickly and
+                    efficiently.
+
                 </p>
 
             </div>
@@ -1268,26 +1772,42 @@
             <div>
 
                 <div class="footer-title">
+
                     Quick Links
+
                 </div>
+
 
                 <div class="footer-links">
 
+
                     <a href="{{ url_for('home') }}">
+
                         Home
+
                     </a>
+
 
                     <a href="{{ url_for('about') }}">
+
                         About Us
+
                     </a>
+
 
                     <a href="{{ url_for('how_it_works') }}">
+
                         How It Works
+
                     </a>
 
+
                     <a href="{{ url_for('contact') }}">
+
                         Contact Us
+
                     </a>
+
 
                 </div>
 
@@ -1299,44 +1819,72 @@
             <div>
 
                 <div class="footer-title">
+
                     Support
+
                 </div>
+
 
                 <div class="footer-links">
 
+
                     <a href="{{ url_for('help_page') }}">
+
                         Help & Support
+
                     </a>
 
+
                     <a href="{{ url_for('privacy') }}">
+
                         Privacy Policy
+
                     </a>
+
 
                     {% if session.get("user_id") %}
 
-                        <a href="{{ url_for('search') }}">
-                            Search Items
+
+                        <a href="{{ url_for('my_reports') }}">
+
+                            My Reports
+
                         </a>
 
-                        <a href="{{ url_for('matches') }}">
-                            Smart Matches
+
+                        <a href="{{ url_for('my_claims') }}">
+
+                            My Claims
+
                         </a>
+
 
                         <a href="{{ url_for('track') }}">
-                            Track Status
+
+                            Track & Status
+
                         </a>
+
 
                     {% else %}
 
+
                         <a href="{{ url_for('login') }}">
+
                             Login
+
                         </a>
+
 
                         <a href="{{ url_for('register') }}">
+
                             Create Account
+
                         </a>
 
+
                     {% endif %}
+
 
                 </div>
 
@@ -1345,17 +1893,26 @@
         </div>
 
 
-        <!-- FOOTER BOTTOM -->
+        <!-- =================================================
+             FOOTER BOTTOM
+        ================================================= -->
 
         <div class="footer-bottom">
 
-            <div>
-                Â© 2026 Smart Lost & Found Management System
-            </div>
 
             <div>
-                Mini Project-I
+
+                © 2026 Smart Lost & Found Management System
+
             </div>
+
+
+            <div>
+
+                Mini Project-I
+
+            </div>
+
 
         </div>
 
@@ -1370,110 +1927,192 @@
 
 <script>
 
+
+    /* =====================================================
+       THREE DOT MENU
+    ===================================================== */
+
     function toggleQuickMenu() {
 
-        const menu = document.getElementById("quickMenu");
-        const button = document.getElementById("menuButton");
+        const menu =
+            document.getElementById("quickMenu");
+
+        const button =
+            document.getElementById("menuButton");
+
 
         if (!menu) {
+
             return;
+
         }
 
-        const isOpen = menu.classList.toggle("show");
+
+        const isOpen =
+            menu.classList.toggle("show");
+
 
         if (button) {
+
             button.setAttribute(
                 "aria-expanded",
                 isOpen ? "true" : "false"
             );
+
         }
 
     }
 
 
-    /* Close menu when clicking outside */
+    /* =====================================================
+       CLOSE MENU WHEN CLICKING OUTSIDE
+    ===================================================== */
 
-    document.addEventListener("click", function(event) {
+    document.addEventListener(
+        "click",
+        function(event) {
 
-        const wrapper = document.querySelector(".menu-wrapper");
-        const menu = document.getElementById("quickMenu");
-        const button = document.getElementById("menuButton");
 
-        if (!wrapper || !menu) {
-            return;
-        }
+            const wrapper =
+                document.querySelector(".menu-wrapper");
 
-        if (!wrapper.contains(event.target)) {
 
-            menu.classList.remove("show");
+            const menu =
+                document.getElementById("quickMenu");
 
-            if (button) {
-                button.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
+
+            const button =
+                document.getElementById("menuButton");
+
+
+            if (!wrapper || !menu) {
+
+                return;
+
             }
 
-        }
 
-    });
+            if (!wrapper.contains(event.target)) {
 
 
-    /* Close menu with Escape key */
-
-    document.addEventListener("keydown", function(event) {
-
-        if (event.key === "Escape") {
-
-            const menu = document.getElementById("quickMenu");
-            const button = document.getElementById("menuButton");
-
-            if (menu) {
                 menu.classList.remove("show");
-            }
-
-            if (button) {
-                button.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-            }
-
-        }
-
-    });
 
 
-    /* Auto-hide flash messages */
+                if (button) {
 
-    setTimeout(function() {
+                    button.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
 
-        const flashes = document.querySelectorAll(".flash");
-
-        flashes.forEach(function(flash) {
-
-            flash.style.transition =
-                "opacity 0.4s ease, transform 0.4s ease";
-
-            flash.style.opacity = "0";
-            flash.style.transform = "translateX(20px)";
-
-            setTimeout(function() {
-
-                if (flash && flash.parentNode) {
-                    flash.remove();
                 }
 
-            }, 400);
+            }
 
-        });
+        }
+    );
 
-    }, 4500);
+
+    /* =====================================================
+       CLOSE MENU WITH ESCAPE
+    ===================================================== */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+
+            if (event.key === "Escape") {
+
+
+                const menu =
+                    document.getElementById("quickMenu");
+
+
+                const button =
+                    document.getElementById("menuButton");
+
+
+                if (menu) {
+
+                    menu.classList.remove("show");
+
+                }
+
+
+                if (button) {
+
+                    button.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       AUTO HIDE FLASH MESSAGES
+    ===================================================== */
+
+    setTimeout(
+        function() {
+
+
+            const flashes =
+                document.querySelectorAll(".flash");
+
+
+            flashes.forEach(
+                function(flash) {
+
+
+                    flash.style.transition =
+                        "opacity 0.4s ease, transform 0.4s ease";
+
+
+                    flash.style.opacity = "0";
+
+
+                    flash.style.transform =
+                        "translateX(20px)";
+
+
+                    setTimeout(
+                        function() {
+
+
+                            if (
+                                flash &&
+                                flash.parentNode
+                            ) {
+
+                                flash.remove();
+
+                            }
+
+                        },
+                        400
+                    );
+
+                }
+            );
+
+
+        },
+        4500
+    );
+
 
 </script>
 
 
 {% block extra_js %}{% endblock %}
+
 
 </body>
 </html>
